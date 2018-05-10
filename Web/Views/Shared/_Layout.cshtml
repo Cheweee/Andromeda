@@ -1,43 +1,101 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title – приложение ASP.NET</title>
+    <title>Andromeda</title>
     @Styles.Render("~/Content/css")
-    @Scripts.Render("~/bundles/modernizr")
+    @Styles.Render("~/Content/angular")
+    @Styles.Render("~/Content/material-data-table")
+    @Styles.Render("~/Content/andromeda")
+    <link rel="stylesheet" href="~/Content/Angular/Fonts/roboto-font.css">
+    <link rel="stylesheet" href="~/Content/Angular/Icon fonts/material-icons.css">
 </head>
-<body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                @Html.ActionLink("Имя приложения", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+<body ng-app="andromedaApp" ng-cloak ng-controller="baseController" layout="column" data-ng-init="pageLoaded('@ViewBag.Name')">
+    <!--Scripts-->
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/angular")
+    @Scripts.Render("~/bundles/material-data-table")
+    @Scripts.Render("~/bundles/andromeda")
+    @RenderSection("scripts", required: false)
+
+    <!-- Application bootstrap  -->
+    <!-- Loader -->
+    <md-content flex class="andromeda-loading" layout-padding layout-margin ng-hide="!loading" layout-fill layout-align="center center" layout="column">
+        <span flex></span>
+        <div class="andromeda-system">
+            <md-icon class="distant-orbit" aria-label="distant orbit" md-svg-src="~/Content/Andromeda/Images/Andromeda distant orbit.svg">
+            </md-icon>
+            <md-icon class="average-orbit" aria-label="average orbit" md-svg-src="~/Content/Andromeda/Images/Andromeda average orbit.svg">
+            </md-icon>
+            <md-icon class="nearest-orbit" aria-label="nearest orbit" md-svg-src="~/Content/Andromeda/Images/Andromeda nearest orbit.svg">
+            </md-icon>
+            <md-icon class="solar" aria-label="solar" md-svg-src="~/Content/Andromeda/Images/Andromeda solar.svg">
+            </md-icon>
+        </div>
+        <h2 class="md-title">
+            {{message}}
+        </h2>
+        <span flex></span>
+    </md-content>
+
+    <div layout="row" flex>
+        <!--Menu-->
+        <div layout="column" class="andromeda-menu md-whiteframe-4dp">
+            <md-button ng-style="home.IsSelected ? {'border-left-width':'3px','border-left-style':'solid', 'padding-left' : '3px'} : {}"
+                       md-colors="{'color': home.Color, 'border-color' : home.Color}"
+                       ng-click="select_item(home)" class="home-button" layout="row" layout-align="start center">
+                <md-icon class="home-icon" md-colors="{'color': home.Color, 'border-color' : home.Color}">{{home.Icon}}</md-icon>
+                <span>{{home.Text}}</span>
+            </md-button>
+            <md-divider></md-divider>
+            <md-button ng-style="item.IsSelected ? {'border-left-width':'3px','border-left-style':'solid', 'padding-left' : '3px'} : {}"
+                       md-colors="{'color': item.Color, 'border-color' : item.Color}"
+                       ng-click="select_item(item)" ng-repeat="item in references" layout="row" layout-align="start center">
+                <md-icon md-colors="{'color': item.Color}">{{item.Icon}}</md-icon>
+                <span>{{item.Text}}</span>
+            </md-button>
+            <md-divider></md-divider>
+            <md-button ng-style="item.IsSelected ? {'border-left-width':'3px','border-left-style':'solid', 'padding-left' : '3px'} : {}"
+                       md-colors="{'color': item.Color, 'border-color' : item.Color}"
+                       ng-click="select_item(item)" ng-repeat="item in pages" layout="row" layout-align="start center">
+                <md-icon md-colors="{'color': item.Color}">{{item.Icon}}</md-icon>
+                <span>{{item.Text}}</span>
+            </md-button>
+            <md-divider></md-divider>
+            <md-button ng-style="item.IsSelected ? {'border-left-width':'3px','border-left-style':'solid', 'padding-left' : '3px'} : {}"
+                       md-colors="{'color': item.Color, 'border-color' : item.Color}"
+                       ng-click="select_item(item)" ng-repeat="item in administration" layout="row" layout-align="start center">
+                <md-icon md-colors="{'color': item.Color}">{{item.Icon}}</md-icon>
+                <span>{{item.Text}}</span>
+            </md-button>
+        </div>
+        <!--Content-->
+        <div style="margin-left:64px;" flex layout="column" layout-align="start-stretch">
+            <div layout="row" style="padding:12px 8px">
+                <span flex></span>
+                <md-button class="md-icon-button">
+                    <md-icon>face</md-icon>
+                    <md-tooltip direction="bottom"><span style="font-size:14px">Моя страница</span></md-tooltip>
+                </md-button>
+                <md-button ng-disabled class="md-icon-button">
+                    <md-icon>help_outline</md-icon>
+                    <md-tooltip direction="bottom"><span style="font-size:14px">Справка</span></md-tooltip>
+                </md-button>
+                <md-button ng-disabled class="md-icon-button">
+                    <md-icon>settings</md-icon>
+                    <md-tooltip direction="bottom"><span style="font-size:14px">Настройки</span></md-tooltip>
+                </md-button>
+                <md-button class="md-icon-button" ng-click="logout()">
+                    <md-icon>exit_to_app</md-icon>
+                    <md-tooltip direction="bottom"><span style="font-size:14px">Выход</span></md-tooltip>
+                </md-button>
             </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Домашняя страница", "Index", "Home")</li>
-                    <li>@Html.ActionLink("О программе", "About", "Home")</li>
-                    <li>@Html.ActionLink("Контакт", "Contact", "Home")</li>
-                </ul>
-            </div>
+            <md-content flex style="padding:8px;">
+                @RenderBody()
+            </md-content>
         </div>
     </div>
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year – приложение ASP.NET</p>
-        </footer>
-    </div>
-
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
 </body>
 </html>

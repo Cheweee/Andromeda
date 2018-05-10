@@ -1,0 +1,41 @@
+﻿.andromeda-menu {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    z-index: 10;
+    padding: 0;
+    width: auto;
+    max-width: 64px;
+    transition: .2s .1s ease-in-out;
+    background: white;
+    border-right: rgba(0, 0, 0, 0.12);
+    border-right-style: solid;
+    border-right-width: 1px;
+}
+    .andromeda-menu:hover, .andromeda-menu:active {
+        max-width: 100%;
+    }
+    .andromeda-menu > .md-button {
+        margin: 0;
+        min-width: 48px;
+        min-height: 48px;
+        border-radius: 0;
+    }
+            .andromeda-menu > .md-button > md-icon {
+            margin: 0 14px;
+        }
+    .andromeda-menu > .home-button {
+        margin: 0;
+        min-width: 64px;
+        min-height: 64px;
+        border-radius: 0;
+    }
+        .andromeda-menu > .home-button > .home-icon {
+            margin: 0 2px;
+            min-width: 48px !important;
+            height: 48px !important;
+            font-size: 48px !important;
+        }
+    .andromeda-menu > .md-button span {
+        margin: 0 10px;
+    }

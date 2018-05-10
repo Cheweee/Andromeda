@@ -1,4 +1,5 @@
-﻿using Andromeda.Models.Context;
+﻿using Andromeda.Models.Administration;
+using Andromeda.Models.Context;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
@@ -8,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Andromeda.Models.Administration
+namespace Andromeda.Core.Administration
 {
     public class UserStore : IUserStore<User, Guid>
     {

@@ -23,12 +23,23 @@ namespace Web
                 .Include("~/Scripts/Angular/angular.*",
                 "~/Scripts/Angular/angular-*"));
 
-            bundles.Add(new StyleBundle("~/Content/angular")
-                .Include("~/Content/Angular/angular-material.*",
-                "~/Content/Angular/Icon fonts/material-icons.*"));
+            bundles.Add(new ScriptBundle("~/bundles/material-data-table")
+                .Include("~/Scripts/Angular/md-data-table.*"));
 
-            bundles.Add(new StyleBundle("~/Content/css").Include(
-                      "~/Content/site.css"));
+            bundles.Add(new ScriptBundle("~/bundles/andromeda")
+                .Include("~/Scripts/Andromeda/andromeda.*"));
+
+            bundles.Add(new StyleBundle("~/Content/angular")
+                .Include("~/Content/Angular/angular-material.*"));
+
+            bundles.Add(new StyleBundle("~/Content/material-data-table")
+                .Include("~/Content/Angular/md-data-table.*"));
+
+            bundles.Add(new StyleBundle("~/Content/andromeda")
+                .Include("~/Content/Andromeda/andromeda.*"));
+
+            bundles.Add(new StyleBundle("~/Content/css")
+                .Include("~/Content/site.css"));
         }
     }
 }

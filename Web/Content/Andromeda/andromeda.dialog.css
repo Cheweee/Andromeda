@@ -1,0 +1,15 @@
+﻿.andromeda-dialog-container {
+    overflow-x: hidden;
+}
+.andromeda-dialog {
+    transition: all ease-in-out .2s;
+    min-width: 500px;
+}
+    .andromeda-dialog.ng-enter,
+    .andromeda-dialog.ng-leave-active {
+        width: 0;
+    }
+    .andromeda-dialog.ng-leave,
+    .andromeda-dialog.ng-enter-active {
+        width: 500px;
+    }

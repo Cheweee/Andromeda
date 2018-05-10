@@ -1,4 +1,5 @@
-﻿using Andromeda.Models.Context;
+﻿using Andromeda.Core.Administration;
+using Andromeda.Models.Context;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
@@ -9,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Andromeda.Models.Administration
+namespace Andromeda.Core.Administration
 {
     public class IdentityConfig
     {

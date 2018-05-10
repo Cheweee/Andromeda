@@ -1,0 +1,82 @@
+﻿.andromeda-loading {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 1;
+    z-index:1000;
+    transition: 0.2s ease-in-out;
+}
+
+    .andromeda-loading.ng-hide {
+        opacity: 0;
+    }
+
+.andromeda-system {
+    width: 250px;
+    height: 250px;
+}
+
+.distant-orbit {
+    animation: rotation 5s infinite linear;
+    -o-animation: rotation 5s infinite linear;
+    -moz-animation: rotation 5s infinite linear;
+    -webkit-animation: rotation 5s infinite linear;
+    width: 250px;
+    height: auto;
+    position: absolute;
+}
+
+.average-orbit {
+    animation: backward-rotation 3s infinite linear;
+    -o-animation: backward-rotation 3s infinite linear;
+    -moz-animation: backward-rotation 3s infinite linear;
+    -webkit-animation: backward-rotation 3s infinite linear;
+    width: 220px;
+    height: auto;
+    margin: 15px;
+    position: absolute;
+}
+
+.nearest-orbit {
+    animation: rotation 3s infinite linear;
+    -o-animation: rotation 3s infinite linear;
+    -moz-animation: rotation 3s infinite linear;
+    -webkit-animation: rotation 3s infinite linear;
+    width: 180px;
+    height: auto;
+    margin: 35px;
+    position: absolute;
+}
+
+.solar {
+    width: 160px;
+    height: auto;
+    margin: 45px;
+    position: absolute;
+}
+
+@-webkit-keyframes rotation {
+    from {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+
+    to {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+@-webkit-keyframes backward-rotation {
+    from {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+
+    to {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+}

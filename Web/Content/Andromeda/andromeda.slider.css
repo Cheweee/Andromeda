@@ -1,0 +1,26 @@
+﻿.slider {
+    overflow-x: hidden;
+    position: relative;
+}
+
+    .slider > .slide {
+        -webkit-transition: .3s ease;
+        -moz-transition: .3s ease;
+        -o-transition: .3s ease;
+        transition: .3s ease;
+    }
+
+        .slider > .slide.right {
+            transform: translateX(100%);
+            position: absolute;
+        }
+
+        .slider > .slide.ng-show {
+            transform: translateX(0);
+            position: relative;
+        }
+
+        .slider > .slide.left {
+            transform: translateX(-100%);
+            position: absolute;
+        }

@@ -1,0 +1,74 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Andromeda - Авторизация</title>
+    @Styles.Render("~/Content/css")
+    @Styles.Render("~/Content/angular")
+    @Styles.Render("~/Content/material-data-table")
+    @Styles.Render("~/Content/andromeda")
+    <link rel="stylesheet" href="~/Content/Angular/Fonts/roboto-font.css">
+    <link rel="stylesheet" href="~/Content/Angular/Icon fonts/material-icons.css">
+</head>
+<body ng-app="andromedaApp" ng-cloak ng-controller="baseController" layout="column">
+    <!--Scripts-->
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/angular")
+    @Scripts.Render("~/bundles/material-data-table")
+    @Scripts.Render("~/bundles/andromeda")
+
+    <md-content flex class="andromeda-loading" layout-padding layout-margin ng-show="loading" layout-fill layout-align="center center" layout="column">
+        <span flex></span>
+        <div class="andromeda-system">
+            <md-icon class="distant-orbit" aria-label="distant orbit" md-svg-src="~/Content/Andromeda/Images/Andromeda distant orbit.svg">
+            </md-icon>
+            <md-icon class="average-orbit" aria-label="average orbit" md-svg-src="~/Content/Andromeda/Images/Andromeda average orbit.svg">
+            </md-icon>
+            <md-icon class="nearest-orbit" aria-label="nearest orbit" md-svg-src="~/Content/Andromeda/Images/Andromeda nearest orbit.svg">
+            </md-icon>
+            <md-icon class="solar" aria-label="solar" md-svg-src="~/Content/Andromeda/Images/Andromeda solar.svg">
+            </md-icon>
+        </div>
+        <h2 class="md-title">
+            {{message}}
+        </h2>
+        <span flex></span>
+    </md-content>
+    <md-content layout-fill layout="row" layout-align="center-center">
+        <md-card layout-padding class="md-whiteframe-5dp" flex="40">
+            <md-toolbar class="md-table-toolbar md-default">
+                <div class="md-toolbar-tools">
+                    <md-icon style="height:auto; width:64px;" md-svg-src="~/Content/Andromeda/Images/Andromeda system.svg"></md-icon>
+                    <span class="md-title">Система Андромеда</span>
+                    <span flex></span>
+                </div>
+            </md-toolbar>
+            <form name="loginForm" layout="column" ng-submit="login()" method="post" ng-cloak ng-valid>
+                <md-input-container>
+                    <label>Логин</label>
+                    <input required ng-model="user.Login" type="text" md-autofocus>
+                </md-input-container>
+                <md-input-container>
+                    <label>Пароль</label>
+                    <input required ng-model="user.Password" type="password">
+                </md-input-container>
+                <md-checkbox ng-model="user.Remember">
+                    <span>Запомнить меня</span>
+                </md-checkbox>
+                <div flex layout="row" layout-align="start-center">
+                    <span flex></span>
+                    <md-button type="submit" ng-disabled="loginForm.$invalid" class="md-primary">Войти</md-button>
+                    <md-button ng-click="cancel()">Отмена</md-button>
+                </div>
+            </form>
+        </md-card>
+    </md-content>
+</body>
+</html>
