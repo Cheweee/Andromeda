@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Andromeda.ViewModels.Server
 {
-    public class ItemViewModel<T> : IViewModel
+    public class EntityViewModel<TEntity> : IViewModel
     {
         public Result Result { get; set; }
         public string Message { get; set; }
-        public T Item { get; set; }
+        public TEntity Entity { get; set; }
     }
 }

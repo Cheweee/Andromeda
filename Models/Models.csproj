@@ -57,6 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Administration\Right.cs" />
+    <Compile Include="Administration\RightRoles.cs" />
     <Compile Include="Administration\Role.cs" />
     <Compile Include="Administration\User.cs" />
     <Compile Include="Administration\UserRoles.cs" />

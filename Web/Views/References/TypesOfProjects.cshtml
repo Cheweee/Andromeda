@@ -1,0 +1,121 @@
+﻿
+@{
+    ViewBag.Name = "typesOfProjects";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script type="text/ng-template" id="addOrEditForm.html">
+    <md-dialog aria-label="AddOrEditItem" ng-controller="typeOfProjectController">
+        <div flex layout-padding layout-margin ng-show="loading" layout-fill layout-align="center center" layout="column">
+            <span flex></span>
+            <md-progress-circular md-diameter="96" md-mode="indeterminate"></md-progress-circular>
+            <h2 class="md-title">
+                {{message}}
+            </h2>
+            <span flex></span>
+        </div>
+        <form name="addOrEditForm" ng-hide="loading" ng-init="loadDialog()" action="" method="post" ng-submit="confirm()" ng-valid>
+            <md-toolbar>
+                <div class="md-toolbar-tools">
+                    <h2 md-title>Тип работ</h2>
+                    <span flex></span>
+                    <md-button class="md-icon-button" ng-click="closeDialog()">
+                        <md-icon>close</md-icon>
+                    </md-button>
+                </div>
+            </md-toolbar>
+            <md-dialog-content>
+                <div class="md-dialog-content">
+                    <md-input-container class="md-block" flex>
+                        <label>Сокращенное наименование</label>
+                        <input required name="shortName" ng-model="entity.ShortName" md-maxlength="20" md-autofocus>
+                        <div ng-messages="addOrEditForm.ShortName.$error" multiple>
+                            <div ng-message="required">
+                                Пожалуйста заполните данное поле.
+                            </div>
+                        </div>
+                    </md-input-container>
+                    <md-input-container class="md-block" flex>
+                        <label>Наименование</label>
+                        <input required name="name" ng-model="entity.Name" md-maxlength="100" md-autofocus>
+                        <div ng-messages="addOrEditForm.Name.$error" multiple>
+                            <div ng-message="required">
+                                Пожалуйста заполните данное поле.
+                            </div>
+                        </div>
+                    </md-input-container>
+                </div>
+            </md-dialog-content>
+            <md-dialog-actions>
+                <md-button class="md-primary" ng-click="confirm()" ng-disabled="addOrEditForm.$invalid">
+                    Принять
+                </md-button>
+                <md-button class="md-alert" ng-click="clearFields()">
+                    Отмена
+                </md-button>
+            </md-dialog-actions>
+        </form>
+    </md-dialog>
+</script>
+
+<md-card layout-fill class="md-whiteframe-3dp" layout="row" ng-controller="referenceController">
+    <div layout="column" class=" md-whiteframe-3dp" layout-fill
+         ng-init="init('Name',
+     '/References/GetTypesOfProjects',
+     '/References/DeleteTypesOfProjects',
+     'Вы уверены, что хотите удалить выбранные типы работ?',
+     'typeOfProjectController', false)">
+        <md-toolbar class="md-table-toolbar md-default" ng-hide="query.selected.length">
+            <div class="md-toolbar-tools">
+                <md-icon>search</md-icon>
+                <form flex ng-dirty ng-valid name="form.filter">
+                    <input type="text" flex ng-model="query.filter.search" ng-model-options="filter.options" placeholder="Поиск">
+                </form>
+                <md-button class="md-icon-button" ng-click="addEntity()">
+                    <md-icon>add</md-icon>
+                    <md-tooltip md-direction="bottom" style="font-size:14px;">Добавить тип работ</md-tooltip>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-toolbar class="md-table-toolbar md-alternate" ng-show="query.selected.length">
+            <div class="md-toolbar-tools" layout-align="space-between center">
+                <span flex>Типов работ выбрано : {{query.selected.length}}</span>
+                <md-button class="md-icon-button" show ng-hide="query.selected.length!=1" ng-click="editEntity(query.selected[0])">
+                    <md-icon md-colors="{color: 'accent-500'}">edit</md-icon>
+                    <md-tooltip md-direction="bottom" style="font-size:14px;">Редактировать выбранный тип работ</md-tooltip>
+                </md-button>
+                <md-button class="md-icon-button" ng-click="delete(query.selected)">
+                    <md-icon md-colors="{color: 'accent-500'}">delete</md-icon>
+                    <md-tooltip md-direction="bottom" style="font-size:14px;">Удалить выбранные типы работ</md-tooltip>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-table-container flex>
+            <table md-table md-row-select="true" multiple="true" ng-model="query.selected" md-progress="promise">
+                <thead md-head md-order="query.order" md-on-reorder="query.getEntities">
+                    <tr md-row>
+                        <th md-column md-order-by="ShortName"><span class="md-subhead">Сокращенное наименование</span></th>
+                        <th md-column md-order-by="Name"><span class="md-subhead">Наименование</span></th>
+                    </tr>
+                </thead>
+                <tbody md-body>
+                    <tr md-auto-select md-row md-select="entity" ng-repeat="entity in query.entities">
+                        <td md-cell>{{entity.ShortName}}</td>
+                        <td md-cell>{{entity.Name}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </md-table-container>
+        <md-table-pagination md-label="{page: 'Страница:', rowsPerPage: 'Записей на странице:', of: 'из'}"
+                             md-page="query.page"
+                             md-limit="query.limit"
+                             md-limit-options="query.limitOptions"
+                             md-total="{{query.total}}"
+                             md-boundary-links="true"
+                             md-on-paginate="query.getEntities">
+        </md-table-pagination>
+    </div>
+</md-card>
+<script src="~/Scripts/Andromeda/Controllers/andromeda.controller.references.js"></script>
+<script src="~/Scripts/Andromeda/Controllers/andromeda.controller.typeOfProject.js"></script>
+

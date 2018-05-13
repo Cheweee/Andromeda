@@ -23,7 +23,7 @@ namespace Andromeda.Core.Managers
                 using (DBContext context = new DBContext())
                 {
                     byte[] passwordHash = Encryption.Encrypt(password);
-                    byte[] userPasswordHash = GetItemValue<User, byte[]>(context, o => o.Login == login, o => o.Password);
+                    byte[] userPasswordHash = GetEntityValue<User, byte[]>(context, o => o.Login == login, o => o.Password);
 
                     if (userPasswordHash.SequenceEqual(passwordHash))
                     {
@@ -44,16 +44,17 @@ namespace Andromeda.Core.Managers
             {
                 using (DBContext context = DBContext.Create())
                 {
-                    PagesViewModel result = new PagesViewModel();
+                    PagesViewModel result = new PagesViewModel { Result = Result.Ok };
                     string login = HttpContext.Current.User.Identity.Name;
-                    Guid userId = GetItemValue<User, Guid>(context, o=> o.Login == login, o=> o.Id);
+                    Guid userId = GetEntityValue<User, Guid>(context, o=> o.Login == login, o=> o.Id);
                     List<Guid> roleIds =
-                        GetCollectionWithJoin<User, UserRoles, Guid, Guid>(context,
+                        GetEntitiesWithJoin<User, UserRoles, Guid, Guid>(context,
                         o => o.Login == login,
                         o => o.Id,
                         o => o.UserId,
                         (fo, so) => fo.RoleId
                         );
+                    List<Guid> rightIds = GetEntitiesWithJoin<Role, RightRole, Guid, Guid>(context, o=> roleIds.Contains(o.Id), fo=>fo.Id, so=> so.RoleId, (fo, so) => fo.RightId);
 
                     if (userId == Guid.Empty)
                     {
@@ -62,10 +63,9 @@ namespace Andromeda.Core.Managers
 
                         return result;
                     }
-                    result.AccesibleReferences = GetUserAccesibleReferences(context, roleIds);
-                    result.AccesiblePages = GetUserAccesiblePages(context, roleIds);
-                    result.AccesibleAdministration = GetUserAccesibleAdministration(context, roleIds);
-                    result.Result = Result.Ok;
+                    result.AccesibleReferences = GetUserAccesibleReferences(context, rightIds);
+                    result.AccesiblePages = GetUserAccesiblePages(context, rightIds);
+                    result.AccesibleAdministration = GetUserAccesibleAdministration(context, rightIds);
 
                     return result;
                 }
@@ -76,17 +76,17 @@ namespace Andromeda.Core.Managers
             }
         }
 
-        private static List<Page> GetUserAccesibleReferences(DBContext context, List<Guid> roleIds)
+        private static List<Page> GetUserAccesibleReferences(DBContext context, List<Guid> rightIds)
         {
-            if (roleIds.Contains(new Guid("70D3CB1F-48BA-44C5-B551-3A19DE0F32C1")) ||
-                roleIds.Contains(new Guid("BDD85C56-7790-42E0-B8AA-2304E81761F9")))
+            if (rightIds.Contains(RightManager.GetAccessToReferencesId()) ||
+                rightIds.Contains(RightManager.GetAdminRightId()))
             {
                 return new List<Page>
                 {
-                    new Page("/CirriculumDevelopment/TypesOfProjects", "types_of_projects", "Типы работ", "format_list_numbered"),
-                    new Page("/CirriculumDevelopment/TypesOfProjects", "coure_titles", "Наименования дисциплин", "title"),
-                    new Page("/CirriculumDevelopment/Faculties", "faculties", "Факультеты и институты", "business"),
-                    new Page("/CirriculumDevelopment/Departments", "departments", "Кафедры", "account_balance"),
+                    new Page("/References/TypesOfProjects", "typesOfProjects", "Типы работ", "format_list_numbered"),
+                    new Page("/References/CourseTitles", "coureTitles", "Наименования дисциплин", "title"),
+                    new Page("/References/Faculties", "faculties", "Факультеты и институты", "business"),
+                    new Page("/References/Departments", "departments", "Кафедры", "account_balance"),
                 };
             }
             else
@@ -94,33 +94,63 @@ namespace Andromeda.Core.Managers
                 return new List<Page>();
             }
         }
-        private static List<Page> GetUserAccesiblePages(DBContext context, List<Guid> roleIds)
+        private static List<Page> GetUserAccesiblePages(DBContext context, List<Guid> rightIds)
         {
-            List<Page> accessiblePages = new List<Page>();
-            if (roleIds.Contains(new Guid("BDD85C56-7790-42E0-B8AA-2304E81761F9")))
+            List<Page> accesiblePages = new List<Page>();
+            if (rightIds.Contains(new Guid("BDD85C56-7790-42E0-B8AA-2304E81761F9")))
             {                
-                accessiblePages.AddRange(new List<Page>
+                return new List<Page>
                 {
-                    new Page("", "seats", "Должности", "event_seat"),
-                    new Page("", "professors", "Преподаватели", "assignment_ind"),
-                    new Page("", "areas_of_training", "Направления подготовки", "layers"),
-                    new Page("", "working_cirriculum", "Рабочие планы", "chrome_reader_mode")
-                }.ToList());
+                    new Page("/CirriculumDevelopment/Seats", "seats", "Должности", "event_seat"),
+                    new Page("/CirriculumDevelopment/Workers", "workers", "Работники", "assignment_ind"),
+                    new Page("/CirriculumDevelopment/AreasOfTraining", "areasOfTraining", "Направления подготовки", "layers"),
+                    new Page("/CirriculumDevelopment/WorkingCirriculums", "workingCirriculums", "Рабочие планы", "chrome_reader_mode")
+                };                
             }
-            if (roleIds.Contains(new Guid("E0AFAFE5-D9C8-40BE-AF1D-A2444DA1D38B")))
+            if (rightIds.Contains(RightManager.GetAccessToDepartmentRolesId()) || 
+                rightIds.Contains(RightManager.GetAccessToFacultyRolesId()))
             {
-
+                accesiblePages.Add(new Page("/CirriculumDevelopment/Seats", "seats", "Должности", "event_seat"));
             }
-            return accessiblePages;
+            if (rightIds.Contains(RightManager.GetAccessToDepartmentWorkersId()) ||
+                rightIds.Contains(RightManager.GetAccessToFacultyWorkersId()))
+            {
+                accesiblePages.Add(new Page("/CirriculumDevelopment/Professors", "professors", "Работники", "assignment_ind"));
+            }
+            if (rightIds.Contains(RightManager.GetAccessToAreasOfTrainingId()))
+            {
+                accesiblePages.Add(new Page("/CirriculumDevelopment/AreasOfTraining", "areasOfTraining", "Направления подготовки", "layers"));
+            }
+            if (rightIds.Contains(RightManager.GetAccessToWorkingCirriculumsId()))
+            {
+                accesiblePages.Add(new Page("/CirriculumDevelopment/WorkingCirriculums", "workingCirriculums", "Рабочие планы", "chrome_reader_mode"));
+            }
+            return accesiblePages;
         }
-        private static List<Page> GetUserAccesibleAdministration(DBContext context, List<Guid> roleIds)
+        private static List<Page> GetUserAccesibleAdministration(DBContext context, List<Guid> rightIds)
         {
-            List<Page> accesibleAdministration = new List<Page>
+            if (rightIds.Contains(RightManager.GetAdminRightId()))
+            {
+                return new List<Page>
                 {
                     new Page("/Administration/Users", "users", "Пользователи", "people"),
                     new Page("/Administration/Roles", "roles", "Роли", "work"),
                     new Page("/Administration/Rights", "rights", "Права ролей", "accessibility")
                 };
+            }
+            List<Page> accesibleAdministration = new List<Page>();
+            if (rightIds.Contains(RightManager.GetUsersAdminRightId()))
+            {
+                accesibleAdministration.Add(new Page("/Administration/Users", "users", "Пользователи", "people"));
+            }
+            if (rightIds.Contains(RightManager.GetRolesAdminRightId()))
+            {
+                accesibleAdministration.Add(new Page("/Administration/Roles", "roles", "Роли", "work"));
+            }
+            if (rightIds.Contains(RightManager.GetRightsAdminRightId()))
+            {
+                accesibleAdministration.Add(new Page("/Administration/Rights", "rights", "Права ролей", "accessibility"));
+            }
             return accesibleAdministration;
         }
     }

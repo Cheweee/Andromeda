@@ -40,15 +40,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Client\CollectionViewModel.cs" />
-    <Compile Include="Client\ItemViewModel.cs" />
+    <Compile Include="Client\EntitiesViewModel.cs" />
+    <Compile Include="Client\EntityViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Server\CollectionViewModels.cs" />
-    <Compile Include="Server\ItemViewModels.cs" />
+    <Compile Include="Server\CourseTitleViewModel.cs" />
+    <Compile Include="Server\DepartmentViewModel.cs" />
+    <Compile Include="Server\EntitiesViewModels.cs" />
+    <Compile Include="Server\EntityViewModels.cs" />
     <Compile Include="Other\Page.cs" />
     <Compile Include="Server\PagesViewModel.cs" />
     <Compile Include="Server\RightViewModel.cs" />
     <Compile Include="Server\RoleViewModel.cs" />
+    <Compile Include="Server\TypeOfProjectsViewModel.cs" />
     <Compile Include="Server\UserViewModel.cs" />
     <Compile Include="Server\ViewModel.cs" />
   </ItemGroup>

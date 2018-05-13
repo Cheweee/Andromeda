@@ -1,17 +1,6 @@
 ﻿app.service('service', function ($http, $timeout) {
     var loginUrl = '/Base/Login';
     var logoutUrl = '/Base/Logout';
-    this.dialogId = null;
-    this.openDialog = function (dialogId, id) {
-        this.dialogId = dialogId;
-        this.addOrEdit = !id;
-        this.id = id;
-    };
-    this.closeDialog = function () {
-        this.dialogId = null;
-        this.id = null;
-        this.addOrEdit = null;
-    };
     //Current action for add_or_edit_obj method
     this.addOrEdit = false;
     //Current object for exchange data between different controllers
@@ -44,12 +33,6 @@
         }
         return { name: chip, type: 'new' };
     };
-    this.openPage = function (url) {
-        return $http({
-            method: getMethod,
-            url: url
-        });
-    };
     //POST Page Loaded method
     this.pageLoaded = function () {
         return $http({
@@ -73,15 +56,15 @@
     };
     var createLimitOptions = function () { return [5, 10, 15]; };
     //Creating query for md-data-table with sort field definition
-    this.createQuery = function (order, getObjsUrl) {
+    this.createQuery = function (order, getEntitiesUrl) {
         query = {
             filter: createFilter(),
             order: order,
             limit: 10,
-            limit_options: createLimitOptions(),
+            limitOptions: createLimitOptions(),
             page: 1,
             total: 0,
-            objs: [],
+            entities: [],
             selected: [],
             allSelected: false,
             toggle: function (item) {
@@ -93,18 +76,18 @@
                     this.selected.splice(index, 1);
                     item.roles = [];
                 }
-                this.allSelected = this.selected.length === this.objs.length;
+                this.allSelected = this.selected.length === this.entities.length;
             },
             toggleAll: function () {
                 if (this.allSelected) {
                     this.selected = [];
-                    angular.forEach(this.objs, function (item) {
+                    angular.forEach(this.entities, function (item) {
                         item.selected = false;
                     });
                 }
                 else {
-                    for (i = 0; i < this.objs.length; i++) {
-                        var item = this.objs[i];
+                    for (i = 0; i < this.entities.length; i++) {
+                        var item = this.entities[i];
                         if (!item.selected) {
                             this.selected.push(item);
                             item.selected = true;
@@ -112,27 +95,27 @@
                     }
                 }
             },
-            getObjs: function () {
+            getEntities: function () {
                 var self = query;
                 $http({
                     dataType: jsonDataType,
                     method: getMethod,
                     params: model = { Page: self.page, Limit: self.limit, Order: self.order, Search: self.filter.search },
-                    url: getObjsUrl
+                    url: getEntitiesUrl
                 }).then(function (response) {
-                    if (response.data.result === 'OK') {
-                        self.objs = response.data.rows;
-                        self.total = response.data.total;
-                        self.page = response.data.page;
+                    if (response.data.Result) {
+                        self.entities = response.data.Entities;
+                        self.total = response.data.Total;
+                        self.page = response.data.Page;
                         self.selected = [];
                     }
-                })
+                });
             }
         };
         return query;
     };
     //Get objects collection by model
-    this.getObjs = function (url, model) {
+    this.getEntities = function (url, model) {
         return $http({
             dataType: jsonDataType,
             method: getMethod,
@@ -140,30 +123,39 @@
             url: url
         });
     };
-    //Get object by model
-    this.getObj = function (url, model) {
+    //Get object by id
+    this.getEntityById = function (url, id) {
         return $http({
             method: getMethod,
             url: url,
-            params: model,
+            params: { id: id },
+            dataType: jsonDataType
+        });
+    };
+    //Get object by name
+    this.getEntityByName = function (url, name) {
+        return $http({
+            method: getMethod,
+            url: url,
+            params: name,
             dataType: jsonDataType
         });
     };
     //Add or edit object
-    this.addOrEditObj = function (url, obj) {
+    this.addOrEditEntity = function (url, entity) {
         return $http({
             method: postMethod,
             url: url,
-            data: JSON.stringify(obj),
+            data: { entity: entity },
             dataType: jsonDataType
         });
     };
     //Delete objects collection
-    this.deleteObjs = function (url, objs) {
+    this.deleteEntities = function (url, entities) {
         return $http({
             method: postMethod,
             url: url,
-            data: JSON.stringify(objs),
+            data: JSON.stringify(entities),
             dataType: jsonDataType
         });
     };

@@ -79,6 +79,9 @@
     <Compile Include="Administration\IdentityConfig.cs" />
     <Compile Include="Logs\LogErrorManager.cs" />
     <Compile Include="Managers\BaseEntityManager.cs" />
+    <Compile Include="Managers\CourseTitleManager.cs" />
+    <Compile Include="Managers\RightManager.cs" />
+    <Compile Include="Managers\RoleManager.cs" />
     <Compile Include="Managers\UserManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

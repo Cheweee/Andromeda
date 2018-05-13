@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Andromeda.ViewModels.Client
 {
-    public class CollectionViewModel
+    public class EntitiesViewModel
     {
         public int Page { get; set; }
         public int Limit { get; set; }

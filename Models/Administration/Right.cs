@@ -25,7 +25,7 @@ namespace Andromeda.Models.Administration
         /// <summary>
         /// Roles collection
         /// </summary>
-        public virtual ICollection<Role> Roles { get; set; }
+        public virtual ICollection<RightRole> RightRoles { get; set; }
         #endregion
 
         #region Constructors
@@ -34,7 +34,7 @@ namespace Andromeda.Models.Administration
         /// </summary>
         public Right()
         {
-            this.Roles = new HashSet<Role>();
+            this.RightRoles = new HashSet<RightRole>();
         }
         #endregion
     }

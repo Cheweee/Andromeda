@@ -45,28 +45,28 @@
         <div layout="column" class="andromeda-menu md-whiteframe-4dp">
             <md-button ng-style="home.IsSelected ? {'border-left-width':'3px','border-left-style':'solid', 'padding-left' : '3px'} : {}"
                        md-colors="{'color': home.Color, 'border-color' : home.Color}"
-                       ng-click="select_item(home)" class="home-button" layout="row" layout-align="start center">
+                       ng-click="selectItem(home)" class="home-button" layout="row" layout-align="start center">
                 <md-icon class="home-icon" md-colors="{'color': home.Color, 'border-color' : home.Color}">{{home.Icon}}</md-icon>
                 <span>{{home.Text}}</span>
             </md-button>
             <md-divider></md-divider>
             <md-button ng-style="item.IsSelected ? {'border-left-width':'3px','border-left-style':'solid', 'padding-left' : '3px'} : {}"
                        md-colors="{'color': item.Color, 'border-color' : item.Color}"
-                       ng-click="select_item(item)" ng-repeat="item in references" layout="row" layout-align="start center">
+                       ng-click="selectItem(item)" ng-repeat="item in references" layout="row" layout-align="start center">
                 <md-icon md-colors="{'color': item.Color}">{{item.Icon}}</md-icon>
                 <span>{{item.Text}}</span>
             </md-button>
             <md-divider></md-divider>
             <md-button ng-style="item.IsSelected ? {'border-left-width':'3px','border-left-style':'solid', 'padding-left' : '3px'} : {}"
                        md-colors="{'color': item.Color, 'border-color' : item.Color}"
-                       ng-click="select_item(item)" ng-repeat="item in pages" layout="row" layout-align="start center">
+                       ng-click="selectItem(item)" ng-repeat="item in pages" layout="row" layout-align="start center">
                 <md-icon md-colors="{'color': item.Color}">{{item.Icon}}</md-icon>
                 <span>{{item.Text}}</span>
             </md-button>
             <md-divider></md-divider>
             <md-button ng-style="item.IsSelected ? {'border-left-width':'3px','border-left-style':'solid', 'padding-left' : '3px'} : {}"
                        md-colors="{'color': item.Color, 'border-color' : item.Color}"
-                       ng-click="select_item(item)" ng-repeat="item in administration" layout="row" layout-align="start center">
+                       ng-click="selectItem(item)" ng-repeat="item in administration" layout="row" layout-align="start center">
                 <md-icon md-colors="{'color': item.Color}">{{item.Icon}}</md-icon>
                 <span>{{item.Text}}</span>
             </md-button>
@@ -75,25 +75,31 @@
         <div style="margin-left:64px;" flex layout="column" layout-align="start-stretch">
             <div layout="row" style="padding:12px 8px">
                 <span flex></span>
-                <md-button class="md-icon-button">
+                <md-button class="md-icon-button" ng-click="account()">
                     <md-icon>face</md-icon>
-                    <md-tooltip direction="bottom"><span style="font-size:14px">Моя страница</span></md-tooltip>
+                    <md-tooltip direction="bottom"><span class="md-body-2">Моя страница</span></md-tooltip>
                 </md-button>
-                <md-button ng-disabled class="md-icon-button">
+                <md-button ng-disabled="true" class="md-icon-button" ng-click="help()">
                     <md-icon>help_outline</md-icon>
-                    <md-tooltip direction="bottom"><span style="font-size:14px">Справка</span></md-tooltip>
+                    <md-tooltip direction="bottom"><span class="md-body-2">Справка</span></md-tooltip>
                 </md-button>
-                <md-button ng-disabled class="md-icon-button">
+                <md-button ng-disabled="true" class="md-icon-button" ng-click="settings()">
                     <md-icon>settings</md-icon>
-                    <md-tooltip direction="bottom"><span style="font-size:14px">Настройки</span></md-tooltip>
+                    <md-tooltip direction="bottom"><span class="md-body-2">Настройки</span></md-tooltip>
                 </md-button>
                 <md-button class="md-icon-button" ng-click="logout()">
                     <md-icon>exit_to_app</md-icon>
-                    <md-tooltip direction="bottom"><span style="font-size:14px">Выход</span></md-tooltip>
+                    <md-tooltip direction="bottom"><span class="md-body-2">Выход</span></md-tooltip>
                 </md-button>
             </div>
-            <md-content flex style="padding:8px;">
+            <md-content flex style="padding:8px;" ng-show="access">
                 @RenderBody()
+            </md-content>
+            <md-content flex style="padding:8px;" ng-hide="access">
+                <div layout="row" layout-align="center center"> 
+                    <md-icon>report</md-icon>
+                    <h4>Доступ запрещен!</h4>
+                </div>
             </md-content>
         </div>
     </div>

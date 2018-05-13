@@ -8,8 +8,8 @@ namespace Andromeda.ViewModels.Server
 {
     public enum Result
     {
-        Ok,
         Error,
+        Ok,
         NotEnoughRights,
         NotAuthenticated
     }
@@ -25,6 +25,10 @@ namespace Andromeda.ViewModels.Server
     public interface INameViewModel
     {
         string Name { get; set; }
+    }
+    public interface IShortNameViewModel
+    {
+        string ShortName { get; set; }
     }
     public class ResultViewModel : IViewModel
     {

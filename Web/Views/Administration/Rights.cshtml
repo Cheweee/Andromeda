@@ -1,0 +1,107 @@
+﻿
+@{
+    ViewBag.Name = "rights";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script type="text/ng-template" id="add_or_edit_form.html">
+    <md-dialog aria-label="AddOrEditItem" ng-controller="rightsController">
+        <div flex layout-padding layout-margin ng-show="loading" layout-fill layout-align="center center" layout="column">
+            <span flex></span>
+            <md-progress-circular md-diameter="96" md-mode="indeterminate"></md-progress-circular>
+            <h2 class="md-title">
+                {{message}}
+            </h2>
+            <span flex></span>
+        </div>
+        <form name="add_or_edit_form" ng-hide="loading" ng-init="loadDialog()" action="" method="post" ng-submit="confirm()" ng-valid>
+            <md-toolbar>
+                <div class="md-toolbar-tools">
+                    <h2 md-title>Право ролей</h2>
+                    <span flex></span>
+                    <md-button class="md-icon-button" ng-click="closeDialog()">
+                        <md-icon>close</md-icon>
+                    </md-button>
+                </div>
+            </md-toolbar>
+            <md-dialog-content>
+                <div class="md-dialog-content">
+                    <md-input-container class="md-block" flex>
+                        <label>Наименование</label>
+                        <input required name="name" ng-model="Name" md-maxlength="100" md-autofocus>
+                        <div ng-messages="add_or_edit_form.right_name.$error" multiple md-auto-hide="false">
+                            <div ng-message="required">
+                                Пожалуйста заполните данное поле.
+                            </div>
+                        </div>
+                    </md-input-container>
+                </div>
+            </md-dialog-content>
+            <md-dialog-actions>
+                <md-button class="md-primary" ng-click="confirm()" ng-disabled="add_or_edit_form.$invalid">
+                    ПРИНЯТЬ
+                </md-button>
+                <md-button class="md-alert" ng-click="clearFields()">
+                    ОТМЕНА
+                </md-button>
+            </md-dialog-actions>
+        </form>
+    </md-dialog>
+</script>
+
+<md-card layout="column" class=" md-whiteframe-3dp" layout-fill ng-controller="referenceController"
+         ng-init="init('Name',
+     '/Administration/GetRights',
+     '/Administration/DeleteRights',
+     'Вы уверены, что хотите удалить выбранные права пользователей?',
+     'rightsController', false)">
+    <md-toolbar class="md-table-toolbar md-default" ng-hide="query.selected.length">
+        <div class="md-toolbar-tools">
+            <md-icon>search</md-icon>
+            <form flex ng-dirty ng-valid name="form.filter">
+                <input type="text" flex ng-model="query.filter.search" ng-model-options="filter.options" placeholder="Поиск по наименованию">
+            </form>
+            <md-button class="md-icon-button" ng-click="add_obj()">
+                <md-icon>add</md-icon>
+                <md-tooltip md-direction="bottom" style="font-size:14px;">Добавить право ролей</md-tooltip>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <md-toolbar class="md-table-toolbar md-alternate" ng-show="query.selected.length">
+        <div class="md-toolbar-tools" layout-align="space-between center">
+            <span flex>Прав выбрано : {{query.selected.length}}</span>
+            <md-button class="md-icon-button" show ng-hide="query.selected.length!=1" ng-click="edit_obj(query.selected[0])">
+                <md-icon md-colors="{color: 'accent-500'}">edit</md-icon>
+                <md-tooltip md-direction="bottom" style="font-size:14px;">Редактировать выбранное право ролей</md-tooltip>
+            </md-button>
+            <md-button class="md-icon-button" ng-click="delete_objs(query.selected)">
+                <md-icon md-colors="{color: 'accent-500'}">delete</md-icon>
+                <md-tooltip md-direction="bottom" style="font-size:14px;">Удалить выбранные права ролей</md-tooltip>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <md-table-container flex>
+        <table md-table md-row-select="true" multiple="true" ng-model="query.selected" md-progress="promise">
+            <thead md-head md-order="query.order">
+                <tr md-row>
+                    <th md-column md-order-by="Name"><span class="md-subhead">Наименование</span></th>
+                </tr>
+            </thead>
+            <tbody md-body>
+                <tr md-auto-select md-row md-select="obj" ng-repeat="obj in query.objs">
+                    <td md-cell>{{obj.Name}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </md-table-container>
+    <md-table-pagination md-label="{page: 'Страница:', rowsPerPage: 'Записей на странице:', of: 'из'}"
+                         md-page="query.page"
+                         md-limit="query.limit"
+                         md-limit-options="query.limit_options"
+                         md-total="{{query.total}}"
+                         md-boundary-links="true"
+                         md-on-paginate="getObjs">
+    </md-table-pagination>
+</md-card>
+<script src="~/Scripts/Angular/Controllers/References.js"></script>
+<script src="~/Scripts/Angular/Controllers/Rights.js"></script>

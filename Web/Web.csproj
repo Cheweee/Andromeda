@@ -146,7 +146,10 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\AdministrationController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\CirriculumDevelopmentController.cs" />
+    <Compile Include="Controllers\ReferencesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -183,7 +186,8 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Scripts\Andromeda\andromeda.base-controller.js" />
+    <Content Include="Scripts\Andromeda\andromeda.slider.js" />
+    <Content Include="Scripts\Andromeda\andromeda.controller.base.js" />
     <Content Include="Scripts\Andromeda\andromeda.app.js" />
     <Content Include="Scripts\Andromeda\andromeda.service.js" />
     <Content Include="Scripts\Angular\angular-animate.js" />
@@ -235,25 +239,28 @@
     <Content Include="Scripts\Angular\angular-messages.min.js.map" />
     <Content Include="Scripts\Angular\angular-route.min.js.map" />
     <Content Include="Scripts\Angular\angular-sanitize.min.js.map" />
-    <None Include="Scripts\jquery-3.3.1.intellisense.js" />
-    <Content Include="Scripts\jquery-3.3.1.js" />
-    <Content Include="Scripts\jquery-3.3.1.min.js" />
-    <Content Include="Scripts\jquery-3.3.1.slim.js" />
-    <Content Include="Scripts\jquery-3.3.1.slim.min.js" />
-    <None Include="Scripts\jquery.validate-vsdoc.js" />
-    <Content Include="Scripts\jquery.validate.js" />
-    <Content Include="Scripts\jquery.validate.min.js" />
-    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
-    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\Andromeda\Controllers\andromeda.controller.typeOfProject.js" />
+    <Content Include="Scripts\Andromeda\Controllers\andromeda.controller.references.js" />
+    <Content Include="Scripts\Andromeda\Controllers\andromeda.controller.courseTitle.js" />
+    <None Include="Scripts\Jquery\jquery-3.3.1.intellisense.js" />
+    <Content Include="Scripts\Jquery\jquery-3.3.1.js" />
+    <Content Include="Scripts\Jquery\jquery-3.3.1.min.js" />
+    <Content Include="Scripts\Jquery\jquery-3.3.1.slim.js" />
+    <Content Include="Scripts\Jquery\jquery-3.3.1.slim.min.js" />
+    <None Include="Scripts\Jquery\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\Jquery\jquery.validate.js" />
+    <Content Include="Scripts\Jquery\jquery.validate.min.js" />
+    <Content Include="Scripts\Jquery\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\Jquery\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
-    <Content Include="Scripts\popper-utils.js" />
-    <Content Include="Scripts\popper-utils.min.js" />
-    <Content Include="Scripts\popper.js" />
-    <Content Include="Scripts\popper.min.js" />
-    <Content Include="Scripts\respond.js" />
-    <Content Include="Scripts\respond.matchmedia.addListener.js" />
-    <Content Include="Scripts\respond.matchmedia.addListener.min.js" />
-    <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\Popper\popper-utils.js" />
+    <Content Include="Scripts\Popper\popper-utils.min.js" />
+    <Content Include="Scripts\Popper\popper.js" />
+    <Content Include="Scripts\Popper\popper.min.js" />
+    <Content Include="Scripts\Respond\respond.js" />
+    <Content Include="Scripts\Respond\respond.matchmedia.addListener.js" />
+    <Content Include="Scripts\Respond\respond.matchmedia.addListener.min.js" />
+    <Content Include="Scripts\Respond\respond.min.js" />
     <Content Include="Scripts\umd\popper-utils.js" />
     <Content Include="Scripts\umd\popper-utils.min.js" />
     <Content Include="Scripts\umd\popper.js" />
@@ -274,18 +281,32 @@
     <Content Include="Scripts\umd\popper-utils.min.js.map" />
     <Content Include="Scripts\umd\popper-utils.js.map" />
     <Content Include="Scripts\README.md" />
-    <Content Include="Scripts\popper.min.js.map" />
-    <Content Include="Scripts\popper.js.map" />
-    <Content Include="Scripts\popper-utils.min.js.map" />
-    <Content Include="Scripts\popper-utils.js.map" />
+    <Content Include="Scripts\Popper\popper.min.js.map" />
+    <Content Include="Scripts\Popper\popper.js.map" />
+    <Content Include="Scripts\Popper\popper-utils.min.js.map" />
+    <Content Include="Scripts\Popper\popper-utils.js.map" />
     <Content Include="Views\Base\Home.cshtml" />
     <Content Include="Views\Base\Login.cshtml" />
+    <Content Include="Views\Base\Account.cshtml" />
+    <Content Include="Views\Base\Help.cshtml" />
+    <Content Include="Views\Base\Settings.cshtml" />
+    <Content Include="Views\Administration\Users.cshtml" />
+    <Content Include="Views\Administration\Roles.cshtml" />
+    <Content Include="Views\Administration\Rights.cshtml" />
+    <Content Include="Views\CirriculumDevelopment\Seats.cshtml" />
+    <Content Include="Views\CirriculumDevelopment\Workers.cshtml" />
+    <Content Include="Views\CirriculumDevelopment\AreasOfTraining.cshtml" />
+    <Content Include="Views\CirriculumDevelopment\WorkingCirriculums.cshtml" />
+    <Content Include="Views\References\TypesOfProjects.cshtml" />
+    <Content Include="Views\References\CourseTitles.cshtml" />
+    <Content Include="Views\References\Faculties.cshtml" />
+    <Content Include="Views\References\Departments.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
     <None Include="packages.config" />
-    <Content Include="Scripts\jquery-3.3.1.slim.min.map" />
-    <Content Include="Scripts\jquery-3.3.1.min.map" />
+    <Content Include="Scripts\Jquery\jquery-3.3.1.slim.min.map" />
+    <Content Include="Scripts\Jquery\jquery-3.3.1.min.map" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
@@ -297,6 +318,10 @@
     <ProjectReference Include="..\Core\Core.csproj">
       <Project>{778af73c-d0b4-45b8-9c47-f08e0c95948f}</Project>
       <Name>Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Models\Models.csproj">
+      <Project>{B734A6CF-420F-4DFD-9159-1E2784B00D8F}</Project>
+      <Name>Models</Name>
     </ProjectReference>
     <ProjectReference Include="..\ViewModels\ViewModels.csproj">
       <Project>{d7e5e19a-54b4-492c-8843-57a629cbbaa0}</Project>

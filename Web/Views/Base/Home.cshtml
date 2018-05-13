@@ -5,47 +5,47 @@
 }
 <div flex hide-sm hide-xs layout-padding layout="column">
     <div layout="row" layout-align="center center">
-        <md-button ng-click="select_item(item)" ng-repeat="item in references">
+        <md-button ng-click="selectItem(item)" ng-repeat="item in references">
             <md-icon class="big-icon" md-colors="{color:'primary-500'}">{{item.Icon}}</md-icon>
-            <md-tooltip md-direction="bottom" style="font-size:14px;">{{item.Text}}</md-tooltip>
+            <md-tooltip md-direction="bottom"><span class="md-body-2">{{item.Text}}</span></md-tooltip>
         </md-button>
     </div>
     <div layout="row" layout-align="center center">
-        <md-button ng-click="select_item(item)" ng-repeat="item in pages">
+        <md-button ng-click="selectItem(item)" ng-repeat="item in pages">
             <md-icon class="big-icon" md-colors="{color:'accent-500'}">{{item.Icon}}</md-icon>
-            <md-tooltip md-direction="bottom" style="font-size:14px;">{{item.Text}}</md-tooltip>
+            <md-tooltip md-direction="bottom"><span class="md-body-2">{{item.Text}}</span></md-tooltip>
         </md-button>
     </div>
     <div layout="row" layout-align="center center">
-        <md-button ng-click="select_item(item)" ng-repeat="item in administration" layout="column">
+        <md-button ng-click="selectItem(item)" ng-repeat="item in administration" layout="column">
             <md-icon class="big-icon" md-colors="{color:'primary-500'}">{{item.Icon}}</md-icon>
-            <md-tooltip md-direction="bottom" style="font-size:14px;">{{item.Text}}</md-tooltip>
+            <md-tooltip md-direction="bottom"><span class="md-body-2">{{item.Text}}</span></md-tooltip>
         </md-button>
     </div>
 </div>
 
 <div flex show-sm show-xs hide-gt-sm layout-padding layout="column">
     <div layout="row" layout-align="center center" layout-margin>
-        <md-button ng-click="select_item(item)" class="medium-button" ng-repeat="item in references" layout="column">
+        <md-button ng-click="selectItem(item)" class="medium-button" ng-repeat="item in references" layout="column">
             <span flex></span>
             <md-icon class="medium-icon" md-colors="{color:'accent-500'}">{{item.Icon}}</md-icon>
-            <md-tooltip md-direction="bottom">{{item.Text}}</md-tooltip>
+            <md-tooltip md-direction="bottom"><span class="md-body-2">{{item.Text}}</span></md-tooltip>
             <span flex></span>
         </md-button>
     </div>
     <div layout="row" layout-align="center center" layout-margin>
-        <md-button ng-click="select_item(item)" class="medium-button" ng-repeat="item in pages" layout="column">
+        <md-button ng-click="selectItem(item)" class="medium-button" ng-repeat="item in pages" layout="column">
             <span flex></span>
             <md-icon class="medium-icon" md-colors="{color:'primary-500'}">{{item.Icon}}</md-icon>
-            <md-tooltip md-direction="bottom">{{item.Text}}</md-tooltip>
+            <md-tooltip md-direction="bottom"><span class="md-body-2">{{item.Text}}</span></md-tooltip>
             <span flex></span>
         </md-button>
     </div>
     <div layout="row" layout-align="center center" layout-margin>
-        <md-button ng-click="select_item(item)" class="medium-button" ng-repeat="item in administration" layout="column">
+        <md-button ng-click="selectItem(item)" class="medium-button" ng-repeat="item in administration" layout="column">
             <span flex></span>
             <md-icon class="medium-icon" md-colors="{color:'primary-500'}">{{item.Icon}}</md-icon>
-            <md-tooltip md-direction="bottom">{{item.Text}}</md-tooltip>
+            <md-tooltip md-direction="bottom"><span class="md-body-2">{{item.Text}}</span></md-tooltip>
             <span flex></span>
         </md-button>
     </div>

@@ -19,6 +19,7 @@
         public virtual DbSet<LogError> LogErrors { get; set; }
         public virtual DbSet<Role> Roles { get; set; }
         public virtual DbSet<Right> Rights { get; set; }
+        public virtual DbSet<RightRole> RightRoles { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<UserRoles> UserRoles { get; set; }
         public virtual DbSet<Department> Departments { get; set; }
@@ -46,7 +47,7 @@
         #region Functions
         public static DBContext Create()
         {
-            throw new NotImplementedException();
+            return new DBContext();
         }
         #endregion
     }
@@ -182,50 +183,17 @@
                 new Role
                 {
                     Id = new Guid("AE9F0C57-DBB3-455F-A578-91C4CDCA3D79"),
-                    Name = "Декан факультета",
-                    Rights = new List<Right>
-                    {
-                        //Права просмотра
-                        context.Rights.Find(new Guid("70D3CB1F-48BA-44C5-B551-3A19DE0F32C1")),
-                        context.Rights.Find(new Guid("E0AFAFE5-D9C8-40BE-AF1D-A2444DA1D38B")),
-                        context.Rights.Find(new Guid("76C77E38-21FF-441D-8053-8F8915084B47")),
-                        context.Rights.Find(new Guid("8753EF72-BE1B-48C1-996D-DFEF39C96DE5")),
-                        context.Rights.Find(new Guid("0EF53537-45CD-4301-9DC0-F7082593C9F9")),
-
-                        //Права редактирования
-                        context.Rights.Find(new Guid("6870BC22-BE78-48DC-A379-D833950721BF")),
-                        context.Rights.Find(new Guid("E9965941-EBB8-4FDE-84AA-F2BFC7871F06")),
-                        context.Rights.Find(new Guid("91449349-05C9-4B8A-980B-0B3A5111E8C5")),
-                    }
+                    Name = "Декан факультета"
                 },
                 new Role
                 {
-                    Id = Guid.NewGuid(),
-                    Name = "Заместитель декана по научной работе",
-                    Rights = new List<Right>
-                    {
-                        context.Rights.Find(new Guid("70D3CB1F-48BA-44C5-B551-3A19DE0F32C1")),
-                        context.Rights.Find(new Guid("8753EF72-BE1B-48C1-996D-DFEF39C96DE5")),
-                        context.Rights.Find(new Guid("0EF53537-45CD-4301-9DC0-F7082593C9F9")),
-                    }
+                    Id = new Guid("0FBD50CE-BAF3-4376-ACBF-24651DC79247"),
+                    Name = "Заместитель декана по научной работе"
                 },
                 new Role
                 {
-                    Id = Guid.NewGuid(),
-                    Name = "Заместитель декана",
-                    Rights = new List<Right>
-                    {
-                        context.Rights.Find(new Guid("70D3CB1F-48BA-44C5-B551-3A19DE0F32C1")),
-                        context.Rights.Find(new Guid("E0AFAFE5-D9C8-40BE-AF1D-A2444DA1D38B")),
-                        context.Rights.Find(new Guid("76C77E38-21FF-441D-8053-8F8915084B47")),
-                        context.Rights.Find(new Guid("8753EF72-BE1B-48C1-996D-DFEF39C96DE5")),
-                        context.Rights.Find(new Guid("0EF53537-45CD-4301-9DC0-F7082593C9F9")),
-
-                        //Права редактирования
-                        context.Rights.Find(new Guid("6870BC22-BE78-48DC-A379-D833950721BF")),
-                        context.Rights.Find(new Guid("E9965941-EBB8-4FDE-84AA-F2BFC7871F06")),
-                        context.Rights.Find(new Guid("91449349-05C9-4B8A-980B-0B3A5111E8C5")),
-                    }
+                    Id = new Guid("B6C64F20-36A4-4354-825E-224101282D13"),
+                    Name = "Заместитель декана"
                 }
             };
                 #endregion
@@ -233,47 +201,23 @@
                 List<Role> professorsRoles = new List<Role> {
                 new Role
                 {
-                    Id = Guid.NewGuid(),
-                    Name = "Профессор",
-                    Rights = new List<Right>
-                    {
-                        context.Rights.Find(new Guid("70D3CB1F-48BA-44C5-B551-3A19DE0F32C1")),
-                        context.Rights.Find(new Guid("8753EF72-BE1B-48C1-996D-DFEF39C96DE5")),
-                        context.Rights.Find(new Guid("0EF53537-45CD-4301-9DC0-F7082593C9F9")),
-                    }
+                    Id = new Guid("434800B0-3C75-4D6E-9375-C0BD8FDA6C30"),
+                    Name = "Профессор"
                 },
                 new Role
                 {
                     Id = new Guid("9BA6F885-DBDA-4755-A913-A678141FC951"),
-                    Name = "Доцент",
-                    Rights = new List<Right>
-                    {
-                        context.Rights.Find(new Guid("70D3CB1F-48BA-44C5-B551-3A19DE0F32C1")),
-                        context.Rights.Find(new Guid("8753EF72-BE1B-48C1-996D-DFEF39C96DE5")),
-                        context.Rights.Find(new Guid("0EF53537-45CD-4301-9DC0-F7082593C9F9")),
-                    }
+                    Name = "Доцент"
                 },
                 new Role
                 {
-                    Id = Guid.NewGuid(),
-                    Name = "Старший преподаватель",
-                    Rights = new List<Right>
-                    {
-                        context.Rights.Find(new Guid("70D3CB1F-48BA-44C5-B551-3A19DE0F32C1")),
-                        context.Rights.Find(new Guid("8753EF72-BE1B-48C1-996D-DFEF39C96DE5")),
-                        context.Rights.Find(new Guid("0EF53537-45CD-4301-9DC0-F7082593C9F9")),
-                    }
+                    Id = new Guid("629AC417-9C60-4915-AB27-925ADF2EBB9C"),
+                    Name = "Старший преподаватель"
                 },
                 new Role
                 {
-                    Id = Guid.NewGuid(),
-                    Name = "Ассистент",
-                    Rights = new List<Right>
-                    {
-                        context.Rights.Find(new Guid("70D3CB1F-48BA-44C5-B551-3A19DE0F32C1")),
-                        context.Rights.Find(new Guid("8753EF72-BE1B-48C1-996D-DFEF39C96DE5")),
-                        context.Rights.Find(new Guid("0EF53537-45CD-4301-9DC0-F7082593C9F9")),
-                    }
+                    Id = new Guid("77C62DBF-4B7C-40F5-897D-A0A33A26FACF"),
+                    Name = "Ассистент"
                 }
             };
                 #endregion
@@ -283,34 +227,12 @@
                 new Role
                 {
                     Id = new Guid("556CAB08-1CC0-40E7-B665-4E59E59189E4"),
-                    Name = "Администратор системы",
-                    Rights = context.Rights.ToList()
+                    Name = "Администратор системы"
                 },
                 new Role
                 {
                     Id = new Guid("4385812B-D4B9-4544-83F1-6B3C13E43D0B"),
-                    Name = "Администратор контента",
-                    Rights = new List<Right>
-                    {
-                        //Права просмотра
-                        context.Rights.Find(new Guid("70D3CB1F-48BA-44C5-B551-3A19DE0F32C1")),
-                        context.Rights.Find(new Guid("E0AFAFE5-D9C8-40BE-AF1D-A2444DA1D38B")),
-                        context.Rights.Find(new Guid("61683D42-2511-43A4-9C54-389BF6DD7F3A")),
-                        context.Rights.Find(new Guid("76C77E38-21FF-441D-8053-8F8915084B47")),
-                        context.Rights.Find(new Guid("B63143D4-88E5-44C9-A405-A06FAAA0CC06")),
-                        context.Rights.Find(new Guid("8753EF72-BE1B-48C1-996D-DFEF39C96DE5")),
-                        context.Rights.Find(new Guid("0EF53537-45CD-4301-9DC0-F7082593C9F9")),
-                        
-                        //Права редактирования
-                        context.Rights.Find(new Guid("6870BC22-BE78-48DC-A379-D833950721BF")),
-                        context.Rights.Find(new Guid("E9965941-EBB8-4FDE-84AA-F2BFC7871F06")),
-                        context.Rights.Find(new Guid("EA2FD1D1-F2A3-4CD7-A895-DDB9375FA279")),
-                        context.Rights.Find(new Guid("91449349-05C9-4B8A-980B-0B3A5111E8C5")),
-                        context.Rights.Find(new Guid("E8396F8F-976B-4245-AF38-7B0307D433F9")),
-                        context.Rights.Find(new Guid("324FED41-A69C-40BC-9630-6D197F717A99")),
-                        context.Rights.Find(new Guid("4B5FF91F-B937-428E-ADEC-9832FA7D9560")),
-                        context.Rights.Find(new Guid("AB239C50-39E0-4CD1-B7A6-C63F8B87F1CE")),
-                    }
+                    Name = "Администратор контента"
                 }
             };
                 #endregion
@@ -319,60 +241,17 @@
                 new Role
                 {
                     Id = new Guid("6EA303EA-96CF-49E3-BB2E-56EB0ADC032C"),
-                    Name = "Заведующий кафедрой",
-                    Rights = new List<Right>
-                    {
-                        //Права просмотра
-                        context.Rights.Find(new Guid("70D3CB1F-48BA-44C5-B551-3A19DE0F32C1")),
-                        context.Rights.Find(new Guid("61683D42-2511-43A4-9C54-389BF6DD7F3A")),
-                        context.Rights.Find(new Guid("B63143D4-88E5-44C9-A405-A06FAAA0CC06")),
-                        context.Rights.Find(new Guid("8753EF72-BE1B-48C1-996D-DFEF39C96DE5")),
-                        context.Rights.Find(new Guid("0EF53537-45CD-4301-9DC0-F7082593C9F9")),
-    
-                        //Права редактирования
-                        context.Rights.Find(new Guid("6870BC22-BE78-48DC-A379-D833950721BF")),
-                        context.Rights.Find(new Guid("EA2FD1D1-F2A3-4CD7-A895-DDB9375FA279")),
-                        context.Rights.Find(new Guid("E8396F8F-976B-4245-AF38-7B0307D433F9")),
-                        context.Rights.Find(new Guid("324FED41-A69C-40BC-9630-6D197F717A99")),
-                        context.Rights.Find(new Guid("4B5FF91F-B937-428E-ADEC-9832FA7D9560")),
-                        context.Rights.Find(new Guid("AB239C50-39E0-4CD1-B7A6-C63F8B87F1CE")),
-                    }
+                    Name = "Заведующий кафедрой"
                 },
                 new Role
                 {
-                    Id = Guid.NewGuid(),
-                    Name = "Инженер",
-                    Rights = new List<Right>
-                    {
-                        //Права просмотра
-                        context.Rights.Find(new Guid("70D3CB1F-48BA-44C5-B551-3A19DE0F32C1")),
-                        context.Rights.Find(new Guid("8753EF72-BE1B-48C1-996D-DFEF39C96DE5")),
-                        context.Rights.Find(new Guid("0EF53537-45CD-4301-9DC0-F7082593C9F9")),
-    
-                        //Права редактирования
-                        context.Rights.Find(new Guid("6870BC22-BE78-48DC-A379-D833950721BF")),
-                        context.Rights.Find(new Guid("324FED41-A69C-40BC-9630-6D197F717A99")),
-                        context.Rights.Find(new Guid("4B5FF91F-B937-428E-ADEC-9832FA7D9560")),
-                        context.Rights.Find(new Guid("AB239C50-39E0-4CD1-B7A6-C63F8B87F1CE")),
-                    }
+                    Id = new Guid("3C40DC47-4D84-4D1F-BE5B-6E15E11A30D9"),
+                    Name = "Инженер"
                 },
                 new Role
                 {
-                    Id = Guid.NewGuid(),
-                    Name = "Методист",
-                    Rights = new List<Right>
-                    {
-                        //Права просмотра
-                        context.Rights.Find(new Guid("70D3CB1F-48BA-44C5-B551-3A19DE0F32C1")),
-                        context.Rights.Find(new Guid("8753EF72-BE1B-48C1-996D-DFEF39C96DE5")),
-                        context.Rights.Find(new Guid("0EF53537-45CD-4301-9DC0-F7082593C9F9")),
-    
-                        //Права редактирования
-                        context.Rights.Find(new Guid("6870BC22-BE78-48DC-A379-D833950721BF")),
-                        context.Rights.Find(new Guid("324FED41-A69C-40BC-9630-6D197F717A99")),
-                        context.Rights.Find(new Guid("4B5FF91F-B937-428E-ADEC-9832FA7D9560")),
-                        context.Rights.Find(new Guid("AB239C50-39E0-4CD1-B7A6-C63F8B87F1CE")),
-                    }
+                    Id = new Guid("3B801C0A-C3BE-40B9-8A55-5FFB54A4E21D"),
+                    Name = "Методист"
                 }
             };
                 #endregion
@@ -1226,6 +1105,132 @@
                 context.Departments.Add(faculty);
                 #endregion
                 context.SaveChanges();
+                #endregion
+
+                #region Выделение прав ролям пользователей
+                #region Выделение прав ролям деканата
+                context.RightRoles.AddRange(new List<RightRole>
+                {
+                    new RightRole{ RoleId = new Guid("AE9F0C57-DBB3-455F-A578-91C4CDCA3D79"),RightId = new Guid("70D3CB1F-48BA-44C5-B551-3A19DE0F32C1") },
+                    new RightRole{ RoleId = new Guid("AE9F0C57-DBB3-455F-A578-91C4CDCA3D79"),RightId = new Guid("E0AFAFE5-D9C8-40BE-AF1D-A2444DA1D38B") },
+                    new RightRole{ RoleId = new Guid("AE9F0C57-DBB3-455F-A578-91C4CDCA3D79"),RightId = new Guid("76C77E38-21FF-441D-8053-8F8915084B47") },
+                    new RightRole{ RoleId = new Guid("AE9F0C57-DBB3-455F-A578-91C4CDCA3D79"),RightId = new Guid("8753EF72-BE1B-48C1-996D-DFEF39C96DE5") },
+                    new RightRole{ RoleId = new Guid("AE9F0C57-DBB3-455F-A578-91C4CDCA3D79"),RightId = new Guid("0EF53537-45CD-4301-9DC0-F7082593C9F9") },
+                    new RightRole{ RoleId = new Guid("AE9F0C57-DBB3-455F-A578-91C4CDCA3D79"),RightId = new Guid("6870BC22-BE78-48DC-A379-D833950721BF") },
+                    new RightRole{ RoleId = new Guid("AE9F0C57-DBB3-455F-A578-91C4CDCA3D79"),RightId = new Guid("E9965941-EBB8-4FDE-84AA-F2BFC7871F06") },
+                    new RightRole{ RoleId = new Guid("AE9F0C57-DBB3-455F-A578-91C4CDCA3D79"),RightId = new Guid("91449349-05C9-4B8A-980B-0B3A5111E8C5") },
+                });
+                context.RightRoles.AddRange(new List<RightRole>
+                {
+                    new RightRole{ RoleId = new Guid("0FBD50CE-BAF3-4376-ACBF-24651DC79247"),RightId = new Guid("70D3CB1F-48BA-44C5-B551-3A19DE0F32C1") },
+                    new RightRole{ RoleId = new Guid("0FBD50CE-BAF3-4376-ACBF-24651DC79247"),RightId = new Guid("8753EF72-BE1B-48C1-996D-DFEF39C96DE5") },
+                    new RightRole{ RoleId = new Guid("0FBD50CE-BAF3-4376-ACBF-24651DC79247"),RightId = new Guid("0EF53537-45CD-4301-9DC0-F7082593C9F9") },
+                });
+                context.RightRoles.AddRange(new List<RightRole>
+                {
+                    new RightRole{ RoleId = new Guid("B6C64F20-36A4-4354-825E-224101282D13"),RightId = new Guid("70D3CB1F-48BA-44C5-B551-3A19DE0F32C1") },
+                    new RightRole{ RoleId = new Guid("B6C64F20-36A4-4354-825E-224101282D13"),RightId = new Guid("E0AFAFE5-D9C8-40BE-AF1D-A2444DA1D38B") },
+                    new RightRole{ RoleId = new Guid("B6C64F20-36A4-4354-825E-224101282D13"),RightId = new Guid("76C77E38-21FF-441D-8053-8F8915084B47") },
+                    new RightRole{ RoleId = new Guid("B6C64F20-36A4-4354-825E-224101282D13"),RightId = new Guid("8753EF72-BE1B-48C1-996D-DFEF39C96DE5") },
+                    new RightRole{ RoleId = new Guid("B6C64F20-36A4-4354-825E-224101282D13"),RightId = new Guid("0EF53537-45CD-4301-9DC0-F7082593C9F9") },
+                    new RightRole{ RoleId = new Guid("B6C64F20-36A4-4354-825E-224101282D13"),RightId = new Guid("6870BC22-BE78-48DC-A379-D833950721BF") },
+                    new RightRole{ RoleId = new Guid("B6C64F20-36A4-4354-825E-224101282D13"),RightId = new Guid("E9965941-EBB8-4FDE-84AA-F2BFC7871F06") },
+                    new RightRole{ RoleId = new Guid("B6C64F20-36A4-4354-825E-224101282D13"),RightId = new Guid("91449349-05C9-4B8A-980B-0B3A5111E8C5") },
+                });
+                #endregion
+
+                #region Выделение прав ролям кафедры
+                context.RightRoles.AddRange(new List<RightRole>
+                {
+                    new RightRole{ RoleId = new Guid("6EA303EA-96CF-49E3-BB2E-56EB0ADC032C"),RightId = new Guid("70D3CB1F-48BA-44C5-B551-3A19DE0F32C1") },
+                    new RightRole{ RoleId = new Guid("6EA303EA-96CF-49E3-BB2E-56EB0ADC032C"),RightId = new Guid("61683D42-2511-43A4-9C54-389BF6DD7F3A") },
+                    new RightRole{ RoleId = new Guid("6EA303EA-96CF-49E3-BB2E-56EB0ADC032C"),RightId = new Guid("B63143D4-88E5-44C9-A405-A06FAAA0CC06") },
+                    new RightRole{ RoleId = new Guid("6EA303EA-96CF-49E3-BB2E-56EB0ADC032C"),RightId = new Guid("8753EF72-BE1B-48C1-996D-DFEF39C96DE5") },
+                    new RightRole{ RoleId = new Guid("6EA303EA-96CF-49E3-BB2E-56EB0ADC032C"),RightId = new Guid("0EF53537-45CD-4301-9DC0-F7082593C9F9") },
+
+                    new RightRole{ RoleId = new Guid("6EA303EA-96CF-49E3-BB2E-56EB0ADC032C"),RightId = new Guid("6870BC22-BE78-48DC-A379-D833950721BF") },
+                    new RightRole{ RoleId = new Guid("6EA303EA-96CF-49E3-BB2E-56EB0ADC032C"),RightId = new Guid("EA2FD1D1-F2A3-4CD7-A895-DDB9375FA279") },
+                    new RightRole{ RoleId = new Guid("6EA303EA-96CF-49E3-BB2E-56EB0ADC032C"),RightId = new Guid("E8396F8F-976B-4245-AF38-7B0307D433F9") },
+                    new RightRole{ RoleId = new Guid("6EA303EA-96CF-49E3-BB2E-56EB0ADC032C"),RightId = new Guid("324FED41-A69C-40BC-9630-6D197F717A99") },
+                    new RightRole{ RoleId = new Guid("6EA303EA-96CF-49E3-BB2E-56EB0ADC032C"),RightId = new Guid("4B5FF91F-B937-428E-ADEC-9832FA7D9560") },
+                    new RightRole{ RoleId = new Guid("6EA303EA-96CF-49E3-BB2E-56EB0ADC032C"),RightId = new Guid("AB239C50-39E0-4CD1-B7A6-C63F8B87F1CE") },
+                });
+                context.RightRoles.AddRange(new List<RightRole>
+                {
+                    new RightRole{ RoleId = new Guid("3C40DC47-4D84-4D1F-BE5B-6E15E11A30D9"),RightId = new Guid("70D3CB1F-48BA-44C5-B551-3A19DE0F32C1") },
+                    new RightRole{ RoleId = new Guid("3C40DC47-4D84-4D1F-BE5B-6E15E11A30D9"),RightId = new Guid("8753EF72-BE1B-48C1-996D-DFEF39C96DE5") },
+                    new RightRole{ RoleId = new Guid("3C40DC47-4D84-4D1F-BE5B-6E15E11A30D9"),RightId = new Guid("0EF53537-45CD-4301-9DC0-F7082593C9F9") },
+
+                    new RightRole{ RoleId = new Guid("3C40DC47-4D84-4D1F-BE5B-6E15E11A30D9"),RightId = new Guid("6870BC22-BE78-48DC-A379-D833950721BF") },
+                    new RightRole{ RoleId = new Guid("3C40DC47-4D84-4D1F-BE5B-6E15E11A30D9"),RightId = new Guid("324FED41-A69C-40BC-9630-6D197F717A99") },
+                    new RightRole{ RoleId = new Guid("3C40DC47-4D84-4D1F-BE5B-6E15E11A30D9"),RightId = new Guid("4B5FF91F-B937-428E-ADEC-9832FA7D9560") },
+                    new RightRole{ RoleId = new Guid("3C40DC47-4D84-4D1F-BE5B-6E15E11A30D9"),RightId = new Guid("AB239C50-39E0-4CD1-B7A6-C63F8B87F1CE") },
+                });
+                context.RightRoles.AddRange(new List<RightRole>
+                {
+                    new RightRole{ RoleId = new Guid("3B801C0A-C3BE-40B9-8A55-5FFB54A4E21D"),RightId = new Guid("70D3CB1F-48BA-44C5-B551-3A19DE0F32C1") },
+                    new RightRole{ RoleId = new Guid("3B801C0A-C3BE-40B9-8A55-5FFB54A4E21D"),RightId = new Guid("8753EF72-BE1B-48C1-996D-DFEF39C96DE5") },
+                    new RightRole{ RoleId = new Guid("3B801C0A-C3BE-40B9-8A55-5FFB54A4E21D"),RightId = new Guid("0EF53537-45CD-4301-9DC0-F7082593C9F9") },
+
+                    new RightRole{ RoleId = new Guid("3B801C0A-C3BE-40B9-8A55-5FFB54A4E21D"),RightId = new Guid("6870BC22-BE78-48DC-A379-D833950721BF") },
+                    new RightRole{ RoleId = new Guid("3B801C0A-C3BE-40B9-8A55-5FFB54A4E21D"),RightId = new Guid("324FED41-A69C-40BC-9630-6D197F717A99") },
+                    new RightRole{ RoleId = new Guid("3B801C0A-C3BE-40B9-8A55-5FFB54A4E21D"),RightId = new Guid("4B5FF91F-B937-428E-ADEC-9832FA7D9560") },
+                    new RightRole{ RoleId = new Guid("3B801C0A-C3BE-40B9-8A55-5FFB54A4E21D"),RightId = new Guid("AB239C50-39E0-4CD1-B7A6-C63F8B87F1CE") },
+                });
+                #endregion
+
+                #region Выделение прав ролям администраторов
+                foreach (Guid rightId in context.Rights.Select(o => o.Id))
+                {
+                    context.RightRoles.Add(new RightRole { RoleId = new Guid("556CAB08-1CC0-40E7-B665-4E59E59189E4"), RightId = rightId });
+                }
+                context.RightRoles.AddRange(new List<RightRole>
+                {
+                    new RightRole{ RoleId = new Guid("4385812B-D4B9-4544-83F1-6B3C13E43D0B"),RightId = new Guid("70D3CB1F-48BA-44C5-B551-3A19DE0F32C1") },
+                    new RightRole{ RoleId = new Guid("4385812B-D4B9-4544-83F1-6B3C13E43D0B"),RightId = new Guid("E0AFAFE5-D9C8-40BE-AF1D-A2444DA1D38B") },
+                    new RightRole{ RoleId = new Guid("4385812B-D4B9-4544-83F1-6B3C13E43D0B"),RightId = new Guid("61683D42-2511-43A4-9C54-389BF6DD7F3A") },
+                    new RightRole{ RoleId = new Guid("4385812B-D4B9-4544-83F1-6B3C13E43D0B"),RightId = new Guid("76C77E38-21FF-441D-8053-8F8915084B47") },
+                    new RightRole{ RoleId = new Guid("4385812B-D4B9-4544-83F1-6B3C13E43D0B"),RightId = new Guid("B63143D4-88E5-44C9-A405-A06FAAA0CC06") },
+                    new RightRole{ RoleId = new Guid("4385812B-D4B9-4544-83F1-6B3C13E43D0B"),RightId = new Guid("8753EF72-BE1B-48C1-996D-DFEF39C96DE5") },
+                    new RightRole{ RoleId = new Guid("4385812B-D4B9-4544-83F1-6B3C13E43D0B"),RightId = new Guid("0EF53537-45CD-4301-9DC0-F7082593C9F9") },
+
+                    new RightRole{ RoleId = new Guid("4385812B-D4B9-4544-83F1-6B3C13E43D0B"),RightId = new Guid("6870BC22-BE78-48DC-A379-D833950721BF") },
+                    new RightRole{ RoleId = new Guid("4385812B-D4B9-4544-83F1-6B3C13E43D0B"),RightId = new Guid("E9965941-EBB8-4FDE-84AA-F2BFC7871F06") },
+                    new RightRole{ RoleId = new Guid("4385812B-D4B9-4544-83F1-6B3C13E43D0B"),RightId = new Guid("EA2FD1D1-F2A3-4CD7-A895-DDB9375FA279") },
+                    new RightRole{ RoleId = new Guid("4385812B-D4B9-4544-83F1-6B3C13E43D0B"),RightId = new Guid("91449349-05C9-4B8A-980B-0B3A5111E8C5") },
+                    new RightRole{ RoleId = new Guid("4385812B-D4B9-4544-83F1-6B3C13E43D0B"),RightId = new Guid("E8396F8F-976B-4245-AF38-7B0307D433F9") },
+                    new RightRole{ RoleId = new Guid("4385812B-D4B9-4544-83F1-6B3C13E43D0B"),RightId = new Guid("324FED41-A69C-40BC-9630-6D197F717A99") },
+                    new RightRole{ RoleId = new Guid("4385812B-D4B9-4544-83F1-6B3C13E43D0B"),RightId = new Guid("4B5FF91F-B937-428E-ADEC-9832FA7D9560") },
+                    new RightRole{ RoleId = new Guid("4385812B-D4B9-4544-83F1-6B3C13E43D0B"),RightId = new Guid("AB239C50-39E0-4CD1-B7A6-C63F8B87F1CE") },
+                });
+                #endregion
+
+                #region Выделение прав ролям ппс
+                context.RightRoles.AddRange(new List<RightRole>
+                {
+                    new RightRole{ RoleId = new Guid("434800B0-3C75-4D6E-9375-C0BD8FDA6C30"),RightId = new Guid("70D3CB1F-48BA-44C5-B551-3A19DE0F32C1") },
+                    new RightRole{ RoleId = new Guid("434800B0-3C75-4D6E-9375-C0BD8FDA6C30"),RightId = new Guid("8753EF72-BE1B-48C1-996D-DFEF39C96DE5") },
+                    new RightRole{ RoleId = new Guid("434800B0-3C75-4D6E-9375-C0BD8FDA6C30"),RightId = new Guid("0EF53537-45CD-4301-9DC0-F7082593C9F9") },
+                });
+                context.RightRoles.AddRange(new List<RightRole>
+                {
+                    new RightRole{ RoleId = new Guid("9BA6F885-DBDA-4755-A913-A678141FC951"),RightId = new Guid("70D3CB1F-48BA-44C5-B551-3A19DE0F32C1") },
+                    new RightRole{ RoleId = new Guid("9BA6F885-DBDA-4755-A913-A678141FC951"),RightId = new Guid("8753EF72-BE1B-48C1-996D-DFEF39C96DE5") },
+                    new RightRole{ RoleId = new Guid("9BA6F885-DBDA-4755-A913-A678141FC951"),RightId = new Guid("0EF53537-45CD-4301-9DC0-F7082593C9F9") },
+                });
+                context.RightRoles.AddRange(new List<RightRole>
+                {
+                    new RightRole{ RoleId = new Guid("629AC417-9C60-4915-AB27-925ADF2EBB9C"),RightId = new Guid("70D3CB1F-48BA-44C5-B551-3A19DE0F32C1") },
+                    new RightRole{ RoleId = new Guid("629AC417-9C60-4915-AB27-925ADF2EBB9C"),RightId = new Guid("8753EF72-BE1B-48C1-996D-DFEF39C96DE5") },
+                    new RightRole{ RoleId = new Guid("629AC417-9C60-4915-AB27-925ADF2EBB9C"),RightId = new Guid("0EF53537-45CD-4301-9DC0-F7082593C9F9") },
+                });
+                context.RightRoles.AddRange(new List<RightRole>
+                {
+                    new RightRole{ RoleId = new Guid("77C62DBF-4B7C-40F5-897D-A0A33A26FACF"),RightId = new Guid("70D3CB1F-48BA-44C5-B551-3A19DE0F32C1") },
+                    new RightRole{ RoleId = new Guid("77C62DBF-4B7C-40F5-897D-A0A33A26FACF"),RightId = new Guid("8753EF72-BE1B-48C1-996D-DFEF39C96DE5") },
+                    new RightRole{ RoleId = new Guid("77C62DBF-4B7C-40F5-897D-A0A33A26FACF"),RightId = new Guid("0EF53537-45CD-4301-9DC0-F7082593C9F9") },
+                });
+                #endregion
                 #endregion
 
                 #region Выделение ролей факультетам, институтам и кафедрам

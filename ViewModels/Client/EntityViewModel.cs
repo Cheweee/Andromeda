@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Andromeda.ViewModels.Client
 {
-    public class ItemViewModel
+    public class EntityViewModel
     {
     }
 }

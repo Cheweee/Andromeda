@@ -51,3 +51,7 @@ md-toast {
     right: 0 !important;
     padding: 0 30% !important;
 }
+
+input {
+    min-width:300px;
+}

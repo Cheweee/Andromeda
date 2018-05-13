@@ -30,7 +30,7 @@ namespace Andromeda.Models.Administration
         /// <summary>
         /// Collection of rights of the role
         /// </summary>
-        public virtual ICollection<Right> Rights { get; set; }
+        public virtual ICollection<RightRole> RightRoles { get; set; }
         /// <summary>
         /// Collection of departments which include the role
         /// </summary>
@@ -44,7 +44,7 @@ namespace Andromeda.Models.Administration
         public Role()
         {
             this.UserRoles = new HashSet<UserRoles>();
-            this.Rights = new HashSet<Right>();
+            this.RightRoles = new HashSet<RightRole>();
             this.Departments = new HashSet<Department>();
         }
         #endregion
