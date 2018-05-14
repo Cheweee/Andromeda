@@ -92,10 +92,10 @@
                     <md-tooltip direction="bottom"><span class="md-body-2">Выход</span></md-tooltip>
                 </md-button>
             </div>
-            <md-content flex style="padding:8px;" ng-show="access">
+            <md-content style="padding:8px;" flex ng-show="access">
                 @RenderBody()
             </md-content>
-            <md-content flex style="padding:8px;" ng-hide="access">
+            <md-content flex ng-hide="access">
                 <div layout="row" layout-align="center center"> 
                     <md-icon>report</md-icon>
                     <h4>Доступ запрещен!</h4>

@@ -17,7 +17,7 @@
 
     $scope.getDepartments = function () {
         var deferred = $q.defer();
-        service.getEntities('/References/GetDepartments'
+        service.getEntities('/References/GetCourseTitleDepartments'
             , model = { Search: $scope.searchDepartment }).then(function (response) {
                 if (response.data.Result) {
                     var rows = response.data.Entities;
@@ -80,7 +80,9 @@
 			return;
 		}
 		$scope.entity.Name = '';
-		$scope.entity.ShortName = '';
+        $scope.entity.ShortName = '';
+        $scope.entity.DepartmentId = null;
+        $scope.selectedDepartment = null;
 	};
 
 	$scope.confirm = function () {

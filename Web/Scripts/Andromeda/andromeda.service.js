@@ -54,7 +54,7 @@
             }
         };
     };
-    var createLimitOptions = function () { return [5, 10, 15]; };
+    var createLimitOptions = function () { return [5, 10, 15, 20, 30, 50]; };
     //Creating query for md-data-table with sort field definition
     this.createQuery = function (order, getEntitiesUrl) {
         query = {
@@ -157,6 +157,20 @@
             url: url,
             data: JSON.stringify(entities),
             dataType: jsonDataType
+        });
+    };
+    this.changeEntities = function (url, model) {
+        return $http({
+            method: postMethod,
+            url: url,
+            data: model,
+            dataType: jsonDataType
+        });
+    };
+    this.postMethod = function (url) {
+        return $http({
+            method: postMethod,
+            url: url
         });
     };
 });

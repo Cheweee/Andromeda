@@ -53,7 +53,7 @@ namespace Andromeda.Web.Controllers
             return Json(data, JsonRequestBehavior.AllowGet);
         }
         [HttpGet]
-        public JsonResult GetDepartments(EntitiesViewModel model)
+        public JsonResult GetCourseTitleDepartments(EntitiesViewModel model)
         {
             var data = BaseEntityManager.GetEntities<Department, DepartmentViewModel>(
                 o => o.Name.ToLower().Contains((model.Search ?? string.Empty).ToLower()) ||
@@ -80,12 +80,167 @@ namespace Andromeda.Web.Controllers
         {
             return View();
         }
+        [HttpGet]
+        public JsonResult GetDepartments(EntitiesViewModel model)
+        {
+
+            var data = DepartmentManager.GetDepartments(model.Page,
+                model.Limit,
+                model.Order,
+                model.IsAscending(),
+                model.Search);
+
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+        [HttpGet]
+        public JsonResult GetDepartment(Guid id)
+        {
+            var data = DepartmentManager.GetDepartment(id);
+
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+        [HttpGet]
+        public JsonResult GetDepartmentFaculties(EntitiesViewModel model)
+        {
+            var data = BaseEntityManager.GetEntities<Department, DepartmentViewModel>(
+                o => o.IsFaculty && (o.Name.ToLower().Contains((model.Search ?? string.Empty).ToLower()) ||
+            o.ShortName.ToLower().Contains((model.Search ?? string.Empty).ToLower())),
+            o => new DepartmentViewModel
+            {
+                Id = o.Id,
+                Name = o.Name
+            });
+
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+        [HttpPost]
+        public JsonResult IsUserHeadOfDepartment()
+        {
+            var data = UserManager.IsUserHeadOfDepartment();
+
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+        [HttpPost]
+        public JsonResult AddDepartment(Department entity)
+        {
+            entity.Id = Guid.NewGuid();
+            entity.IsFaculty = false;
+            var data = BaseEntityManager.AddEntity(entity);
+
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+        [HttpPost]
+        public JsonResult ModifyDepartment(Department entity)
+        {
+            var data = BaseEntityManager.ModifyEntity(entity);
+
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+        [HttpPost]
+        public JsonResult DeleteDepartments(List<Department> entities)
+        {
+            var data = BaseEntityManager.DeleteEntities(entities);
+
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
         #endregion
         #region Faculties
         [HttpGet]
         public ActionResult Faculties()
         {
             return View();
+        }
+        [HttpGet]
+        public JsonResult GetFaculties(EntitiesViewModel model)
+        {
+            var data = DepartmentManager.GetFaculties(
+                model.Page,
+                model.Limit,
+                model.Order,
+                model.IsAscending(),
+                model.Search);
+
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+        [HttpGet]
+        public JsonResult GetFaculty(Guid id)
+        {
+            var data = BaseEntityManager.GetEntity<Department, DepartmentViewModel>(
+                o=> o.Id == id, o=> new DepartmentViewModel
+                {
+                    Id = o.Id,
+                    Name = o.Name,
+                    ShortName = o.ShortName
+                });
+
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+        [HttpGet]
+        public JsonResult GetNotFacultyDepartments(EntitiesViewModel model)
+        {
+            var data = BaseEntityManager.GetEntities<Department, DepartmentViewModel>(
+                o => !o.IsFaculty && o.FacultyId == null && (o.Name.ToLower().Contains((model.Search ?? string.Empty).ToLower()) ||
+            o.ShortName.ToLower().Contains((model.Search ?? string.Empty).ToLower())),
+            o => new DepartmentViewModel
+            {
+                Id = o.Id,
+                Name = o.Name,
+                ShortName = o.ShortName
+            });
+
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+        [HttpGet]
+        public JsonResult GetFacultyDepartments(EntitiesViewModel model)
+        {
+            var data = BaseEntityManager.GetEntities<Department, DepartmentViewModel>(
+                o => !o.IsFaculty && o.FacultyId == model.SearchId && (o.Name.ToLower().Contains((model.Search ?? string.Empty).ToLower()) ||
+            o.ShortName.ToLower().Contains((model.Search ?? string.Empty).ToLower())),
+            o => new DepartmentViewModel
+            {
+                Id = o.Id,
+                Name = o.Name,
+                ShortName = o.ShortName
+            });
+
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+        [HttpPost]
+        public JsonResult SaveFacultyDepartments(ChangeEntitiesViewModel<Department> model)
+        {
+            var data = DepartmentManager.SaveFacultyDepartments(model.NewId, model.Entities.Select(o => o.Id).ToList());
+
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+        [HttpPost]
+        public JsonResult IsUserDean()
+        {
+            var data = UserManager.IsUserDean();
+
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+        [HttpPost]
+        public JsonResult AddFaculty(Department entity)
+        {
+            entity.Id = Guid.NewGuid();
+            entity.IsFaculty = true;
+            var data = BaseEntityManager.AddEntity(entity);
+
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+        [HttpPost]
+        public JsonResult ModifyFaculty(Department entity)
+        {
+            var data = BaseEntityManager.ModifyEntity(entity);
+
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+        [HttpPost]
+        public JsonResult DeleteFaculties(List<Department> entities)
+        {
+            var data = BaseEntityManager.DeleteEntities(entities);
+
+            return Json(data, JsonRequestBehavior.AllowGet);
         }
         #endregion
         #region TypesOfProjects
@@ -146,5 +301,12 @@ namespace Andromeda.Web.Controllers
             return Json(data, JsonRequestBehavior.AllowGet);
         }
         #endregion
+        [HttpPost]
+        public JsonResult CanUserEditReferences()
+        {
+            var data = UserManager.CanUserEditReferences();
+
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
     }
 }

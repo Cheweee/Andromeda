@@ -373,7 +373,7 @@ namespace Andromeda.Core.Managers
             return result;
         }
 
-        public static IViewModel AddEntity<T>(T entity) where T : class
+        public static IViewModel AddEntity<T>(T entity) where T : class, IKeyEntity<Guid>
         {
             try
             {
@@ -384,14 +384,14 @@ namespace Andromeda.Core.Managers
                     context.SaveChanges();
                 }
 
-                return new ResultViewModel { Result = Result.Ok };
+                return new AddOrEditViewModel { Result = Result.Ok, Id = entity.Id };
             }
             catch(Exception exc)
             {
                 return LogErrorManager.Add(exc);
             }
         }
-        public static IViewModel ModifyEntity<T>(T entity) where T : class
+        public static IViewModel ModifyEntity<T>(T entity) where T : class, IKeyEntity<Guid>
         {
             try
             {
@@ -402,7 +402,7 @@ namespace Andromeda.Core.Managers
                     context.SaveChanges();
                 }
 
-                return new ResultViewModel { Result = Result.Ok };
+                return new AddOrEditViewModel { Result = Result.Ok, Id = entity.Id };
             }
             catch (Exception exc)
             {

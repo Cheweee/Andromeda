@@ -12,6 +12,7 @@ namespace Andromeda.ViewModels.Client
         public int Limit { get; set; }
         public string Search { get; set; }
         public string Order { get; set; }
+        public Guid SearchId { get; set; }
 
         public bool IsAscending()
         {

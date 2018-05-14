@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Client\ChangeCollectionViewModel.cs" />
     <Compile Include="Client\EntitiesViewModel.cs" />
     <Compile Include="Client\EntityViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

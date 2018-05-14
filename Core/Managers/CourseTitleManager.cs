@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Andromeda.Core.Managers
 {
-    public class CourseTitleManager
+    public class CourseTitleManager : BaseEntityManager
     {
         public static IViewModel GetCourseTitles(int page, int limit, string order, bool isAscending, string search)
         {

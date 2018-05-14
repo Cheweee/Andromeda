@@ -28,7 +28,7 @@ namespace Andromeda.Models.References
         /// </summary>
         public string ShortName { get; set; }
         /// <summary>
-        /// Code of the department (required property)
+        /// Code of the department
         /// </summary>
         public int? Code { get; set; }
         /// <summary>

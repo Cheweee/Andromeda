@@ -17,7 +17,7 @@ namespace Andromeda.Common.Extensions
             }
             var param = Expression.Parameter(typeof(TSource), "x");
             var property = Expression.Property(param, propertyName);
-            Expression conversion = Expression.Convert(property, property.Type);
+            Expression conversion = Expression.Convert(property, typeof(object));
             return Expression.Lambda<Func<TSource, object>>(conversion, param);
         }
         public static Func<TSource, object> GetFunc<TSource>(string propertyName)

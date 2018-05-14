@@ -47,14 +47,6 @@ namespace Andromeda.Core.Managers
                     PagesViewModel result = new PagesViewModel { Result = Result.Ok };
                     string login = HttpContext.Current.User.Identity.Name;
                     Guid userId = GetEntityValue<User, Guid>(context, o=> o.Login == login, o=> o.Id);
-                    List<Guid> roleIds =
-                        GetEntitiesWithJoin<User, UserRoles, Guid, Guid>(context,
-                        o => o.Login == login,
-                        o => o.Id,
-                        o => o.UserId,
-                        (fo, so) => fo.RoleId
-                        );
-                    List<Guid> rightIds = GetEntitiesWithJoin<Role, RightRole, Guid, Guid>(context, o=> roleIds.Contains(o.Id), fo=>fo.Id, so=> so.RoleId, (fo, so) => fo.RightId);
 
                     if (userId == Guid.Empty)
                     {
@@ -63,6 +55,14 @@ namespace Andromeda.Core.Managers
 
                         return result;
                     }
+                    List<Guid> roleIds =
+                        GetEntitiesWithJoin<User, UserRoles, Guid, Guid>(context,
+                        o => o.Login == login,
+                        o => o.Id,
+                        o => o.UserId,
+                        (fo, so) => fo.RoleId
+                        );
+                    List<Guid> rightIds = GetEntitiesWithJoin<Role, RightRole, Guid, Guid>(context, o=> roleIds.Contains(o.Id), fo=>fo.Id, so=> so.RoleId, (fo, so) => fo.RightId);
                     result.AccesibleReferences = GetUserAccesibleReferences(context, rightIds);
                     result.AccesiblePages = GetUserAccesiblePages(context, rightIds);
                     result.AccesibleAdministration = GetUserAccesibleAdministration(context, rightIds);
@@ -72,6 +72,129 @@ namespace Andromeda.Core.Managers
             }
             catch (Exception exc)
             {                
+                return LogErrorManager.Add(exc);
+            }
+        }
+        public static IViewModel CanUserEditReferences()
+        {
+            try
+            {
+                using(DBContext context = DBContext.Create())
+                {
+                    ResultViewModel result = new ResultViewModel { Result = Result.Ok };
+                    string login = HttpContext.Current.User.Identity.Name;
+                    Guid userId = GetEntityValue<User, Guid>(context, o => o.Login == login, o => o.Id);
+                    if (userId == Guid.Empty)
+                    {
+                        result.Result = Result.Error;
+                        result.Message = "Ошибка входа пользователя!";
+
+                        return result;
+                    }
+
+                    List<Guid> roleIds =
+                        GetEntitiesWithJoin<User, UserRoles, Guid, Guid>(context,
+                        o => o.Login == login,
+                        o => o.Id,
+                        o => o.UserId,
+                        (fo, so) => fo.RoleId
+                        );
+                    List<Guid> rightIds = GetEntitiesWithJoin<Role, RightRole, Guid, Guid>(context, o => roleIds.Contains(o.Id), fo => fo.Id, so => so.RoleId, (fo, so) => fo.RightId);
+
+                    if(!rightIds.Contains(RightManager.GetAdminRightId()) || !rightIds.Contains(RightManager.GetEditReferencesId()))
+                    {
+                        result.Result = Result.NotEnoughRights;
+                    }
+
+                    return result;
+                }
+            }
+            catch(Exception exc)
+            {
+                return LogErrorManager.Add(exc);
+            }
+        }
+        public static IViewModel IsUserHeadOfDepartment()
+        {
+            try
+            {
+                using (DBContext context = DBContext.Create())
+                {
+                    ResultViewModel result = new ResultViewModel { Result = Result.Ok };
+                    string login = HttpContext.Current.User.Identity.Name;
+                    Guid userId = GetEntityValue<User, Guid>(context, o => o.Login == login, o => o.Id);
+                    if (userId == Guid.Empty)
+                    {
+                        result.Result = Result.Error;
+                        result.Message = "Ошибка входа пользователя!";
+
+                        return result;
+                    }
+
+                    List<Guid> roleIds =
+                        GetEntitiesWithJoin<User, UserRoles, Guid, Guid>(context,
+                        o => o.Login == login,
+                        o => o.Id,
+                        o => o.UserId,
+                        (fo, so) => fo.RoleId
+                        );
+
+                    if (roleIds.Contains(RoleManager.GetHeadOfDepartmentId()))
+                    {
+                        result.Result = Result.Ok;
+                    }
+                    else
+                    {
+                        result.Result = Result.NotEnoughRights;
+                    }
+
+                    return result;
+                }
+            }
+            catch(Exception exc)
+            {
+                return LogErrorManager.Add(exc);
+            }
+        }
+        public static IViewModel IsUserDean()
+        {
+            try
+            {
+                using (DBContext context = DBContext.Create())
+                {
+                    ResultViewModel result = new ResultViewModel { Result = Result.Ok };
+                    string login = HttpContext.Current.User.Identity.Name;
+                    Guid userId = GetEntityValue<User, Guid>(context, o => o.Login == login, o => o.Id);
+                    if (userId == Guid.Empty)
+                    {
+                        result.Result = Result.Error;
+                        result.Message = "Ошибка входа пользователя!";
+
+                        return result;
+                    }
+
+                    List<Guid> roleIds =
+                        GetEntitiesWithJoin<User, UserRoles, Guid, Guid>(context,
+                        o => o.Login == login,
+                        o => o.Id,
+                        o => o.UserId,
+                        (fo, so) => fo.RoleId
+                        );
+
+                    if (roleIds.Contains(RoleManager.GetDeanId()))
+                    {
+                        result.Result = Result.Ok;
+                    }
+                    else
+                    {
+                        result.Result = Result.NotEnoughRights;
+                    }
+
+                    return result;
+                }
+            }
+            catch (Exception exc)
+            {
                 return LogErrorManager.Add(exc);
             }
         }

@@ -58,7 +58,9 @@
     </md-dialog>
 </script>
 
-<md-card layout-fill class="md-whiteframe-3dp" layout="row" ng-controller="referenceController">
+<md-card  ng-init="checkRole('/References/CanUserEditReferences')"
+         layout-fill class="md-whiteframe-3dp" 
+         layout="row" ng-controller="tableController">
     <div layout="column" class=" md-whiteframe-3dp" layout-fill
          ng-init="init('Name',
      '/References/GetTypesOfProjects',
@@ -71,7 +73,7 @@
                 <form flex ng-dirty ng-valid name="form.filter">
                     <input type="text" flex ng-model="query.filter.search" ng-model-options="filter.options" placeholder="Поиск">
                 </form>
-                <md-button class="md-icon-button" ng-click="addEntity()">
+                <md-button ng-hide="!canEdit" class="md-icon-button" ng-click="addEntity()">
                     <md-icon>add</md-icon>
                     <md-tooltip md-direction="bottom" style="font-size:14px;">Добавить тип работ</md-tooltip>
                 </md-button>
@@ -80,18 +82,18 @@
         <md-toolbar class="md-table-toolbar md-alternate" ng-show="query.selected.length">
             <div class="md-toolbar-tools" layout-align="space-between center">
                 <span flex>Типов работ выбрано : {{query.selected.length}}</span>
-                <md-button class="md-icon-button" show ng-hide="query.selected.length!=1" ng-click="editEntity(query.selected[0])">
+                <md-button class="md-icon-button" show ng-hide="query.selected.length!=1 ||!canEdit" ng-click="editEntity(query.selected[0])">
                     <md-icon md-colors="{color: 'accent-500'}">edit</md-icon>
                     <md-tooltip md-direction="bottom" style="font-size:14px;">Редактировать выбранный тип работ</md-tooltip>
                 </md-button>
-                <md-button class="md-icon-button" ng-click="delete(query.selected)">
+                <md-button ng-hide="!canEdit" class="md-icon-button" ng-click="delete(query.selected)">
                     <md-icon md-colors="{color: 'accent-500'}">delete</md-icon>
                     <md-tooltip md-direction="bottom" style="font-size:14px;">Удалить выбранные типы работ</md-tooltip>
                 </md-button>
             </div>
         </md-toolbar>
         <md-table-container flex>
-            <table md-table md-row-select="true" multiple="true" ng-model="query.selected" md-progress="promise">
+            <table md-table md-row-select="canEdit" multiple="true" ng-model="query.selected" md-progress="promise">
                 <thead md-head md-order="query.order" md-on-reorder="query.getEntities">
                     <tr md-row>
                         <th md-column md-order-by="ShortName"><span class="md-subhead">Сокращенное наименование</span></th>
@@ -116,6 +118,6 @@
         </md-table-pagination>
     </div>
 </md-card>
-<script src="~/Scripts/Andromeda/Controllers/andromeda.controller.references.js"></script>
+<script src="~/Scripts/Andromeda/Controllers/andromeda.controller.table.js"></script>
 <script src="~/Scripts/Andromeda/Controllers/andromeda.controller.typeOfProject.js"></script>
 

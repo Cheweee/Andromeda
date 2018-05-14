@@ -1,9 +1,11 @@
-﻿app.controller('referenceController', function ($scope, $timeout, $mdDialog, $q, service) {
+﻿app.controller('tableController', function ($scope, $timeout, $mdDialog, $q, service) {
     $scope.query = null;
     $scope.deleteMethod;
     $scope.deleteMessage;
     $scope.addOrEditController;
     $scope.fullscreen = false;
+    $scope.canEdit = false;
+    $scope.canGoToAdditionalInfo = false;
 
     $scope.init = function (order, getMethod, deleteMethod, deleteMessage, addOrEditController, fullscreen) {
         $scope.query = service.createQuery(order, getMethod);
@@ -12,6 +14,19 @@
         $scope.addOrEditController = addOrEditController;
         $scope.fullscreen = fullscreen;
         $scope.$watch('query.filter.search', function () { if ($scope.query !== null) $scope.query.getEntities(); });
+    };
+
+    $scope.checkRole = function (canEditUrl = false, accessToAdditionalInfoUrl = false) {
+        if (canEditUrl) {
+            service.postMethod(canEditUrl).then(function (response) {
+                $scope.canEdit = response.data.Result !== 2;
+            });
+        }
+        if (accessToAdditionalInfoUrl) {
+            service.postMethod(accessToAdditionalInfoUrl).then(function (response) {
+                $scope.canGoToAdditionalInfo = response.data.Result !== 2;
+            });
+        }
     };
     
     $scope.add = function (event) {

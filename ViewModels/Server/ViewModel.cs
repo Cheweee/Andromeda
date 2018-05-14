@@ -37,4 +37,10 @@ namespace Andromeda.ViewModels.Server
         public string Message { get; set; }
         #endregion        
     }
+    public class AddOrEditViewModel : IViewModel
+    {
+        public Result Result { get; set; }
+        public string Message { get; set; }
+        public Guid Id { get; set; }
+    }
 }

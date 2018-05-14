@@ -79,7 +79,9 @@
     </md-dialog>
 </script>
 
-<md-card layout-fill class="md-whiteframe-3dp" layout="row" ng-controller="referenceController">
+<md-card ng-init="checkRole('/References/CanUserEditReferences')"
+         layout-fill class="md-whiteframe-3dp"
+         layout="row" ng-controller="tableController">
     <div layout="column" class=" md-whiteframe-3dp" layout-fill
          ng-init="init('Name',
      '/References/GetCourseTitles',
@@ -112,7 +114,7 @@
             </div>
         </md-toolbar>
         <md-table-container flex>
-            <table md-table md-row-select="true" multiple="true" ng-model="query.selected" md-progress="promise">
+            <table md-table md-row-select="canEdit" multiple="true" ng-model="query.selected" md-progress="promise">
                 <thead md-head md-order="query.order" md-on-reorder="query.getEntities">
                     <tr md-row>
                         <th md-column md-order-by="ShortName"><span class="md-subhead">Сокращенное наименование</span></th>
@@ -139,7 +141,7 @@
         </md-table-pagination>
     </div>
 </md-card>
-<script src="~/Scripts/Andromeda/Controllers/andromeda.controller.references.js"></script>
+<script src="~/Scripts/Andromeda/Controllers/andromeda.controller.table.js"></script>
 <script src="~/Scripts/Andromeda/Controllers/andromeda.controller.courseTitle.js"></script>
 
 
