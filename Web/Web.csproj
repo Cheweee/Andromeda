@@ -194,6 +194,8 @@
     <Content Include="Scripts\Andromeda\Controllers\andromeda.controller.department.js" />
     <Content Include="Scripts\Andromeda\Controllers\andromeda.controller.faculty.js" />
     <Content Include="Scripts\Andromeda\Controllers\andromeda.controller.workingCirriculum.js" />
+    <Content Include="Scripts\Angular\angular-cookies.js" />
+    <Content Include="Scripts\Angular\angular-cookies.min.js" />
     <Content Include="Scripts\Angular\angular-animate.js" />
     <Content Include="Scripts\Angular\angular-animate.min.js" />
     <Content Include="Scripts\Angular\angular-aria.js" />
@@ -246,6 +248,7 @@
     <Content Include="Scripts\Andromeda\Controllers\andromeda.controller.typeOfProject.js" />
     <Content Include="Scripts\Andromeda\Controllers\andromeda.controller.table.js" />
     <Content Include="Scripts\Andromeda\Controllers\andromeda.controller.courseTitle.js" />
+    <Content Include="Scripts\Angular\angular-cookies.min.js.map" />
     <None Include="Scripts\Jquery\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\Jquery\jquery-3.3.1.js" />
     <Content Include="Scripts\Jquery\jquery-3.3.1.min.js" />

@@ -1,4 +1,4 @@
-﻿app.controller('tableController', function ($scope, $timeout, $mdDialog, $q, service) {
+﻿app.controller('tableController', function ($scope, $timeout, $mdDialog, $q, $cookies, $window, service) {
     $scope.query = null;
     $scope.deleteMethod;
     $scope.deleteMessage;
@@ -6,6 +6,8 @@
     $scope.fullscreen = false;
     $scope.canEdit = false;
     $scope.canGoToAdditionalInfo = false;
+    $scope.addOrEditOnDifferentPage = false;
+    $scope.addOrEditOnDifferentPageUrl = '';
 
     $scope.init = function (order, getMethod, deleteMethod, deleteMessage, addOrEditController, fullscreen) {
         $scope.query = service.createQuery(order, getMethod);
@@ -28,13 +30,21 @@
             });
         }
     };
+
+    $scope.enableAddOrEditOnAnotherPage = function (url) {
+        $scope.addOrEditOnDifferentPage = true;
+        $scope.addOrEditOnDifferentPageUrl = url;
+    }
     
-    $scope.add = function (event) {
-        service.openDialog('addOrEditForm.html');
+    $scope.add = function () {
+        $cookies.put('addOrEdit', true);
+        $window.location.href = $scope.addOrEditOnDifferentPageUrl;
     };
 
-    $scope.edit = function (obj, event) {
-        service.openDialog('addOrEditForm.html', obj.Id);
+    $scope.edit = function (entity, event) {
+        $cookies.put('addOrEdit', false);
+        $cookies.put('entityId', entity.Id);
+        $window.location.href = $scope.addOrEditOnDifferentPageUrl;
     };
 
     $scope.$watch(function () { return service.dialogId; }, function (value) {
@@ -48,6 +58,10 @@
     });
 
     $scope.addEntity = function (event) {
+        if ($scope.addOrEditOnDifferentPage) {
+            $scope.add();
+            return;
+        }
         service.addOrEdit = true;
         $mdDialog.show({
             clickOutsideToClose: false,
@@ -61,6 +75,10 @@
     };
 
     $scope.editEntity = function (entity, event) {
+        if ($scope.addOrEditOnDifferentPage) {
+            $scope.edit(entity);
+            return;
+        }
         service.addOrEdit = false;
         service.id = entity.Id;
         $mdDialog.show({

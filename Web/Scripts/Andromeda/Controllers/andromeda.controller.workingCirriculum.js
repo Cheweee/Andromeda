@@ -1,4 +1,4 @@
-﻿app.controller('areaOfTrainingController', function ($scope, $q, $timeout, $mdDialog, $filter, service) {
+﻿app.controller('workingCirriculumController', function ($scope, $q, $timeout, $mdDialog, $filter, service) {
     var result = false;
     var createTimer = function () {
         $timeout(function () {
@@ -13,7 +13,7 @@
 
     $scope.typesOfEd = [];
     $scope.searchTypeOfEd = '';
-    $scope.selectedtypeOfEd = '';
+    $scope.selectedTypeOfEd = '';
 
     $scope.getTypesOfEd = function () {
         var deferred = $q.defer();
@@ -77,7 +77,7 @@
         loading: false,
         message: 'Загрузка данных',
         addition: false,
-        addOrEdit: service.addOrEdit,
+        addOrEdit: null,
         closeDialog: function () {
             service.closeDialog();
         }
@@ -85,18 +85,20 @@
 
     $scope.loadDialog = function () {
         $scope.message = 'Загрузка данных';
+        $scope.settings.addOrEdit = $cookies.get('addOrEdit');
         if (!$scope.settings.addOrEdit) {
+            var wcId = $cookies.get('entityId');
             $scope.loading = true;
-            service.getEntityById('/CirriculumDevelopment/GetAreaOfTraining', service.id)
+            service.getEntityById('/CirriculumDevelopment/GetAreaOfTraining', wcId)
                 .then(function (response) {
                     if (response.data.Result) {
                         $scope.entity.Id = response.data.Entity.Id;
-                        $scope.entity.Code = response.data.Entity.Code;
-                        $scope.entity.Name = response.data.Entity.Name;
-                        $scope.entity.ShortName = response.data.Entity.ShortName;
+                        $scope.entity.StartTraining = response.data.Entity.StartTraining;
+                        $scope.entity.TrainingPeriod = response.data.Entity.TrainingPeriod;
+                        $scope.entity.EducationalStandart = response.data.Entity.EducationalStandart;
+                        $scope.entity.AreaOfTrainingId = response.data.Entity.AreaOfTrainingId;
+                        $scope.entity.TypeOfEducationName = response.data.Entity.TypeOfEducationName;
                         $scope.entity.DepartmentId = response.data.Entity.DepartmentId;
-                        $scope.entity.Directionaly = response.data.Entity.Directionaly;
-                        $scope.entity.LevelOfHigherEducationName = response.data.Entity.LevelOfHigherEducationName;
                         $scope.getDepartments().then(function () {
                             var rows = $scope.departments;
                             for (i = 0; i < rows.length; i++) {
@@ -108,12 +110,23 @@
                             }
                             createTimer();
                         });
-                        $scope.getLevelsOfHE().then(function () {
-                            var rows = $scope.levelsOfHE;
+                        $scope.getAreasOfTraining().then(function () {
+                            var rows = $scope.areasOfTrainings;
                             for (i = 0; i < rows.length; i++) {
                                 if ($scope.entity !== null) {
-                                    if ($scope.entity.LevelOfHigherEducationName === rows[i].Name) {
-                                        $scope.selectedLevelOfHE = rows[i];
+                                    if ($scope.entity.AreaOfTrainingId === rows[i].Id) {
+                                        $scope.selectedTypeOfEd = rows[i];
+                                    }
+                                }
+                            }
+                            createTimer();
+                        });
+                        $scope.getTypesOfEd().then(function () {
+                            var rows = $scope.typesOfEd;
+                            for (i = 0; i < rows.length; i++) {
+                                if ($scope.entity !== null) {
+                                    if ($scope.entity.TypeOfEducationName === rows[i].Name) {
+                                        $scope.selectedAreaOfTraining = rows[i];
                                     }
                                 }
                             }

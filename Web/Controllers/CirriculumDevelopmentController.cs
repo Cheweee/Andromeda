@@ -100,6 +100,11 @@ namespace Andromeda.Web.Controllers
             return View();
         }
         [HttpGet]
+        public ActionResult WorkingCirriculum()
+        {
+            return View();
+        }
+        [HttpGet]
         public JsonResult GetWorkingCirriculums(EntitiesViewModel model)
         {
             var data = WorkingCirriculumManager.GetWorkingCirriculums(model.Page, model.Limit, model.Order, model.IsAscending(), model.Search);

@@ -1,4 +1,4 @@
-﻿var app = angular.module('andromedaApp', ['ngMaterial', 'ngAnimate', 'ngMessages', 'md.data.table'])
+﻿var app = angular.module('andromedaApp', ['ngMaterial', 'ngAnimate', 'ngMessages', 'ngCookies', 'md.data.table'])
     //Creating a theme provider and choosing colors of application
     .config(function ($mdThemingProvider) {
         $mdThemingProvider

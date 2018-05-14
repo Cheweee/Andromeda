@@ -29,6 +29,10 @@ namespace Andromeda.Models.Entities
         /// </summary>
         public Guid? WorkingCirriculumId { get; set; }
         /// <summary>
+        /// Id of the department which contains this academic discipline
+        /// </summary>
+        public Guid? DepartmentId { get; set; }
+        /// <summary>
         /// Index of academic discipline (required property)
         /// </summary>
         [Required]

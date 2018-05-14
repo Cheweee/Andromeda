@@ -1,5 +1,5 @@
 ﻿//Creating a basic app controller for managing menus and user data
-app.controller('baseController', function ($scope, $mdToast, $window, $timeout, $location, service) {
+app.controller('baseController', function ($scope, $mdToast, $window, $timeout, service) {
     $scope.message = 'Загрузка...';
     var createTimer = function (need_stop) {
         $timeout(function () {
