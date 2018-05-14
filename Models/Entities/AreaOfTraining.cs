@@ -44,6 +44,10 @@ namespace Andromeda.Models.Entities
         [Required]
         [MaxLength(50)]
         public string LevelOfHigherEducationName { get; set; }
+        /// <summary>
+        /// Id of the Department
+        /// </summary>
+        public Guid? DepartmentId { get; set; }
 
         /// <summary>
         /// Level of higher education entity

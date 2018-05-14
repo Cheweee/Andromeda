@@ -52,7 +52,7 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
     <Reference Include="WECr">
-      <HintPath>..\..\..\..\Documents\Visual Studio 2017\Projects\FTLT\FTLT\Others\WECr.dll</HintPath>
+      <HintPath>..\..\..\..\..\kni20\Documents\Visual Studio 2017\Projects\FTLT\FTLT\Others\WECr.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

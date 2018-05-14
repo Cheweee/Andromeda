@@ -202,22 +202,26 @@
                 new Role
                 {
                     Id = new Guid("434800B0-3C75-4D6E-9375-C0BD8FDA6C30"),
-                    Name = "Профессор"
+                    Name = "Профессор",
+                    CanTeach = true
                 },
                 new Role
                 {
                     Id = new Guid("9BA6F885-DBDA-4755-A913-A678141FC951"),
-                    Name = "Доцент"
+                    Name = "Доцент",
+                    CanTeach = true
                 },
                 new Role
                 {
                     Id = new Guid("629AC417-9C60-4915-AB27-925ADF2EBB9C"),
-                    Name = "Старший преподаватель"
+                    Name = "Старший преподаватель",
+                    CanTeach = true
                 },
                 new Role
                 {
                     Id = new Guid("77C62DBF-4B7C-40F5-897D-A0A33A26FACF"),
-                    Name = "Ассистент"
+                    Name = "Ассистент",
+                    CanTeach = true
                 }
             };
                 #endregion

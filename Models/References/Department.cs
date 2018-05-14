@@ -64,6 +64,10 @@ namespace Andromeda.Models.References
         /// Collection of users in this department
         /// </summary>
         public virtual ICollection<User> Users { get; set; }
+        /// <summary>
+        /// Collection of areas of training in this department
+        /// </summary>
+        public virtual ICollection<AreaOfTraining> AreasOfTraining { get; set; }
         #endregion
 
         #region Constructors
@@ -78,6 +82,7 @@ namespace Andromeda.Models.References
             this.AcademicDisciplines = new HashSet<AcademicDiscipline>();
             this.RolesInDepartment = new HashSet<Role>();
             this.CourseTitlesInDepartment = new HashSet<CourseTitle>();
+            this.AreasOfTraining = new HashSet<AreaOfTraining>();
         }
         #endregion
     }

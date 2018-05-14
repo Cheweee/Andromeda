@@ -24,6 +24,10 @@ namespace Andromeda.Models.Administration
         /// </summary>
         public string Name { get; set; }
         /// <summary>
+        /// Can user teach students (show that user take place in load distribution)
+        /// </summary>
+        public bool CanTeach { get; set; }
+        /// <summary>
         /// Collection of users which have this role
         /// </summary>
         public virtual ICollection<UserRoles> UserRoles { get; set; }

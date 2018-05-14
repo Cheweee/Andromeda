@@ -100,26 +100,24 @@ namespace Andromeda.Core.Managers
                     {
                         Result = Result.Ok
                     };
-                    result.Entities = isAscending ?
-                        context.Set<TSource>()
+                    var tempEntities = context.Set<TSource>()
                         .AsNoTracking()
-                        .Where(searchFunc)
+                        .Where(searchFunc);
+                    result.Total = tempEntities.Count();
+                    result.Entities = isAscending ?
+                        tempEntities
                         .OrderBy(order)
                         .Select(selectFunc)
                         .Skip((page - 1) * limit)
                         .Take(limit)
-                        .ToList() : 
-                        context.Set<TSource>()
-                        .AsNoTracking()
-                        .Where(searchFunc)
+                        .ToList() :
+                        tempEntities
                         .OrderByDescending(order)
                         .Select(selectFunc)
                         .Skip((page - 1) * limit)
                         .Take(limit)
                         .ToList();
 
-                    result.Total = context.Set<TSource>()
-                        .AsNoTracking().Count();
                     result.Page = page;
                     return result;
                 }
@@ -231,24 +229,23 @@ namespace Andromeda.Core.Managers
                     {
                         Result = Result.Ok
                     };
-                    IEnumerable<TSource1> joinTempCollection = isAscending ?
-                        context.Set<TSource1>()
+                    var tempEntities = context.Set<TSource1>()
                         .AsNoTracking()
-                        .Where(searchFunc)
+                        .Where(searchFunc);
+
+                    result.Total = tempEntities.Count();
+                    IEnumerable<TSource1> joinTempCollection = isAscending ?
+                        tempEntities
                         .OrderBy(order)
                         .Skip((page - 1) * limit)
                         .Take(limit) :
-                        context.Set<TSource1>()
-                        .AsNoTracking()
-                        .Where(searchFunc)
+                        tempEntities
                         .OrderByDescending(order)
                         .Skip((page - 1) * limit)
                         .Take(limit);
                     result.Entities = context.Set<TSource2>()
                         .Join(joinTempCollection, fo => fo.Id, so => so.Id, joinSelector)
                         .ToList();
-                    result.Total = context.Set<TSource1>()
-                        .AsNoTracking().Count();
                     result.Page = page;
 
                     return result;
@@ -271,24 +268,23 @@ namespace Andromeda.Core.Managers
                     {
                         Result = Result.Ok
                     };
-                    IEnumerable<TSource1> tempCollection = isAscending ?
-                        context.Set<TSource1>()
+                    var tempEntities = context.Set<TSource1>()
                         .AsNoTracking()
-                        .Where(searchFunc)
+                        .Where(searchFunc);
+
+                    result.Total = tempEntities.Count();
+
+                    IEnumerable<TSource1> tempCollection = isAscending ?
+                        tempEntities
                         .OrderBy(order)
                         .Skip((page - 1) * limit)
-                        .Take(limit) :
-                        context.Set<TSource1>()
-                        .AsNoTracking()
-                        .Where(searchFunc)
+                        .Take(limit) : tempEntities
                         .OrderByDescending(order)
                         .Skip((page - 1) * limit)
                         .Take(limit);
                     result.Entities = context.Set<TSource2>()
                         .Join(tempCollection, outerKeySelector, innerKeySelector, joinSelector)
                         .ToList();
-                    result.Total = context.Set<TSource1>()
-                        .AsNoTracking().Count();
                     result.Page = page;
 
                     return result;

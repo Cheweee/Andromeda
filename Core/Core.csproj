@@ -71,19 +71,21 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
     <Reference Include="WECr">
-      <HintPath>..\..\..\..\Documents\Visual Studio 2017\Projects\FTLT\FTLT\Others\WECr.dll</HintPath>
+      <HintPath>..\WECr.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Administration\AppUserManager.cs" />
     <Compile Include="Administration\IdentityConfig.cs" />
     <Compile Include="Logs\LogErrorManager.cs" />
+    <Compile Include="Managers\AreaOfTrainingManager.cs" />
     <Compile Include="Managers\BaseEntityManager.cs" />
     <Compile Include="Managers\CourseTitleManager.cs" />
     <Compile Include="Managers\DepartmentManager.cs" />
     <Compile Include="Managers\RightManager.cs" />
     <Compile Include="Managers\RoleManager.cs" />
     <Compile Include="Managers\UserManager.cs" />
+    <Compile Include="Managers\WorkingCirriculumManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

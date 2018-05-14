@@ -31,63 +31,38 @@ namespace Andromeda.Core.Managers
                         (fo, so) => new DepartmentViewModel
                     {
                         FacultyId = fo.Id,
-                        FacultyName = fo.Name ?? "Не привязана к факультету",
-                        FacultyShortName = fo.ShortName ?? "Не привязана к факультету",
+                        FacultyName = fo.Name ?? string.Empty,
+                        FacultyShortName = fo.ShortName ?? string.Empty,
                         Id = so.Id,
                         Name = so.Name,
                         ShortName = so.ShortName,
                         Code = so.Code ?? 0
                     }).ToList();
-                    var entities = isAscending ? tempEntities.Where(
+                    tempEntities.AddRange(context.Departments.Where(o => !o.IsFaculty && o.FacultyId == null).Select(o => new DepartmentViewModel
+                    {
+                        Code = o.Code ?? 0,
+                        Id = o.Id,
+                        Name = o.Name,
+                        ShortName = o.ShortName
+                    }));
+
+                    var tempCollection = tempEntities.Where(
                 o => o.Name.ToLower().Contains((search ?? string.Empty).ToLower()) ||
                 o.ShortName.ToLower().Contains((search ?? string.Empty).ToLower()) ||
-                o.FacultyName.ToLower().Contains((search ?? string.Empty).ToLower()))
+                o.FacultyName.ToLower().Contains((search ?? string.Empty).ToLower())).ToList();
+
+                    result.Total = tempCollection.Count;
+
+                    result.Entities = isAscending ? tempCollection
                     .OrderBy(order)
                     .Skip((page - 1) * limit)
                     .Take(limit)
                     .ToList() :
-                     tempEntities.Where(
-                o => o.Name.ToLower().Contains((search ?? string.Empty).ToLower()) ||
-                o.ShortName.ToLower().Contains((search ?? string.Empty).ToLower()) ||
-                o.FacultyName.ToLower().Contains((search ?? string.Empty).ToLower()))
+                     tempCollection
                     .OrderByDescending(order)
                     .Skip((page - 1) * limit)
                     .Take(limit)
                     .ToList();
-
-                    result.Total = context.Departments.Where(o => !o.IsFaculty).AsNoTracking().Count();
-                    result.Entities = entities;
-                    result.Page = page;
-                    return result;
-                }
-            }
-            catch (Exception exc)
-            {
-                return LogErrorManager.Add(exc);
-            }
-        }
-        public static IViewModel GetFaculties(int page, int limit, string order, bool isAscending, string search)
-        {
-            try
-            {
-                using (DBContext context = DBContext.Create())
-                {
-                    EntitiesViewModel<DepartmentViewModel> result = new EntitiesViewModel<DepartmentViewModel>
-                    {
-                        Result = Result.Ok
-                    };
-
-                    result.Entities = GetEntities<Department, DepartmentViewModel>(context, page, limit, order, isAscending, 
-                        o=> o.IsFaculty && (
-                        o.Name.ToLower().Contains((search ?? string.Empty).ToLower()) ||
-                        o.ShortName.ToLower().Contains((search ?? string.Empty).ToLower())),
-                        o=> new DepartmentViewModel
-                        {
-                            Id = o.Id,
-                            Name = o.Name,
-                            ShortName = o.ShortName
-                        });
-                    result.Total = context.Departments.Where(o => o.IsFaculty).AsNoTracking().Count();
                     result.Page = page;
                     return result;
                 }
@@ -157,6 +132,39 @@ namespace Andromeda.Core.Managers
                 }
             }
             catch(Exception exc)
+            {
+                return LogErrorManager.Add(exc);
+            }
+        }
+        public static IViewModel DeleteFaculties(List<Department> entities)
+        {
+            try
+            {
+                using (DBContext context = DBContext.Create())
+                {
+                    context.Configuration.AutoDetectChangesEnabled = false;
+                    context.Configuration.ValidateOnSaveEnabled = false;
+
+                    var entitiesIds = entities.Select(d => d.Id).ToList();
+                    var facultyDepartments = context.Departments.Where(o => entitiesIds.Contains(o.FacultyId ?? Guid.Empty));
+                    foreach(Department entity in facultyDepartments)
+                    {
+                        entity.FacultyId = null;
+                        context.Entry(entity).State = EntityState.Modified;
+                    }
+
+                    foreach (Department entity in entities)
+                    {
+                        context.Entry(entity).State = EntityState.Deleted;
+                    }
+                    context.SaveChanges();
+
+                    context.Configuration.AutoDetectChangesEnabled = true;
+                    context.Configuration.ValidateOnSaveEnabled = true;
+                }
+                return new ResultViewModel { Result = Result.Ok };
+            }
+            catch (Exception exc)
             {
                 return LogErrorManager.Add(exc);
             }

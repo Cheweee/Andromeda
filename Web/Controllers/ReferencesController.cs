@@ -153,12 +153,17 @@ namespace Andromeda.Web.Controllers
         [HttpGet]
         public JsonResult GetFaculties(EntitiesViewModel model)
         {
-            var data = DepartmentManager.GetFaculties(
+            var data = BaseEntityManager.GetEntities<Department, DepartmentViewModel>(
                 model.Page,
                 model.Limit,
                 model.Order,
                 model.IsAscending(),
-                model.Search);
+                o=> o.IsFaculty && (o.Name.ToLower().Contains((model.Search ?? string.Empty).ToLower()) || o.ShortName.ToLower().Contains((model.Search ?? string.Empty).ToLower())),
+                o=> new DepartmentViewModel {
+                    Id = o.Id,
+                    Name = o.Name,
+                    ShortName = o.ShortName
+                });
 
             return Json(data, JsonRequestBehavior.AllowGet);
         }
@@ -238,7 +243,7 @@ namespace Andromeda.Web.Controllers
         [HttpPost]
         public JsonResult DeleteFaculties(List<Department> entities)
         {
-            var data = BaseEntityManager.DeleteEntities(entities);
+            var data = DepartmentManager.DeleteFaculties(entities);
 
             return Json(data, JsonRequestBehavior.AllowGet);
         }

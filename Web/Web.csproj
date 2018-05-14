@@ -190,8 +190,10 @@
     <Content Include="Scripts\Andromeda\andromeda.controller.base.js" />
     <Content Include="Scripts\Andromeda\andromeda.app.js" />
     <Content Include="Scripts\Andromeda\andromeda.service.js" />
+    <Content Include="Scripts\Andromeda\Controllers\andromeda.controller.areaOfTraining.js" />
     <Content Include="Scripts\Andromeda\Controllers\andromeda.controller.department.js" />
     <Content Include="Scripts\Andromeda\Controllers\andromeda.controller.faculty.js" />
+    <Content Include="Scripts\Andromeda\Controllers\andromeda.controller.workingCirriculum.js" />
     <Content Include="Scripts\Angular\angular-animate.js" />
     <Content Include="Scripts\Angular\angular-animate.min.js" />
     <Content Include="Scripts\Angular\angular-aria.js" />
@@ -303,6 +305,7 @@
     <Content Include="Views\References\CourseTitles.cshtml" />
     <Content Include="Views\References\Faculties.cshtml" />
     <Content Include="Views\References\Departments.cshtml" />
+    <Content Include="Views\CirriculumDevelopment\WorkingCirriculum.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
