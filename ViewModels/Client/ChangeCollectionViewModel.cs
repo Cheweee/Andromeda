@@ -8,7 +8,7 @@ namespace Andromeda.ViewModels.Client
 {
     public class ChangeEntitiesViewModel<T>
     {
-        public Guid? NewId { get; set; }
+        public Guid NewId { get; set; }
         public List<T> Entities { get; set; }
     }
 }

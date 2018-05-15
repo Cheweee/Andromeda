@@ -5,7 +5,7 @@
 }
 
 <script type="text/ng-template" id="addOrEditForm.html">
-    <md-dialog aria-label="AddOrEditItem" ng-controller="departmentController">
+    <md-dialog aria-label="AddOrEditItem" ng-controller="roleController">
         <div flex layout-padding layout-margin ng-show="loading" layout-fill layout-align="center center" layout="column">
             <span flex></span>
             <md-progress-circular md-diameter="96" md-mode="indeterminate"></md-progress-circular>
@@ -17,7 +17,7 @@
         <form name="addOrEditForm" ng-hide="loading" ng-init="loadDialog()" action="" method="post" ng-submit="confirm()" ng-valid>
             <md-toolbar>
                 <div class="md-toolbar-tools">
-                    <h2 md-title>Кафедра</h2>
+                    <h2 md-title>Роль</h2>
                     <span flex></span>
                     <md-button class="md-icon-button" ng-click="closeDialog()">
                         <md-icon>close</md-icon>
@@ -26,49 +26,37 @@
             </md-toolbar>
             <md-dialog-content>
                 <div class="md-dialog-content">
-                    <md-input-container class="md-block" flex>
-                        <label>Код</label>
-                        <input type="number" name="code" ng-model="entity.Code" min="1">
-                    </md-input-container>
-                    <md-input-container class="md-block" flex>
-                        <label>Сокращенное наименование</label>
-                        <input required name="shortName" ng-model="entity.ShortName" md-maxlength="20" md-autofocus>
-                        <div ng-messages="addOrEditForm.shortName.$error" multiple>
-                            <div ng-message="required">
-                                Пожалуйста заполните данное поле.
+                        <md-input-container class="md-block" flex>
+                            <label>Наименование</label>
+                            <input required name="name" ng-model="entity.Name" md-maxlength="100">
+                            <div ng-messages="addOrEditForm.name.$error" multiple>
+                                <div ng-message="required">
+                                    Пожалуйста заполните данное поле.
+                                </div>
                             </div>
-                        </div>
-                    </md-input-container>
-                    <md-input-container class="md-block" flex>
-                        <label>Наименование</label>
-                        <input required name="name" ng-model="entity.Name" md-maxlength="100">
-                        <div ng-messages="addOrEditForm.name.$error" multiple>
-                            <div ng-message="required">
-                                Пожалуйста заполните данное поле.
-                            </div>
-                        </div>
-                    </md-input-container>
-                    <md-autocomplete name="faculty"
-                                     md-no-chache="true"
-                                     md-clear-button="true"
-                                     md-selected-item="selectedFaculty"
-                                     md-search-text="searchFaculty"
-                                     md-items="item in getFaculties()"
-                                     md-item-text="item.Name"
-                                     md-min-length="0"
-                                     md-floating-label="Факультет">
-                        <md-item-template>
-                            <span md-highlight-text="searchFaculty" md-highlight-flags="^i">{{item.Name}}</span>
-                        </md-item-template>
-                        <md-not-found>
-                            Совпадений не найдено.
-                        </md-not-found>
-                        <div ng-messages="addOrEditForm.faculty.$error" multiple>
-                            <div ng-message="required">
-                                Пожалуйста заполните данное поле.
-                            </div>
-                        </div>
-                    </md-autocomplete>
+                        </md-input-container>
+                        <md-checkbox ng-model="entity.CanTeach">
+                            Преподаватель
+                        </md-checkbox>
+                    <md-chips md-autocomplete-snap md-require-match="true" ng-model="entity.rights"
+                              md-transform-chip="settings.transformChip($chip)">
+                        <md-autocomplete style="min-width:200px;" md-autoselect md-no-cache="true"
+                                         md-selected-item="settings.right"
+                                         md-search-text="settings.searchRight"
+                                         md-items="item in getNotRoleRights()"
+                                         md-item-text="item.Name" flex
+                                         placeholder="Поиск">
+                            <md-item-template>
+                                <span md-highlight-text="settings.searchRight" md-highlight-flags="^i">{{ item.Name }}</span>
+                            </md-item-template>
+                            <md-not-found>
+                                Совпадений не найдено.
+                            </md-not-found>
+                        </md-autocomplete>
+                        <md-chip-template>
+                            <span>{{ $chip.Name }}</span>
+                        </md-chip-template>
+                    </md-chips>
                 </div>
             </md-dialog-content>
             <md-dialog-actions>
@@ -83,17 +71,16 @@
     </md-dialog>
 </script>
 <md-card ng-init="checkRole(
-     '/References/CanUserEditReferences',
-     '/References/IsUserHeadOfDepartment')"
+     '/Administration/IsUserSystemAdmin')"
          class="md-whiteframe-3dp"
          layout="column" layout-fill
          ng-controller="tableController">
     <div layout="column" flex
          ng-init="init('Name',
-     '/References/GetDepartments',
-     '/References/DeleteDepartments',
-     'Вы уверены, что хотите удалить выбранные кафедры?',
-     'departmentController', false)">
+     '/Administration/GetRoles',
+     '/Administration/DeleteRoles',
+     'Вы уверены, что хотите удалить выбранные роли?',
+     'roleController', false)">
         <md-toolbar class="md-table-toolbar md-default" ng-hide="query.selected.length">
             <div class="md-toolbar-tools">
                 <md-icon>search</md-icon>
@@ -102,25 +89,21 @@
                 </form>
                 <md-button ng-hide="!canEdit" class="md-icon-button" ng-click="addEntity()">
                     <md-icon>add</md-icon>
-                    <md-tooltip md-direction="bottom" style="font-size:14px;">Добавить кафедру</md-tooltip>
-                </md-button>
-                <md-button ng-hide="!canGoToAdditionalInfo" class="md-icon-button" ng-click="openInfo()">
-                    <md-icon>remove_red_eye</md-icon>
-                    <md-tooltip md-direction="bottom" style="font-size:14px;">Посмотреть информацию кафедры</md-tooltip>
+                    <md-tooltip md-direction="bottom" style="font-size:14px;">Добавить роль</md-tooltip>
                 </md-button>
             </div>
         </md-toolbar>
         <md-toolbar class="md-table-toolbar md-alternate" ng-show="query.selected.length">
             <div class="md-toolbar-tools">
-                <span>Кафедр выбрано : {{query.selected.length}}</span>
+                <span>Ролей выбрано : {{query.selected.length}}</span>
                 <span flex></span>
                 <md-button class="md-icon-button" show ng-hide="query.selected.length!=1 || !canEdit" ng-click="editEntity(query.selected[0])">
                     <md-icon md-colors="{color: 'accent-500'}">edit</md-icon>
-                    <md-tooltip md-direction="bottom" style="font-size:14px;">Редактировать выбранную кафедру</md-tooltip>
+                    <md-tooltip md-direction="bottom" style="font-size:14px;">Редактировать выбранную роль</md-tooltip>
                 </md-button>
                 <md-button ng-hide="!canEdit" class="md-icon-button" ng-click="delete(query.selected)">
                     <md-icon md-colors="{color: 'accent-500'}">delete</md-icon>
-                    <md-tooltip md-direction="bottom" style="font-size:14px;">Удалить выбранные кафедры</md-tooltip>
+                    <md-tooltip md-direction="bottom" style="font-size:14px;">Удалить выбранные роли</md-tooltip>
                 </md-button>
             </div>
         </md-toolbar>
@@ -129,18 +112,12 @@
             <table md-table md-row-select="canEdit" multiple="true" ng-model="query.selected" md-progress="promise">
                 <thead md-head md-order="query.order" md-on-reorder="query.getEntities">
                     <tr md-row>
-                        <th md-column md-order-by="Code" md-numeric><span class="md-subhead">Код</span></th>
-                        <th md-column md-order-by="ShortName"><span class="md-subhead">Сокращенное наименование</span></th>
                         <th md-column md-order-by="Name"><span class="md-subhead">Наименование</span></th>
-                        <th md-column md-order-by="FacultyName"><span class="md-subhead">Факультет</span></th>
                     </tr>
                 </thead>
                 <tbody md-body>
                     <tr md-auto-select md-row md-select="entity" ng-repeat="entity in query.entities">
-                        <td md-cell>{{entity.Code}}</td>
-                        <td md-cell>{{entity.ShortName}}</td>
                         <td md-cell>{{entity.Name}}</td>
-                        <td md-cell>{{entity.FacultyName}}</td>
                     </tr>
                 </tbody>
             </table>

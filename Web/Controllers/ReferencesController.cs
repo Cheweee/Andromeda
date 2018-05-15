@@ -199,8 +199,7 @@ namespace Andromeda.Web.Controllers
         public JsonResult GetFacultyDepartments(EntitiesViewModel model)
         {
             var data = BaseEntityManager.GetEntities<Department, DepartmentViewModel>(
-                o => !o.IsFaculty && o.FacultyId == model.SearchId && (o.Name.ToLower().Contains((model.Search ?? string.Empty).ToLower()) ||
-            o.ShortName.ToLower().Contains((model.Search ?? string.Empty).ToLower())),
+                o => !o.IsFaculty && o.FacultyId == model.SearchId,
             o => new DepartmentViewModel
             {
                 Id = o.Id,

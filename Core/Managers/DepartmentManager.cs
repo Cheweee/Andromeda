@@ -49,7 +49,8 @@ namespace Andromeda.Core.Managers
                     var tempCollection = tempEntities.Where(
                 o => o.Name.ToLower().Contains((search ?? string.Empty).ToLower()) ||
                 o.ShortName.ToLower().Contains((search ?? string.Empty).ToLower()) ||
-                o.FacultyName.ToLower().Contains((search ?? string.Empty).ToLower())).ToList();
+                o.FacultyName.ToLower().Contains((search ?? string.Empty).ToLower()))
+                .ToList();
 
                     result.Total = tempCollection.Count;
 

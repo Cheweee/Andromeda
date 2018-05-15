@@ -3,6 +3,7 @@ using Andromeda.Models.Administration;
 using Andromeda.Models.Context;
 using Andromeda.ViewModels.Other;
 using Andromeda.ViewModels.Server;
+using Andromeda.Common.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,12 +12,13 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Security;
 using WECr;
+using System.Data.Entity;
 
 namespace Andromeda.Core.Managers
 {
     public class UserManager : BaseEntityManager
     {
-        public static ResultViewModel Login(string login, string password, bool remember)
+        public static IViewModel Login(string login, string password, bool remember)
         {
             try
             {
@@ -194,6 +196,91 @@ namespace Andromeda.Core.Managers
                 }
             }
             catch (Exception exc)
+            {
+                return LogErrorManager.Add(exc);
+            }
+        }
+        public static IViewModel IsUserSystemAdmin()
+        {
+            try
+            {
+                using (DBContext context = DBContext.Create())
+                {
+                    ResultViewModel result = new ResultViewModel { Result = Result.Ok };
+                    string login = HttpContext.Current.User.Identity.Name;
+                    Guid userId = GetEntityValue<User, Guid>(context, o => o.Login == login, o => o.Id);
+                    if (userId == Guid.Empty)
+                    {
+                        result.Result = Result.Error;
+                        result.Message = "Ошибка входа пользователя!";
+
+                        return result;
+                    }
+
+                    List<Guid> roleIds =
+                        GetEntitiesWithJoin<User, UserRoles, Guid, Guid>(context,
+                        o => o.Login == login,
+                        o => o.Id,
+                        o => o.UserId,
+                        (fo, so) => fo.RoleId
+                        );
+
+                    if (roleIds.Contains(RoleManager.GetSystemAdminId()))
+                    {
+                        result.Result = Result.Ok;
+                    }
+                    else
+                    {
+                        result.Result = Result.NotEnoughRights;
+                    }
+
+                    return result;
+                }
+            }
+            catch (Exception exc)
+            {
+                return LogErrorManager.Add(exc);
+            }
+        }
+        public static IViewModel GetUsers(int page, int limit, string order, bool isAscending, string search)
+        {
+            try
+            {
+                using (DBContext context = DBContext.Create())
+                {
+                    EntitiesViewModel<UserViewModel> data = new EntitiesViewModel<UserViewModel>
+                    {
+                        Result = Result.Ok
+                    };
+
+                    var tempEntities = context.Users
+                        .Where(
+                        o => o.UserName.ToLower().Contains((search ?? string.Empty).ToLower()) ||
+                        o.LastName.ToLower().Contains((search ?? string.Empty).ToLower()) ||
+                        o.Login.ToLower().Contains((search ?? string.Empty).ToLower()) ||
+                        o.Patronimyc.ToLower().Contains((search ?? string.Empty).ToLower()))
+                        .AsNoTracking()
+                        .Select(
+                        o => new UserViewModel
+                        {
+                            Id = o.Id,
+                            LastName = o.LastName,
+                            Login = o.Login,
+                            Name = o.UserName,
+                            Patronymic = o.Patronimyc ?? string.Empty
+                        }).ToList();
+
+                    data.Total = tempEntities.Count;
+                    data.Entities = tempEntities
+                        .OrderBy(order)
+                        .Skip((page - 1) * limit)
+                        .Take(limit)
+                        .ToList();
+
+                    return data;
+                }
+            }
+            catch(Exception exc)
             {
                 return LogErrorManager.Add(exc);
             }
