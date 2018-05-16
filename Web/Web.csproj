@@ -195,6 +195,7 @@
     <Content Include="Scripts\Andromeda\Controllers\andromeda.controller.department.js" />
     <Content Include="Scripts\Andromeda\Controllers\andromeda.controller.faculty.js" />
     <Content Include="Scripts\Andromeda\Controllers\andromeda.controller.role.js" />
+    <Content Include="Scripts\Andromeda\Controllers\andromeda.controller.user.js" />
     <Content Include="Scripts\Andromeda\Controllers\andromeda.controller.workingCirriculum.js" />
     <Content Include="Scripts\Angular\angular-cookies.js" />
     <Content Include="Scripts\Angular\angular-cookies.min.js" />
@@ -311,6 +312,7 @@
     <Content Include="Views\References\Faculties.cshtml" />
     <Content Include="Views\References\Departments.cshtml" />
     <Content Include="Views\CirriculumDevelopment\WorkingCirriculum.cshtml" />
+    <Content Include="Views\Administration\User.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

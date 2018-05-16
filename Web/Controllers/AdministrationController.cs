@@ -1,5 +1,6 @@
 ﻿using Andromeda.Core.Managers;
 using Andromeda.Models.Administration;
+using Andromeda.Models.References;
 using Andromeda.ViewModels.Client;
 using Andromeda.ViewModels.Server;
 using System;
@@ -19,21 +20,14 @@ namespace Andromeda.Web.Controllers
             return View();
         }
         [HttpGet]
+        public new ActionResult User()
+        {
+            return View();
+        }
+        [HttpGet]
         public JsonResult GetUsers(EntitiesViewModel model)
         {
             var data = UserManager.GetUsers(model.Page, model.Limit, model.Order, model.IsAscending(), model.Search);
-                //BaseEntityManager.GetEntities<User, UserViewModel>(model.Page, model.Limit, model.Order, model.IsAscending(),
-                //o => o.UserName.ToLower().Contains((model.Search ?? string.Empty)) ||
-                //o.LastName.ToLower().Contains((model.Search ?? string.Empty)) ||
-                //o.Login.ToLower().Contains((model.Search ?? string.Empty)) ||
-                //o.Patronimyc.ToLower().Contains((model.Search ?? string.Empty)),
-                //o=> new UserViewModel {
-                //    Id = o.Id,
-                //    LastName = o.LastName,
-                //    Login = o.Login,
-                //    Name = o.UserName,
-                //    Patronymic = o.Patronimyc ?? string.Empty
-                //});
 
             return Json(data, JsonRequestBehavior.AllowGet);
         }
@@ -48,6 +42,52 @@ namespace Andromeda.Web.Controllers
                     Login = o.Login,
                     Name = o.UserName,
                     Patronymic = o.Patronimyc
+                });
+
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+        [HttpGet]
+        public JsonResult GetNotUserAcademicDegrees(EntitiesViewModel model)
+        {
+            var data = UserManager.GetNotUserAcademicDegrees(model.SearchId, model.Search);
+
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+        [HttpGet]
+        public JsonResult GetUserAcademicDegrees(EntitiesViewModel model)
+        {
+            var data = UserManager.GetUserAcademicDegrees(model.SearchId);
+
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+        [HttpGet]
+        public JsonResult GetNotUserAcademicTitles(EntitiesViewModel model)
+        {
+            var data = BaseEntityManager.GetEntitiesWithJoin<UserAcademicTitle, AcademicTitle, Guid, AcademicTitleViewModel>(
+                o=> o.UserId != model.SearchId,
+                ua => ua.AcademicTitleId,
+                a => a.Id,
+                (a, ua)=> new AcademicTitleViewModel
+                {
+                    Id = a.Id,
+                    Name = a.Name,
+                    ShortName = a.ShortName
+                });
+
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+        [HttpGet]
+        public JsonResult GetUserAcademicTitles(EntitiesViewModel model)
+        {
+            var data = BaseEntityManager.GetEntitiesWithJoin<UserAcademicTitle, AcademicTitle, Guid, AcademicTitleViewModel>(
+                o => o.UserId == model.SearchId,
+                ua => ua.AcademicTitleId,
+                a => a.Id,
+                (a, ua) => new AcademicTitleViewModel
+                {
+                    Id = a.Id,
+                    Name = a.Name,
+                    ShortName = a.ShortName
                 });
 
             return Json(data, JsonRequestBehavior.AllowGet);

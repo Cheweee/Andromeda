@@ -1,0 +1,118 @@
+﻿
+@{
+    ViewBag.Title = "user";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<md-card ng-controller="userController" ng-init="loadDialog()">
+    <md-card-title>
+        <md-card-title-text>
+            <span class="md-headline">Пользователь</span>
+        </md-card-title-text>
+    </md-card-title>
+    <md-card-content>
+        <div layout="column">
+            <div layout="row">
+                <md-input-container flex class="md-block">
+                    <label>Фамилия</label>
+                    <input required name="lastName" ng-model="entity.LastName" md-maxlength="50" md-autofocus>
+                    <div ng-messages="addOrEditForm.lastName.$error" multiple>
+                        <div ng-message="required">
+                            Пожалуйста заполните данное поле.
+                        </div>
+                    </div>
+                </md-input-container>
+                <md-input-container flex class="md-block">
+                    <label>Имя</label>
+                    <input required name="name" ng-model="entity.Name" md-maxlength="50">
+                    <div ng-messages="addOrEditForm.name.$error" multiple>
+                        <div ng-message="required">
+                            Пожалуйста заполните данное поле.
+                        </div>
+                    </div>
+                </md-input-container>
+                <md-input-container flex class="md-block">
+                    <label>Отчество</label>
+                    <input name="patronimyc" ng-model="entity.Patronimyc" md-maxlength="50">
+                    <div ng-messages="addOrEditForm.patronimyc.$error" multiple>
+                        <div ng-message="required">
+                            Пожалуйста заполните данное поле.
+                        </div>
+                    </div>
+                </md-input-container>
+            </div>
+            <div layout="row">
+                <md-input-container flex class="md-block">
+                    <label>Логин</label>
+                    <input required name="login" ng-model="entity.Login" md-maxlength="50">
+                    <div ng-messages="addOrEditForm.login.$error" multiple>
+                        <div ng-message="required">
+                            Пожалуйста заполните данное поле.
+                        </div>
+                    </div>
+                </md-input-container>
+                <md-input-container flex class="md-block">
+                    <label>Пароль</label>
+                    <input required name="password" ng-model="entity.Password" md-maxlength="50">
+                    <div ng-messages="addOrEditForm.password.$error" multiple>
+                        <div ng-message="required">
+                            Пожалуйста заполните данное поле.
+                        </div>
+                    </div>
+                </md-input-container>
+            </div>
+            <div layout="row">
+                <md-chips flex md-autocomplete-snap md-require-match="true" ng-model="entity.AcademicDegrees"
+                          md-transform-chip="settings.transformChip($chip)">
+                    <md-autocomplete md-autoselect md-no-cache="true"
+                                     md-search-text="settings.searchAcademicDegree"
+                                     md-items="item in getNotUserAcademicDegrees()"
+                                     md-item-text="item.Name"
+                                     placeholder="Ученые степени">
+                        <md-item-template>
+                            <span md-highlight-text="settings.searchAcademicDegree" md-highlight-flags="^i">{{ item.Name }}</span>
+                        </md-item-template>
+                        <md-not-found>
+                            Совпадений не найдено.
+                        </md-not-found>
+                    </md-autocomplete>
+                    <md-chip-template>
+                        <span>{{ $chip.Name }}</span>
+                    </md-chip-template>
+                </md-chips>
+                <md-chips flex md-autocomplete-snap md-require-match="true" ng-model="entity.AcademicTitles"
+                          md-transform-chip="settings.transformChip($chip)">
+                    <md-autocomplete md-autoselect md-no-cache="true"
+                                     md-search-text="settings.searchAcademicTitle"
+                                     md-items="item in getNotUserAcademicTitles()"
+                                     md-item-text="item.Name" flex
+                                     placeholder="Ученые звания">
+                        <md-item-template>
+                            <span md-highlight-text="settings.searchAcademicTitle" md-highlight-flags="^i">{{ item.Name }}</span>
+                        </md-item-template>
+                        <md-not-found>
+                            Совпадений не найдено.
+                        </md-not-found>
+                    </md-autocomplete>
+                    <md-chip-template>
+                        <span>{{ $chip.Name }}</span>
+                    </md-chip-template>
+                </md-chips>
+            </div>
+        </div>
+    </md-card-content>
+    <md-card-actions>
+        <div layout="row">
+            <span flex></span>
+            <md-button class="md-primary" ng-click="confirm()" ng-disabled="addOrEditForm.$invalid">
+                Принять
+            </md-button>
+            <md-button class="md-alert" ng-click="clearFields()">
+                Отмена
+            </md-button>
+        </div>
+    </md-card-actions>
+</md-card>
+
+<script src="~/Scripts/Andromeda/Controllers/andromeda.controller.table.js"></script>
+<script src="~/Scripts/Andromeda/Controllers/andromeda.controller.user.js"></script>

@@ -44,6 +44,7 @@ div.md-toolbar-tools a.md-button {
 
 md-chips {
     display: block;
+    padding: 2px;
 }
 
 md-toast {

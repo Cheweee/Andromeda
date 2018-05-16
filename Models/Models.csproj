@@ -81,6 +81,8 @@
     <Compile Include="References\LevelOfHigherEducation.cs" />
     <Compile Include="References\TypeOfEducation.cs" />
     <Compile Include="References\TypeOfProject.cs" />
+    <Compile Include="References\UserAcademicDegree.cs" />
+    <Compile Include="References\UserAcademicTitle.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

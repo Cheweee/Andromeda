@@ -1,4 +1,4 @@
-п»їusing Andromeda.Core.Logs;
+using Andromeda.Core.Logs;
 using Andromeda.Models.Administration;
 using Andromeda.Models.Context;
 using Andromeda.ViewModels.Other;
@@ -32,7 +32,7 @@ namespace Andromeda.Core.Managers
                         FormsAuthentication.SetAuthCookie(login, remember);
                         return new ResultViewModel { Result = Result.Ok };
                     }
-                    return new ResultViewModel { Message = "РќРµРІРµСЂРЅРѕРµ РёРјСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РёР»Рё РїР°СЂРѕР»СЊ", Result = Result.Error };
+                    return new ResultViewModel { Message = "Неверное имя пользователя или пароль", Result = Result.Error };
                 }
             }
             catch (Exception exc)
@@ -53,7 +53,7 @@ namespace Andromeda.Core.Managers
                     if (userId == Guid.Empty)
                     {
                         result.Result = Result.Error;
-                        result.Message = "РћС€РёР±РєР° РІС…РѕРґР° РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ!";
+                        result.Message = "Ошибка входа пользователя!";
 
                         return result;
                     }
@@ -89,7 +89,7 @@ namespace Andromeda.Core.Managers
                     if (userId == Guid.Empty)
                     {
                         result.Result = Result.Error;
-                        result.Message = "РћС€РёР±РєР° РІС…РѕРґР° РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ!";
+                        result.Message = "Ошибка входа пользователя!";
 
                         return result;
                     }
@@ -128,7 +128,7 @@ namespace Andromeda.Core.Managers
                     if (userId == Guid.Empty)
                     {
                         result.Result = Result.Error;
-                        result.Message = "РћС€РёР±РєР° РІС…РѕРґР° РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ!";
+                        result.Message = "Ошибка входа пользователя!";
 
                         return result;
                     }
@@ -170,7 +170,7 @@ namespace Andromeda.Core.Managers
                     if (userId == Guid.Empty)
                     {
                         result.Result = Result.Error;
-                        result.Message = "РћС€РёР±РєР° РІС…РѕРґР° РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ!";
+                        result.Message = "Ошибка входа пользователя!";
 
                         return result;
                     }
@@ -212,7 +212,7 @@ namespace Andromeda.Core.Managers
                     if (userId == Guid.Empty)
                     {
                         result.Result = Result.Error;
-                        result.Message = "РћС€РёР±РєР° РІС…РѕРґР° РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ!";
+                        result.Message = "Ошибка входа пользователя!";
 
                         return result;
                     }
@@ -252,26 +252,34 @@ namespace Andromeda.Core.Managers
                     {
                         Result = Result.Ok
                     };
+                    search = search ?? string.Empty;
+                    string[] searchWords = search.ToLower().Contains(' ') ? search.Split(' ') : new string[] { search };
 
-                    var tempEntities = context.Users
-                        .Where(
-                        o => o.UserName.ToLower().Contains((search ?? string.Empty).ToLower()) ||
-                        o.LastName.ToLower().Contains((search ?? string.Empty).ToLower()) ||
-                        o.Login.ToLower().Contains((search ?? string.Empty).ToLower()) ||
-                        o.Patronimyc.ToLower().Contains((search ?? string.Empty).ToLower()))
-                        .AsNoTracking()
-                        .Select(
-                        o => new UserViewModel
+                    IQueryable<User> tempEntities = context.Users
+                        .AsNoTracking();
+                    if (searchWords.Length > 0)
+                    {
+                        foreach (string searchWord in searchWords)
                         {
-                            Id = o.Id,
-                            LastName = o.LastName,
-                            Login = o.Login,
-                            Name = o.UserName,
-                            Patronymic = o.Patronimyc ?? string.Empty
-                        }).ToList();
+                            tempEntities = tempEntities.Where(
+                            o => o.UserName.ToLower().Contains(searchWord) ||
+                            o.LastName.ToLower().Contains(searchWord) ||
+                            o.Login.ToLower().Contains(searchWord) ||
+                            o.Patronimyc.ToLower().Contains(searchWord));
+                        }
+                    }
+                    List<UserViewModel> entities = tempEntities.Select(
+                    o => new UserViewModel
+                    {
+                        Id = o.Id,
+                        LastName = o.LastName,
+                        Login = o.Login,
+                        Name = o.UserName,
+                        Patronymic = o.Patronimyc ?? string.Empty
+                    }).ToList();
 
-                    data.Total = tempEntities.Count;
-                    data.Entities = tempEntities
+                    data.Total = entities.Count;
+                    data.Entities = entities
                         .OrderBy(order)
                         .Skip((page - 1) * limit)
                         .Take(limit)
@@ -285,6 +293,79 @@ namespace Andromeda.Core.Managers
                 return LogErrorManager.Add(exc);
             }
         }
+        public static IViewModel GetNotUserAcademicDegrees(Guid userId, string search)
+        {
+            try
+            {
+                using (DBContext context = DBContext.Create())
+                {
+                    EntitiesViewModel<AcademicDegreeViewModel> data = new EntitiesViewModel<AcademicDegreeViewModel>
+                    {
+                        Result = Result.Ok
+                    };
+
+                    var tempEntities = context.UserAcademicDegrees.Where(o => o.UserId != userId).AsNoTracking();
+
+                    data.Entities = context.AcademicDegrees.Join(tempEntities, a => a.Id,
+                         ua => ua.AcademicDegreeId,
+                         (a, ua) => new AcademicDegreeViewModel
+                         {
+                             Id = a.Id,
+                             Name = a.Name + " " + context.BranchesOfScience
+                             .Where(b => b.Id == a.BranchOfScienceId)
+                             .Select(b => b.Name).FirstOrDefault(),
+                             ShortName = a.ShortName + " " + context.BranchesOfScience
+                             .Where(b => b.Id == a.BranchOfScienceId).Select(b => b.ShortName)
+                             .FirstOrDefault()
+                         }).ToList();
+                    data.Entities = data.Entities.Where(o =>
+                         o.Name.ToLower().Contains((search ?? string.Empty).ToLower()) ||
+                         o.ShortName.ToLower().Contains((search ?? string.Empty).ToLower()))
+                         .ToList();
+
+                    return data;
+                }
+            }
+            catch(Exception exc)
+            {
+                return LogErrorManager.Add(exc);
+            }
+        }
+        public static IViewModel GetUserAcademicDegrees(Guid userId)
+        {
+            try
+            {
+                using (DBContext context = DBContext.Create())
+                {
+                    EntitiesViewModel<AcademicDegreeViewModel> data = new EntitiesViewModel<AcademicDegreeViewModel>
+                    {
+                        Result = Result.Ok
+                    };
+
+                    var tempEntities = context.UserAcademicDegrees.Where(o => o.UserId == userId).AsNoTracking();
+
+                    data.Entities = context.AcademicDegrees.Join(tempEntities, a => a.Id,
+                         ua => ua.AcademicDegreeId,
+                         (a, ua) => new AcademicDegreeViewModel
+                         {
+                             Id = a.Id,
+                             Name = a.Name + " " + context.BranchesOfScience
+                             .Where(b => b.Id == a.BranchOfScienceId)
+                             .Select(b => b.Name).FirstOrDefault(),
+                             ShortName = a.ShortName + " " + context.BranchesOfScience
+                             .Where(b => b.Id == a.BranchOfScienceId).Select(b => b.ShortName)
+                             .FirstOrDefault()
+                         })
+                         .AsNoTracking().ToList();
+
+                    return data;
+                }
+            }
+            catch (Exception exc)
+            {
+                return LogErrorManager.Add(exc);
+            }
+        }
 
         private static List<Page> GetUserAccesibleReferences(DBContext context, List<Guid> rightIds)
         {
@@ -293,10 +374,10 @@ namespace Andromeda.Core.Managers
             {
                 return new List<Page>
                 {
-                    new Page("/References/TypesOfProjects", "typesOfProjects", "РўРёРїС‹ СЂР°Р±РѕС‚", "format_list_numbered"),
-                    new Page("/References/CourseTitles", "coureTitles", "РќР°РёРјРµРЅРѕРІР°РЅРёСЏ РґРёСЃС†РёРїР»РёРЅ", "title"),
-                    new Page("/References/Faculties", "faculties", "Р¤Р°РєСѓР»СЊС‚РµС‚С‹ Рё РёРЅСЃС‚РёС‚СѓС‚С‹", "business"),
-                    new Page("/References/Departments", "departments", "РљР°С„РµРґСЂС‹", "account_balance"),
+                    new Page("/References/TypesOfProjects", "typesOfProjects", "Типы работ", "format_list_numbered"),
+                    new Page("/References/CourseTitles", "coureTitles", "Наименования дисциплин", "title"),
+                    new Page("/References/Faculties", "faculties", "Факультеты и институты", "business"),
+                    new Page("/References/Departments", "departments", "Кафедры", "account_balance"),
                 };
             }
             else
@@ -311,29 +392,29 @@ namespace Andromeda.Core.Managers
             {                
                 return new List<Page>
                 {
-                    new Page("/CirriculumDevelopment/Seats", "seats", "Р”РѕР»Р¶РЅРѕСЃС‚Рё", "event_seat"),
-                    new Page("/CirriculumDevelopment/Workers", "workers", "Р Р°Р±РѕС‚РЅРёРєРё", "assignment_ind"),
-                    new Page("/CirriculumDevelopment/AreasOfTraining", "areasOfTraining", "РќР°РїСЂР°РІР»РµРЅРёСЏ РїРѕРґРіРѕС‚РѕРІРєРё", "layers"),
-                    new Page("/CirriculumDevelopment/WorkingCirriculums", "workingCirriculums", "Р Р°Р±РѕС‡РёРµ РїР»Р°РЅС‹", "chrome_reader_mode")
+                    new Page("/CirriculumDevelopment/Seats", "seats", "Должности", "event_seat"),
+                    new Page("/CirriculumDevelopment/Workers", "workers", "Работники", "assignment_ind"),
+                    new Page("/CirriculumDevelopment/AreasOfTraining", "areasOfTraining", "Направления подготовки", "layers"),
+                    new Page("/CirriculumDevelopment/WorkingCirriculums", "workingCirriculums", "Рабочие планы", "chrome_reader_mode")
                 };                
             }
             if (rightIds.Contains(RightManager.GetAccessToDepartmentRolesId()) || 
                 rightIds.Contains(RightManager.GetAccessToFacultyRolesId()))
             {
-                accesiblePages.Add(new Page("/CirriculumDevelopment/Seats", "seats", "Р”РѕР»Р¶РЅРѕСЃС‚Рё", "event_seat"));
+                accesiblePages.Add(new Page("/CirriculumDevelopment/Seats", "seats", "Должности", "event_seat"));
             }
             if (rightIds.Contains(RightManager.GetAccessToDepartmentWorkersId()) ||
                 rightIds.Contains(RightManager.GetAccessToFacultyWorkersId()))
             {
-                accesiblePages.Add(new Page("/CirriculumDevelopment/Professors", "professors", "Р Р°Р±РѕС‚РЅРёРєРё", "assignment_ind"));
+                accesiblePages.Add(new Page("/CirriculumDevelopment/Professors", "professors", "Работники", "assignment_ind"));
             }
             if (rightIds.Contains(RightManager.GetAccessToAreasOfTrainingId()))
             {
-                accesiblePages.Add(new Page("/CirriculumDevelopment/AreasOfTraining", "areasOfTraining", "РќР°РїСЂР°РІР»РµРЅРёСЏ РїРѕРґРіРѕС‚РѕРІРєРё", "layers"));
+                accesiblePages.Add(new Page("/CirriculumDevelopment/AreasOfTraining", "areasOfTraining", "Направления подготовки", "layers"));
             }
             if (rightIds.Contains(RightManager.GetAccessToWorkingCirriculumsId()))
             {
-                accesiblePages.Add(new Page("/CirriculumDevelopment/WorkingCirriculums", "workingCirriculums", "Р Р°Р±РѕС‡РёРµ РїР»Р°РЅС‹", "chrome_reader_mode"));
+                accesiblePages.Add(new Page("/CirriculumDevelopment/WorkingCirriculums", "workingCirriculums", "Рабочие планы", "chrome_reader_mode"));
             }
             return accesiblePages;
         }
@@ -343,25 +424,26 @@ namespace Andromeda.Core.Managers
             {
                 return new List<Page>
                 {
-                    new Page("/Administration/Users", "users", "РџРѕР»СЊР·РѕРІР°С‚РµР»Рё", "people"),
-                    new Page("/Administration/Roles", "roles", "Р РѕР»Рё", "work"),
-                    new Page("/Administration/Rights", "rights", "РџСЂР°РІР° СЂРѕР»РµР№", "accessibility")
+                    new Page("/Administration/Users", "users", "Пользователи", "people"),
+                    new Page("/Administration/Roles", "roles", "Роли", "work"),
+                    new Page("/Administration/Rights", "rights", "Права ролей", "accessibility")
                 };
             }
             List<Page> accesibleAdministration = new List<Page>();
             if (rightIds.Contains(RightManager.GetUsersAdminRightId()))
             {
-                accesibleAdministration.Add(new Page("/Administration/Users", "users", "РџРѕР»СЊР·РѕРІР°С‚РµР»Рё", "people"));
+                accesibleAdministration.Add(new Page("/Administration/Users", "users", "Пользователи", "people"));
             }
             if (rightIds.Contains(RightManager.GetRolesAdminRightId()))
             {
-                accesibleAdministration.Add(new Page("/Administration/Roles", "roles", "Р РѕР»Рё", "work"));
+                accesibleAdministration.Add(new Page("/Administration/Roles", "roles", "Роли", "work"));
             }
             if (rightIds.Contains(RightManager.GetRightsAdminRightId()))
             {
-                accesibleAdministration.Add(new Page("/Administration/Rights", "rights", "РџСЂР°РІР° СЂРѕР»РµР№", "accessibility"));
+                accesibleAdministration.Add(new Page("/Administration/Rights", "rights", "Права ролей", "accessibility"));
             }
             return accesibleAdministration;
         }
     }
 }
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         

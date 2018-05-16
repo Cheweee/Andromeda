@@ -4,72 +4,6 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<script type="text/ng-template" id="addOrEditForm.html">
-    <md-dialog aria-label="AddOrEditItem" ng-controller="roleController">
-        <div flex layout-padding layout-margin ng-show="loading" layout-fill layout-align="center center" layout="column">
-            <span flex></span>
-            <md-progress-circular md-diameter="96" md-mode="indeterminate"></md-progress-circular>
-            <h2 class="md-title">
-                {{message}}
-            </h2>
-            <span flex></span>
-        </div>
-        <form name="addOrEditForm" ng-hide="loading" ng-init="loadDialog()" action="" method="post" ng-submit="confirm()" ng-valid>
-            <md-toolbar>
-                <div class="md-toolbar-tools">
-                    <h2 md-title>Роль</h2>
-                    <span flex></span>
-                    <md-button class="md-icon-button" ng-click="closeDialog()">
-                        <md-icon>close</md-icon>
-                    </md-button>
-                </div>
-            </md-toolbar>
-            <md-dialog-content>
-                <div class="md-dialog-content">
-                    <md-input-container class="md-block" flex>
-                        <label>Наименование</label>
-                        <input required name="name" ng-model="entity.Name" md-maxlength="100">
-                        <div ng-messages="addOrEditForm.name.$error" multiple>
-                            <div ng-message="required">
-                                Пожалуйста заполните данное поле.
-                            </div>
-                        </div>
-                    </md-input-container>
-                    <md-checkbox ng-model="entity.CanTeach">
-                        Преподаватель
-                    </md-checkbox>
-                    <md-chips md-autocomplete-snap md-require-match="true" ng-model="entity.rights"
-                              md-transform-chip="settings.transformChip($chip)">
-                        <md-autocomplete style="min-width:200px;" md-autoselect md-no-cache="true"
-                                         md-selected-item="settings.right"
-                                         md-search-text="settings.searchRight"
-                                         md-items="item in getNotRoleRights()"
-                                         md-item-text="item.Name" flex
-                                         placeholder="Поиск">
-                            <md-item-template>
-                                <span md-highlight-text="settings.searchRight" md-highlight-flags="^i">{{ item.Name }}</span>
-                            </md-item-template>
-                            <md-not-found>
-                                Совпадений не найдено.
-                            </md-not-found>
-                        </md-autocomplete>
-                        <md-chip-template>
-                            <span>{{ $chip.Name }}</span>
-                        </md-chip-template>
-                    </md-chips>
-                </div>
-            </md-dialog-content>
-            <md-dialog-actions>
-                <md-button class="md-primary" ng-click="confirm()" ng-disabled="addOrEditForm.$invalid">
-                    Принять
-                </md-button>
-                <md-button class="md-alert" ng-click="clearFields()">
-                    Отмена
-                </md-button>
-            </md-dialog-actions>
-        </form>
-    </md-dialog>
-</script>
 <md-card ng-init="checkRole(
      '/Administration/IsUserSystemAdmin')"
          class="md-whiteframe-3dp"
@@ -81,7 +15,7 @@
      '/Administration/DeleteUsers',
      'Вы уверены, что хотите удалить выбранных пользователей?',
      'roleController', false)">
-        <md-toolbar class="md-table-toolbar md-default" ng-hide="query.selected.length">
+        <md-toolbar ng-init="enableAddOrEditOnAnotherPage('/Administration/User/')" class="md-table-toolbar md-default" ng-hide="query.selected.length">
             <div class="md-toolbar-tools">
                 <md-icon>search</md-icon>
                 <form flex ng-dirty ng-valid name="form.filter">

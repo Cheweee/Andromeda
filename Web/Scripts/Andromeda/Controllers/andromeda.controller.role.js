@@ -10,8 +10,7 @@
     $scope.closeDialog = function () {
         $mdDialog.hide();
     };
-
-    $scope.department = [];
+    
     $scope.searchRight = '';
     $scope.selectedRole = null;
 

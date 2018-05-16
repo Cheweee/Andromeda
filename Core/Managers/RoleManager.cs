@@ -43,7 +43,9 @@ namespace Andromeda.Core.Managers
                     {
                         Id = r.Id,
                         Name = r.Name
-                    }).ToList();
+                    })
+                    .Where(o=> o.Name.ToLower().Contains((search ?? string.Empty).ToLower()))
+                    .ToList();
 
                     return data;
                 }

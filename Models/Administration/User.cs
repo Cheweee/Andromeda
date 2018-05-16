@@ -39,14 +39,14 @@ namespace Andromeda.Models.Administration
         [MaxLength(50)]
         public string Login { get; set; }
         /// <summary>
-        /// User password (required property)
-        /// </summary>
-        public byte[] Password { get; set; }
-        /// <summary>
         /// User patronymic
         /// </summary>
         [MaxLength(50)]
         public string Patronimyc { get; set; }
+        /// <summary>
+        /// User password (required property)
+        /// </summary>
+        public byte[] Password { get; set; }
 
         /// <summary>
         /// Collection of departments to which belongs user
