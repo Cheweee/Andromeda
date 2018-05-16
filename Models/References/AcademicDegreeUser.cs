@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Andromeda.Models.References
 {
-    public class UserAcademicDegree
+    public class AcademicDegreeUser
     {
         [Key]
         [Column(Order = 1)]

@@ -22,7 +22,7 @@
         public virtual DbSet<RightRole> RightRoles { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<UserRoles> UserRoles { get; set; }
-        public virtual DbSet<UserAcademicDegree> UserAcademicDegrees { get; set; }
+        public virtual DbSet<AcademicDegreeUser> AcademicDegreeUsers { get; set; }
         public virtual DbSet<UserAcademicTitle> UserAcademicTitles { get; set; }
         public virtual DbSet<Department> Departments { get; set; }
         public virtual DbSet<TypeOfEducation> TypesOfEducations { get; set; }
