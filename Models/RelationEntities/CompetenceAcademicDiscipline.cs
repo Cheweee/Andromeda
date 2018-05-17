@@ -6,15 +6,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Andromeda.Models.References
+namespace Andromeda.Models.RelationEntities
 {
-    public class AcademicDegreeUser
+    public class CompetenceAcademicDiscipline
     {
         [Key]
         [Column(Order = 1)]
-        public Guid UserId { get; set; }
+        public Guid CompetenceId { get; set; }
         [Key]
         [Column(Order = 2)]
-        public Guid AcademicDegreeId { get; set; }
+        public Guid AcademicDisciplineId { get; set; }
     }
 }

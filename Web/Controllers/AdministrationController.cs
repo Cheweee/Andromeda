@@ -1,6 +1,7 @@
 ﻿using Andromeda.Core.Managers;
 using Andromeda.Models.Administration;
 using Andromeda.Models.References;
+using Andromeda.Models.RelationEntities;
 using Andromeda.ViewModels.Client;
 using Andromeda.ViewModels.Server;
 using System;
@@ -34,15 +35,7 @@ namespace Andromeda.Web.Controllers
         [HttpGet]
         public JsonResult GetUser(Guid id)
         {
-            var data = BaseEntityManager.GetEntity<User, UserViewModel>(o => o.Id == id,
-                o => new UserViewModel
-                {
-                    Id = o.Id,
-                    LastName = o.LastName,
-                    Login = o.Login,
-                    Name = o.UserName,
-                    Patronymic = o.Patronimyc
-                });
+            var data = UserManager.GetUser(id);
 
             return Json(data, JsonRequestBehavior.AllowGet);
         }
@@ -61,33 +54,16 @@ namespace Andromeda.Web.Controllers
             return Json(data, JsonRequestBehavior.AllowGet);
         }
         [HttpGet]
-        public JsonResult GetNotUserAcademicTitles(EntitiesViewModel model)
+        public JsonResult GetAcademicTitles(EntitiesViewModel model)
         {
-            var data = BaseEntityManager.GetEntitiesWithJoin<UserAcademicTitle, AcademicTitle, Guid, AcademicTitleViewModel>(
-                o=> o.UserId != model.SearchId,
-                ua => ua.AcademicTitleId,
-                a => a.Id,
-                (a, ua)=> new AcademicTitleViewModel
+            var data = BaseEntityManager.GetEntities<AcademicTitle, AcademicTitleViewModel>(
+                o => o.ShortName.ToLower().Contains((model.Search ?? string.Empty).ToLower()) ||
+                o.Name.ToLower().Contains((model.Search ?? string.Empty).ToLower()),
+                o => new AcademicTitleViewModel
                 {
-                    Id = a.Id,
-                    Name = a.Name,
-                    ShortName = a.ShortName
-                });
-
-            return Json(data, JsonRequestBehavior.AllowGet);
-        }
-        [HttpGet]
-        public JsonResult GetUserAcademicTitles(EntitiesViewModel model)
-        {
-            var data = BaseEntityManager.GetEntitiesWithJoin<UserAcademicTitle, AcademicTitle, Guid, AcademicTitleViewModel>(
-                o => o.UserId == model.SearchId,
-                ua => ua.AcademicTitleId,
-                a => a.Id,
-                (a, ua) => new AcademicTitleViewModel
-                {
-                    Id = a.Id,
-                    Name = a.Name,
-                    ShortName = a.ShortName
+                    Id = o.Id,
+                    Name = o.Name,
+                    ShortName = o.ShortName
                 });
 
             return Json(data, JsonRequestBehavior.AllowGet);

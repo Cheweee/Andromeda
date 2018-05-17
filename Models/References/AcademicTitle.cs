@@ -1,5 +1,6 @@
 ﻿using Andromeda.Models.Administration;
 using Andromeda.Models.Interfaces;
+using Andromeda.Models.RelationEntities;
 using System;
 using System.Collections.Generic;
 

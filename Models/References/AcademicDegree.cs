@@ -1,5 +1,6 @@
 ﻿using Andromeda.Models.Administration;
 using Andromeda.Models.Interfaces;
+using Andromeda.Models.RelationEntities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,7 +35,7 @@ namespace Andromeda.Models.References
         /// <summary>
         /// Collection of users who have this academic degree
         /// </summary>
-        public virtual ICollection<User> Users { get; set; }
+        public virtual ICollection<AcademicDegreeUser> AcademicDegreeUsers { get; set; }
         /// <summary>
         /// Branch of science of this academic degree
         /// </summary>
@@ -47,7 +48,7 @@ namespace Andromeda.Models.References
         /// </summary>
         public AcademicDegree()
         {
-            this.Users = new HashSet<User>();
+            this.AcademicDegreeUsers = new HashSet<AcademicDegreeUser>();
         }
         #endregion
     }

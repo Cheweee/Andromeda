@@ -1,6 +1,7 @@
 ﻿using Andromeda.Models.Administration;
 using Andromeda.Models.Entities;
 using Andromeda.Models.Interfaces;
+using Andromeda.Models.RelationEntities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,7 +44,7 @@ namespace Andromeda.Models.References
         /// <summary>
         /// Collection of user roles in this department
         /// </summary>
-        public virtual ICollection<UserRoles> UserRolesInDepartment { get; set; }
+        public virtual ICollection<UserRoleDepartment> UserRoleDepartments { get; set; }
         /// <summary>
         /// Collection of working cirriculums in this department
         /// </summary>
@@ -53,17 +54,9 @@ namespace Andromeda.Models.References
         /// </summary>
         public virtual ICollection<AcademicDiscipline> AcademicDisciplines { get; set; }
         /// <summary>
-        /// Collection of roles in this department
-        /// </summary>
-        public virtual ICollection<Role> RolesInDepartment { get; set; }
-        /// <summary>
         /// Collection of course titles in this department
         /// </summary>
         public virtual ICollection<CourseTitle> CourseTitlesInDepartment { get; set; }
-        /// <summary>
-        /// Collection of users in this department
-        /// </summary>
-        public virtual ICollection<User> Users { get; set; }
         /// <summary>
         /// Collection of areas of training in this department
         /// </summary>
@@ -77,10 +70,9 @@ namespace Andromeda.Models.References
         public Department()
         {
             this.IsFaculty = false;
-            this.UserRolesInDepartment = new HashSet<UserRoles>();
+            this.UserRoleDepartments = new HashSet<UserRoleDepartment>();
             this.WorkingCirriculums = new HashSet<WorkingCirriculum>();
             this.AcademicDisciplines = new HashSet<AcademicDiscipline>();
-            this.RolesInDepartment = new HashSet<Role>();
             this.CourseTitlesInDepartment = new HashSet<CourseTitle>();
             this.AreasOfTraining = new HashSet<AreaOfTraining>();
         }

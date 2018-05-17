@@ -1,5 +1,6 @@
 ﻿using Andromeda.Models.Interfaces;
 using Andromeda.Models.References;
+using Andromeda.Models.RelationEntities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -63,7 +64,7 @@ namespace Andromeda.Models.Entities
         /// <summary>
         /// Collection of competences which need to this academic discipline
         /// </summary>
-        public virtual ICollection<Competence> Competences { get; set; }
+        public virtual ICollection<CompetenceAcademicDiscipline> CompetenceAcademicDisciplines { get; set; }
         /// <summary>
         /// Collection of projects of this academic discipline
         /// </summary>
@@ -76,7 +77,7 @@ namespace Andromeda.Models.Entities
         /// </summary>
         public AcademicDiscipline()
         {
-            this.Competences = new HashSet<Competence>();
+            this.CompetenceAcademicDisciplines = new HashSet<CompetenceAcademicDiscipline>();
             this.Projects = new HashSet<Project>();
         }
         #endregion

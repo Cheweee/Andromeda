@@ -1,4 +1,5 @@
-﻿using Andromeda.Models.References;
+﻿using Andromeda.Models.Administration;
+using Andromeda.Models.References;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -7,12 +8,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Andromeda.Models.Administration
+namespace Andromeda.Models.RelationEntities
 {
     /// <summary>
     /// The entity for many-to-many communication user - role
     /// </summary>
-    public partial class UserRoles
+    public partial class UserRole
     {
         #region Properties
         [Key]
@@ -24,13 +25,13 @@ namespace Andromeda.Models.Administration
 
         public virtual User User { get; set; }
         public virtual Role Role { get; set; }
-        public virtual ICollection<Department> Departments { get; set; }
+        public virtual ICollection<UserRoleDepartment> UserRoleDepartments { get; set; }
         #endregion
 
         #region Constructors
-        public UserRoles()
+        public UserRole()
         {
-            this.Departments = new HashSet<Department>();
+            this.UserRoleDepartments = new HashSet<UserRoleDepartment>();
         }
         #endregion
     }

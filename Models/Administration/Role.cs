@@ -1,5 +1,6 @@
 ﻿using Andromeda.Models.Interfaces;
 using Andromeda.Models.References;
+using Andromeda.Models.RelationEntities;
 using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
@@ -30,15 +31,11 @@ namespace Andromeda.Models.Administration
         /// <summary>
         /// Collection of users which have this role
         /// </summary>
-        public virtual ICollection<UserRoles> UserRoles { get; set; }
+        public virtual ICollection<UserRole> UserRoles { get; set; }
         /// <summary>
         /// Collection of rights of the role
         /// </summary>
         public virtual ICollection<RightRole> RightRoles { get; set; }
-        /// <summary>
-        /// Collection of departments which include the role
-        /// </summary>
-        public virtual ICollection<Department> Departments { get; set; }
         #endregion
 
         #region Constructors
@@ -47,9 +44,8 @@ namespace Andromeda.Models.Administration
         /// </summary>
         public Role()
         {
-            this.UserRoles = new HashSet<UserRoles>();
+            this.UserRoles = new HashSet<UserRole>();
             this.RightRoles = new HashSet<RightRole>();
-            this.Departments = new HashSet<Department>();
         }
         #endregion
     }

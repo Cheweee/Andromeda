@@ -57,10 +57,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Administration\Right.cs" />
-    <Compile Include="Administration\RightRoles.cs" />
+    <Compile Include="RelationEntities\CompetenceAcademicDiscipline.cs" />
+    <Compile Include="RelationEntities\RightRoles.cs" />
     <Compile Include="Administration\Role.cs" />
     <Compile Include="Administration\User.cs" />
-    <Compile Include="Administration\UserRoles.cs" />
+    <Compile Include="RelationEntities\UserRole.cs" />
     <Compile Include="Base\BaseEntity.cs" />
     <Compile Include="Context\DBContext.cs" />
     <Compile Include="Entities\AcademicDiscipline.cs" />
@@ -81,8 +82,8 @@
     <Compile Include="References\LevelOfHigherEducation.cs" />
     <Compile Include="References\TypeOfEducation.cs" />
     <Compile Include="References\TypeOfProject.cs" />
-    <Compile Include="References\AcademicDegreeUser.cs" />
-    <Compile Include="References\UserAcademicTitle.cs" />
+    <Compile Include="RelationEntities\AcademicDegreeUser.cs" />
+    <Compile Include="RelationEntities\UserRoleDepartment.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

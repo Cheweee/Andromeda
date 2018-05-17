@@ -1,5 +1,6 @@
 ﻿using Andromeda.Models.Interfaces;
 using Andromeda.Models.References;
+using Andromeda.Models.RelationEntities;
 using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,10 @@ namespace Andromeda.Models.Administration
         /// Id of the user
         /// </summary>
         public Guid Id { get; set; }
+        /// <summary>
+        /// Academic title id
+        /// </summary>
+        public Guid? AcademicTitleId { get; set; }
         /// <summary>
         /// User name (required property)
         /// </summary>
@@ -47,23 +52,14 @@ namespace Andromeda.Models.Administration
         /// User password (required property)
         /// </summary>
         public byte[] Password { get; set; }
-
-        /// <summary>
-        /// Collection of departments to which belongs user
-        /// </summary>
-        public virtual ICollection<Department> Departments { get; set; }
         /// <summary>
         /// Collection of user roles
         /// </summary>
-        public virtual ICollection<UserRoles> UserRoles { get; set; }
-        /// <summary>
-        /// Collection of user academic titles
-        /// </summary>
-        public virtual ICollection<AcademicTitle> AcademicTitles { get; set; }
+        public virtual ICollection<UserRole> UserRoles { get; set; }
         /// <summary>
         /// Collection of user academic degrees
         /// </summary>
-        public virtual ICollection<AcademicDegree> AcademicDegrees { get; set; }
+        public virtual ICollection<AcademicDegreeUser> AcademicDegreeUsers { get; set; }
         #endregion
 
         #region Constructors
@@ -72,9 +68,8 @@ namespace Andromeda.Models.Administration
         /// </summary>
         public User()
         {
-            this.UserRoles = new HashSet<UserRoles>();
-            this.AcademicTitles = new HashSet<AcademicTitle>();
-            this.AcademicDegrees = new HashSet<AcademicDegree>();
+            this.UserRoles = new HashSet<UserRole>();
+            this.AcademicDegreeUsers = new HashSet<AcademicDegreeUser>();
         }
         #endregion
     }

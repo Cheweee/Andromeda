@@ -1,18 +1,20 @@
 ﻿app.controller('userController', function ($scope, $q, $timeout, $cookies, $filter, service) {
     $scope.entity = {
         Id: null,
+        AcademicTitleId: null,
         Name: '',
         Patronimyc : '',
         LastName: '',
         Login: '',
         Password: '',
-        AcademicDegrees: [],
-        AcademicTitles: []
+        AcademicDegrees: []
     };
 
     $scope.settings = {
         searchAcademicDegree: '',
+        academicTitles: [],
         searchAcademicTitle: '',
+        selectedAcademicTitle: null,
         delay: 500,
         loading: false,
         message: 'Загрузка данных',
@@ -41,8 +43,19 @@
                         $scope.entity.Patronimyc = response.data.Entity.Patronimyc;
                         $scope.entity.Login = response.data.Entity.Login;
                         $scope.entity.Password = response.data.Entity.Password;
+                        $scope.entity.AcademicTitleId = response.data.Entity.AcademicTitleId;
                         $scope.getUserAcademicDegrees();
-                        $scope.getUserAcademicTitles();
+                        $scope.getAcademicTitles().then(function () {
+                            var rows = $scope.settings.academicTitles;
+                            for (i = 0; i < rows.length; i++) {
+                                if ($scope.entity !== null) {
+                                    if ($scope.entity.AcademicTitleId === rows[i].Id) {
+                                        $scope.settings.selectedAcademicTitle = rows[i];
+                                    }
+                                }
+                            }
+                            $scope.settings.createTimer();
+                        });
                     }
                 });
         }
@@ -63,13 +76,18 @@
     };
 
     $scope.confirm = function () {
+        var academicTitleId = null;
+        if ($scope.settings.AcademicTitle) {
+            academicTitleId = $scope.settings.AcademicTitle.Id;
+        }
         var entity = {
             Id: $scope.entity.Id,
             Name: $scope.entity.Name,
             LastName: $scope.entity.LastName,
             Patronimyc: $scope.entity.Patronimyc,
             Login: $scope.entity.Login,
-            Password: $scope.entity.Password
+            Password: $scope.entity.Password,
+            AcademicTitleId: academicTitleId
         };
 
         $scope.message = 'Сохранение изменений';
@@ -113,32 +131,16 @@
             });
     };
 
-    $scope.getNotUserAcademicTitles = function () {
+    $scope.getAcademicTitles = function () {
         var deferred = $q.defer();
-        service.getEntities('/Administration/GetNotUserAcademicTitles'
+        service.getEntities('/Administration/GetAcademicTitles'
             , model = { Search: $scope.settings.searchAcademicTitle }).then(function (response) {
                 if (response.data.Result) {
-                    var rows = response.data.Entities;
-                    for (i = 0; i < $scope.entity.AcademicTitles.length; i++) {
-                        var index = rows.findIndex(o => o.Id === $scope.entity.AcademicTitles[i].Id);
-                        if (index >= 0) {
-                            rows.splice(index, 1);
-                        }
-                    }
-                    deferred.resolve(rows);
+                    $scope.settings.academicTitles = response.data.Entities;
+                    deferred.resolve($scope.settings.academicTitles);
                 }
             });
 
         return deferred.promise;
-    };
-
-    $scope.getUserAcademicTitles = function () {
-        service.getEntities('/Administration/GetUserAcademicTitles'
-            , model = { SearchId: $scope.entity.Id }).then(function (response) {
-                if (response.data.Result) {
-                    $scope.entity.AcademicTitles = response.data.Entities;
-                }
-                $scope.loading = false;
-            });
     };
 });

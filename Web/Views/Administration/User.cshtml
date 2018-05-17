@@ -60,44 +60,104 @@
                         </div>
                     </div>
                 </md-input-container>
+                <md-autocomplete name="academicTitle" flex
+                                 md-no-chache="true"
+                                 md-clear-button="true"
+                                 md-selected-item="settings.selectedAcademicTitle"
+                                 md-search-text="settings.searchAcademicTitle"
+                                 md-items="item in getAcademicTitles()"
+                                 md-item-text="item.Name"
+                                 md-min-length="0"
+                                 md-floating-label="Ученое звание">
+                    <md-item-template>
+                        <span md-highlight-text="settings.searchAcademicTitle" md-highlight-flags="^i">{{item.Name}}</span>
+                    </md-item-template>
+                    <md-not-found>
+                        Совпадений не найдено.
+                    </md-not-found>
+                    <div ng-messages="addOrEditForm.faculty.$error" multiple>
+                        <div ng-message="required">
+                            Пожалуйста заполните данное поле.
+                        </div>
+                    </div>
+                </md-autocomplete>
             </div>
-            <div layout="row">
-                <md-chips flex md-autocomplete-snap md-require-match="true" ng-model="entity.AcademicDegrees"
-                          md-transform-chip="settings.transformChip($chip)">
-                    <md-autocomplete md-autoselect md-no-cache="true"
-                                     md-search-text="settings.searchAcademicDegree"
-                                     md-items="item in getNotUserAcademicDegrees()"
-                                     md-item-text="item.Name"
-                                     placeholder="Ученые степени">
-                        <md-item-template>
-                            <span md-highlight-text="settings.searchAcademicDegree" md-highlight-flags="^i">{{ item.Name }}</span>
-                        </md-item-template>
-                        <md-not-found>
-                            Совпадений не найдено.
-                        </md-not-found>
-                    </md-autocomplete>
-                    <md-chip-template>
-                        <span>{{ $chip.Name }}</span>
-                    </md-chip-template>
-                </md-chips>
-                <md-chips flex md-autocomplete-snap md-require-match="true" ng-model="entity.AcademicTitles"
-                          md-transform-chip="settings.transformChip($chip)">
-                    <md-autocomplete md-autoselect md-no-cache="true"
-                                     md-search-text="settings.searchAcademicTitle"
-                                     md-items="item in getNotUserAcademicTitles()"
-                                     md-item-text="item.Name" flex
-                                     placeholder="Ученые звания">
-                        <md-item-template>
-                            <span md-highlight-text="settings.searchAcademicTitle" md-highlight-flags="^i">{{ item.Name }}</span>
-                        </md-item-template>
-                        <md-not-found>
-                            Совпадений не найдено.
-                        </md-not-found>
-                    </md-autocomplete>
-                    <md-chip-template>
-                        <span>{{ $chip.Name }}</span>
-                    </md-chip-template>
-                </md-chips>
+            <md-chips flex md-autocomplete-snap md-require-match="true" ng-model="entity.AcademicDegrees"
+                      md-transform-chip="settings.transformChip($chip)">
+                <md-autocomplete md-autoselect md-no-cache="true"
+                                 md-search-text="settings.searchAcademicDegree"
+                                 md-items="item in getNotUserAcademicDegrees()"
+                                 md-item-text="item.Name"
+                                 placeholder="Ученые степени">
+                    <md-item-template>
+                        <span md-highlight-text="settings.searchAcademicDegree" md-highlight-flags="^i">{{ item.Name }}</span>
+                    </md-item-template>
+                    <md-not-found>
+                        Совпадений не найдено.
+                    </md-not-found>
+                </md-autocomplete>
+                <md-chip-template>
+                    <span>{{ $chip.Name }}</span>
+                </md-chip-template>
+            </md-chips>
+        </div>
+        <div layout="column" layout-fill>
+            <div layout="column" flex>
+                <md-toolbar class="md-table-toolbar md-default" ng-hide="query.selected.length">
+                    <div class="md-toolbar-tools">
+                        <md-icon>search</md-icon>
+                        <form flex ng-dirty ng-valid name="form.filter">
+                            <input type="text" flex ng-model="query.filter.search" ng-model-options="filter.options" placeholder="Роли">
+                        </form>
+                        <md-button ng-hide="!canEdit" class="md-icon-button" ng-click="addEntity()">
+                            <md-icon>add</md-icon>
+                            <md-tooltip md-direction="bottom" style="font-size:14px;">Добавить академическую дисциплину</md-tooltip>
+                        </md-button>
+                    </div>
+                </md-toolbar>
+                <md-toolbar class="md-table-toolbar md-alternate" ng-show="query.selected.length">
+                    <div class="md-toolbar-tools">
+                        <span>Кафедр выбрано : {{query.selected.length}}</span>
+                        <span flex></span>
+                        <md-button class="md-icon-button" show ng-hide="query.selected.length!=1 || !canEdit" ng-click="editEntity(query.selected[0])">
+                            <md-icon md-colors="{color: 'accent-500'}">edit</md-icon>
+                            <md-tooltip md-direction="bottom" style="font-size:14px;">Редактировать выбранную академическую дисциплину</md-tooltip>
+                        </md-button>
+                        <md-button ng-hide="!canEdit" class="md-icon-button" ng-click="delete(query.selected)">
+                            <md-icon md-colors="{color: 'accent-500'}">delete</md-icon>
+                            <md-tooltip md-direction="bottom" style="font-size:14px;">Удалить выбранные академические дисциплины</md-tooltip>
+                        </md-button>
+                    </div>
+                </md-toolbar>
+                <md-divider></md-divider>
+                <md-table-container flex>
+                    <table md-table md-row-select="canEdit" multiple="true" ng-model="query.selected" md-progress="promise">
+                        <thead md-head md-order="query.order" md-on-reorder="query.getEntities">
+                            <tr md-row>
+                                <th md-column md-order-by="Code" md-numeric><span class="md-subhead">Код</span></th>
+                                <th md-column md-order-by="ShortName"><span class="md-subhead">Сокращенное наименование</span></th>
+                                <th md-column md-order-by="Name"><span class="md-subhead">Наименование</span></th>
+                                <th md-column md-order-by="FacultyName"><span class="md-subhead">Факультет</span></th>
+                            </tr>
+                        </thead>
+                        <tbody md-body>
+                            <tr md-auto-select md-row md-select="entity" ng-repeat="entity in query.entities">
+                                <td md-cell>{{entity.Code}}</td>
+                                <td md-cell>{{entity.ShortName}}</td>
+                                <td md-cell>{{entity.Name}}</td>
+                                <td md-cell>{{entity.FacultyName}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </md-table-container>
+                <md-table-pagination md-label="{page: 'Страница:', rowsPerPage: 'Записей на странице:', of: 'из'}"
+                                     md-page="query.page"
+                                     md-limit="query.limit"
+                                     md-limit-options="query.limitOptions"
+                                     md-total="{{query.total}}"
+                                     md-boundary-links="true"
+                                     md-on-paginate="query.getEntities">
+                </md-table-pagination>
             </div>
         </div>
     </md-card-content>

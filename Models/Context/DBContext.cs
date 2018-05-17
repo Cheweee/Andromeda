@@ -4,6 +4,7 @@
     using Andromeda.Models.Entities;
     using Andromeda.Models.Logs;
     using Andromeda.Models.References;
+    using Andromeda.Models.RelationEntities;
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
@@ -16,14 +17,15 @@
     public partial class DBContext : DbContext
     {
         #region Properties
+        #region Logs
         public virtual DbSet<LogError> LogErrors { get; set; }
+        #endregion
+        #region Administration
         public virtual DbSet<Role> Roles { get; set; }
         public virtual DbSet<Right> Rights { get; set; }
-        public virtual DbSet<RightRole> RightRoles { get; set; }
         public virtual DbSet<User> Users { get; set; }
-        public virtual DbSet<UserRoles> UserRoles { get; set; }
-        public virtual DbSet<AcademicDegreeUser> AcademicDegreeUsers { get; set; }
-        public virtual DbSet<UserAcademicTitle> UserAcademicTitles { get; set; }
+        #endregion
+        #region References
         public virtual DbSet<Department> Departments { get; set; }
         public virtual DbSet<TypeOfEducation> TypesOfEducations { get; set; }
         public virtual DbSet<LevelOfHigherEducation> LevelsOfHigherEducation { get; set; }
@@ -32,11 +34,21 @@
         public virtual DbSet<AcademicTitle> AcademicTitles { get; set; }
         public virtual DbSet<AcademicDegree> AcademicDegrees { get; set; }
         public virtual DbSet<BranchOfScience> BranchesOfScience { get; set; }
+        #endregion
+        #region Entities
         public virtual DbSet<Competence> Competences { get; set; }
         public virtual DbSet<AreaOfTraining> AreasOfTraining { get; set; }
         public virtual DbSet<Project> Projects { get; set; }
         public virtual DbSet<AcademicDiscipline> AcademicDsciplines { get; set; }
         public virtual DbSet<WorkingCirriculum> WorkingCirriculums { get; set; }
+        #endregion
+        #region Relation entities
+        public virtual DbSet<AcademicDegreeUser> AcademicDegreeUsers { get; set; }
+        public virtual DbSet<CompetenceAcademicDiscipline> CompetenceAcademicDisciplines { get; set; }
+        public virtual DbSet<RightRole> RightRoles { get; set; }
+        public virtual DbSet<UserRole> UserRoles { get; set; }
+        public virtual DbSet<UserRoleDepartment> UserRoleDepartments { get; set; }
+        #endregion
         #endregion
 
         #region Constructors
@@ -1239,21 +1251,21 @@
                 #endregion
                 #endregion
 
-                #region Выделение ролей факультетам, институтам и кафедрам
-                foreach (Department dep in context.Departments.Local.Where(o => o.IsFaculty))
-                {
-                    dep.RolesInDepartment = deaneryRoles;
-                }
-                var departmentRoles = new List<Role>();
-                departmentRoles.AddRange(departmentStaffRoles);
-                departmentRoles.AddRange(professorsRoles);
-                foreach (Department dep in context.Departments.Local.Where(o => !o.IsFaculty))
-                {
-                    dep.RolesInDepartment = departmentRoles;
+                //#region Выделение ролей факультетам, институтам и кафедрам
+                //foreach (Department dep in context.Departments.Local.Where(o => o.IsFaculty))
+                //{
+                //    dep.RolesInDepartment = deaneryRoles;
+                //}
+                //var departmentRoles = new List<Role>();
+                //departmentRoles.AddRange(departmentStaffRoles);
+                //departmentRoles.AddRange(professorsRoles);
+                //foreach (Department dep in context.Departments.Local.Where(o => !o.IsFaculty))
+                //{
+                //    dep.RolesInDepartment = departmentRoles;
 
-                }
-                context.SaveChanges();
-                #endregion
+                //}
+                //context.SaveChanges();
+                //#endregion
 
                 #region Создание пользователей
                 Guid grinId = Guid.NewGuid();
@@ -1264,16 +1276,7 @@
                     LastName = "Гринченков",
                     Password = Encryption.Encrypt("grinchDV"),
                     Patronimyc = "Валерьевич",
-                    UserName = "Дмитрий",
-                    UserRoles = new List<UserRoles>
-                        {
-                            new UserRoles()
-                            {
-                                UserId = grinId,
-                                RoleId = new Guid("AE9F0C57-DBB3-455F-A578-91C4CDCA3D79"),
-                                Departments = context.Departments.Local.Where(o=>o.Id == new Guid("6C3B8752-F8BB-43DA-886E-20E3146012CE")).ToList()
-                            }
-                        }
+                    UserName = "Дмитрий"
                 };
                 Guid kirpichenkovaId = new Guid();
                 User kirpichenkova = new User
@@ -1283,16 +1286,7 @@
                     LastName = "Кирпиченкова",
                     Password = Encryption.Encrypt("ifioonelove"),
                     Patronimyc = "Валерьевна",
-                    UserName = "Наталья",
-                    UserRoles = new List<UserRoles>
-                    {
-                        new UserRoles()
-                        {
-                            UserId = kirpichenkovaId,
-                            RoleId = new Guid("AE9F0C57-DBB3-455F-A578-91C4CDCA3D79"),
-                            Departments = context.Departments.Local.Where(o=>o.Id == new Guid("A006EC7E-A15C-49A5-B627-2F5781CC305A")).ToList()
-                        }
-                    }
+                    UserName = "Наталья"
                 };
                 Guid kirillId = new Guid("099DC122-6E91-4281-BC30-1587730A1BE5");
                 User kirill = new User
@@ -1303,9 +1297,9 @@
                     Password = Encryption.Encrypt("qwerty_123"),
                     Patronimyc = "Николаевич",
                     UserName = "Кирилл",
-                    UserRoles = new List<UserRoles>
+                    UserRoles = new List<UserRole>
                         {
-                            new UserRoles()
+                            new UserRole()
                             {
                                 UserId = kirillId,
                                 //DepartmentId = new Guid("6C3B8752-F8BB-43DA-886E-20E3146012CE"),

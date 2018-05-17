@@ -13,6 +13,7 @@ using System.Web;
 using System.Web.Security;
 using WECr;
 using System.Data.Entity;
+using Andromeda.Models.RelationEntities;
 
 namespace Andromeda.Core.Managers
 {
@@ -58,7 +59,7 @@ namespace Andromeda.Core.Managers
                         return result;
                     }
                     List<Guid> roleIds =
-                        GetEntitiesWithJoin<User, UserRoles, Guid, Guid>(context,
+                        GetEntitiesWithJoin<User, UserRole, Guid, Guid>(context,
                         o => o.Login == login,
                         o => o.Id,
                         o => o.UserId,
@@ -95,7 +96,7 @@ namespace Andromeda.Core.Managers
                     }
 
                     List<Guid> roleIds =
-                        GetEntitiesWithJoin<User, UserRoles, Guid, Guid>(context,
+                        GetEntitiesWithJoin<User, UserRole, Guid, Guid>(context,
                         o => o.Login == login,
                         o => o.Id,
                         o => o.UserId,
@@ -134,7 +135,7 @@ namespace Andromeda.Core.Managers
                     }
 
                     List<Guid> roleIds =
-                        GetEntitiesWithJoin<User, UserRoles, Guid, Guid>(context,
+                        GetEntitiesWithJoin<User, UserRole, Guid, Guid>(context,
                         o => o.Login == login,
                         o => o.Id,
                         o => o.UserId,
@@ -176,7 +177,7 @@ namespace Andromeda.Core.Managers
                     }
 
                     List<Guid> roleIds =
-                        GetEntitiesWithJoin<User, UserRoles, Guid, Guid>(context,
+                        GetEntitiesWithJoin<User, UserRole, Guid, Guid>(context,
                         o => o.Login == login,
                         o => o.Id,
                         o => o.UserId,
@@ -218,7 +219,7 @@ namespace Andromeda.Core.Managers
                     }
 
                     List<Guid> roleIds =
-                        GetEntitiesWithJoin<User, UserRoles, Guid, Guid>(context,
+                        GetEntitiesWithJoin<User, UserRole, Guid, Guid>(context,
                         o => o.Login == login,
                         o => o.Id,
                         o => o.UserId,
@@ -275,7 +276,7 @@ namespace Andromeda.Core.Managers
                         LastName = o.LastName,
                         Login = o.Login,
                         Name = o.UserName,
-                        Patronymic = o.Patronimyc ?? string.Empty
+                        Patronimyc = o.Patronimyc ?? string.Empty
                     }).ToList();
 
                     data.Total = entities.Count;
@@ -284,6 +285,38 @@ namespace Andromeda.Core.Managers
                         .Skip((page - 1) * limit)
                         .Take(limit)
                         .ToList();
+
+                    return data;
+                }
+            }
+            catch(Exception exc)
+            {
+                return LogErrorManager.Add(exc);
+            }
+        }
+        public static IViewModel GetUser(Guid id)
+        {
+            try
+            {
+                using (DBContext context = DBContext.Create())
+                {
+                    EntityViewModel<UserViewModel> data = new EntityViewModel<UserViewModel>
+                    {
+                        Result = Result.Ok
+                    };
+
+                    data.Entity = context.Users
+                        .Where(o => o.Id == id).AsNoTracking().ToList().Select(
+                            o => new UserViewModel
+                            {
+                                Id = o.Id,
+                                LastName = o.LastName,
+                                Login = o.Login,
+                                Name = o.UserName,
+                                Patronimyc = o.Patronimyc,
+                                Password = Encryption.Decrypt(o.Password),
+                                AcademicTitleId = o.AcademicTitleId
+                            }).FirstOrDefault();
 
                     return data;
                 }
@@ -304,20 +337,23 @@ namespace Andromeda.Core.Managers
                         Result = Result.Ok
                     };
 
-                    var tempEntities = context.UserAcademicDegrees.Where(o => o.UserId != userId).AsNoTracking();
+                    data.Entities = context.AcademicDegrees.Join(context.BranchesOfScience.AsNoTracking(),
+                        a=> a.BranchOfScienceId,
+                        b=>b.Id,
+                        (a, b) => new AcademicDegreeViewModel
+                        {
+                            Id = a.Id,
+                            Name = a.Name + " " + b.Name.ToLower(),
+                            ShortName = a.ShortName + " " + b.ShortName.ToLower()
+                        })
+                        .AsNoTracking().ToList();
 
-                    data.Entities = context.AcademicDegrees.Join(tempEntities, a => a.Id,
-                         ua => ua.AcademicDegreeId,
-                         (a, ua) => new AcademicDegreeViewModel
-                         {
-                             Id = a.Id,
-                             Name = a.Name + " " + context.BranchesOfScience
-                             .Where(b => b.Id == a.BranchOfScienceId)
-                             .Select(b => b.Name).FirstOrDefault(),
-                             ShortName = a.ShortName + " " + context.BranchesOfScience
-                             .Where(b => b.Id == a.BranchOfScienceId).Select(b => b.ShortName)
-                             .FirstOrDefault()
-                         }).ToList();
+                    var userAdIds = context.AcademicDegreeUsers.Where(o => o.UserId == userId).Select(o => o.AcademicDegreeId).ToList();
+
+                    if(userAdIds.Count > 0)
+                    {
+                        data.Entities = data.Entities.Where(o => !userAdIds.Contains(o.Id)).ToList();
+                    }
                     data.Entities = data.Entities.Where(o =>
                          o.Name.ToLower().Contains((search ?? string.Empty).ToLower()) ||
                          o.ShortName.ToLower().Contains((search ?? string.Empty).ToLower()))
@@ -342,7 +378,7 @@ namespace Andromeda.Core.Managers
                         Result = Result.Ok
                     };
 
-                    var tempEntities = context.UserAcademicDegrees.Where(o => o.UserId == userId).AsNoTracking();
+                    var tempEntities = context.AcademicDegreeUsers.Where(o => o.UserId == userId).AsNoTracking();
 
                     data.Entities = context.AcademicDegrees.Join(tempEntities, a => a.Id,
                          ua => ua.AcademicDegreeId,
