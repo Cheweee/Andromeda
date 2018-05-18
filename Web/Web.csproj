@@ -150,6 +150,7 @@
     <Compile Include="Controllers\AdministrationController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\CirriculumDevelopmentController.cs" />
+    <Compile Include="Controllers\LoadDistributionController.cs" />
     <Compile Include="Controllers\ReferencesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -315,7 +316,9 @@
     <Content Include="Views\CirriculumDevelopment\WorkingCirriculum.cshtml" />
     <Content Include="Views\Administration\User.cshtml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Views\LoadDistribution\" />
+  </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
     <Content Include="Scripts\Jquery\jquery-3.3.1.slim.min.map" />

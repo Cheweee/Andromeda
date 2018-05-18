@@ -5,7 +5,7 @@
 
 	$scope.getRoles = function () {
         var deferred = $q.defer();
-        service.getEntities('/Administration/GetUserRoleRoles', model = { Search: $scope.searchRole })
+        service.getEntities('/Administration/GetUserRoleRoles', model = { Search: $scope.searchRole, SearchId: $cookies.get('entityId') })
             .then(function (response) {
                 if (response.data.Result) {
                     var rows = response.data.Entities;
@@ -23,7 +23,7 @@
 
     $scope.getDepartments = function () {
         var deferred = $q.defer();
-        service.getEntities('/Administration/GetUserRoleDepartments', model = { Search: $scope.searchDepartment })
+        service.getEntities('/Administration/GetUserRoleDepartments', model = { Search: $scope.searchDepartment, SearchId: $cookies.get('entityId'), SecondSearchId: $scope.selectedRole.Id })
             .then(function (response) {
                 if (response.data.Result) {
                     var rows = response.data.Entities;

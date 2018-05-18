@@ -280,11 +280,22 @@ namespace Andromeda.Core.Managers
                     }).ToList();
 
                     data.Total = entities.Count;
-                    data.Entities = entities
-                        .OrderBy(order)
-                        .Skip((page - 1) * limit)
-                        .Take(limit)
-                        .ToList();
+                    if (isAscending)
+                    {
+                        data.Entities = entities
+                            .OrderBy(order)
+                            .Skip((page - 1) * limit)
+                            .Take(limit)
+                            .ToList();
+                    }
+                    else
+                    {
+                        data.Entities = entities
+                            .OrderByDescending(order)
+                            .Skip((page - 1) * limit)
+                            .Take(limit)
+                            .ToList();
+                    }
 
                     return data;
                 }
@@ -326,7 +337,7 @@ namespace Andromeda.Core.Managers
                 return LogErrorManager.Add(exc);
             }
         }
-        public static IViewModel GetNotUserAcademicDegrees(Guid userId, string search)
+        public static IViewModel GetNotUserAcademicDegrees(Guid? userId, string search)
         {
             try
             {
@@ -367,7 +378,7 @@ namespace Andromeda.Core.Managers
                 return LogErrorManager.Add(exc);
             }
         }
-        public static IViewModel GetUserAcademicDegrees(Guid userId)
+        public static IViewModel GetUserAcademicDegrees(Guid? userId)
         {
             try
             {
