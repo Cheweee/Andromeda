@@ -83,7 +83,6 @@
     <Compile Include="References\TypeOfEducation.cs" />
     <Compile Include="References\TypeOfProject.cs" />
     <Compile Include="RelationEntities\AcademicDegreeUser.cs" />
-    <Compile Include="RelationEntities\UserRoleDepartment.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

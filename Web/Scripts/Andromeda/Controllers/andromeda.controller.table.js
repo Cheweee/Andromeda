@@ -15,7 +15,7 @@
         $scope.deleteMessage = deleteMessage;
         $scope.addOrEditController = addOrEditController;
         $scope.fullscreen = fullscreen;
-        $scope.$watch('query.filter.search', function () { if ($scope.query !== null) $scope.query.getEntities(); });
+        $scope.$watch('query.filter.search', function () { if ($scope.query) $scope.query.getEntities(); });
     };
 
     $scope.checkRole = function (canEditUrl = false, accessToAdditionalInfoUrl = false) {
@@ -34,28 +34,17 @@
     $scope.enableAddOrEditOnAnotherPage = function (url) {
         $scope.addOrEditOnDifferentPage = true;
         $scope.addOrEditOnDifferentPageUrl = url;
-    }
+    };
     
     $scope.add = function () {
-        $cookies.put('addOrEdit', true);
+        $cookies.remove('entityId');
         $window.location.href = $scope.addOrEditOnDifferentPageUrl;
     };
 
     $scope.edit = function (entity, event) {
-        $cookies.put('addOrEdit', false);
         $cookies.put('entityId', entity.Id);
         $window.location.href = $scope.addOrEditOnDifferentPageUrl;
     };
-
-    $scope.$watch(function () { return service.dialogId; }, function (value) {
-        if ($scope.query === null) {
-            return;
-        }
-        $scope.dialog = value;
-        if (!value) {
-            $scope.query.getEntities();
-        }
-    });
 
     $scope.addEntity = function (event) {
         if ($scope.addOrEditOnDifferentPage) {

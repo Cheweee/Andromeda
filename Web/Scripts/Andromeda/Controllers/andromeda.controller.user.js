@@ -1,4 +1,4 @@
-﻿app.controller('userController', function ($scope, $q, $timeout, $cookies, $filter, service) {
+﻿app.controller('userController', function ($scope, $q, $timeout, $cookies, $mdDialog, $filter, service) {
     $scope.entity = {
         Id: null,
         AcademicTitleId: null,
@@ -24,14 +24,17 @@
         createTimer: function () {
             $timeout(function () {
                 // loading
-                $scope.loading = false;
+                $scope.settings.loading = false;
             }, this.delay);
         }
     };
 
+    $scope.roles = service.createQuery('Name', '/Administration/GetUserRoles');
+
     $scope.loadDialog = function () {
         $scope.message = 'Загрузка данных';
         var id = $cookies.get('entityId');
+        service.addOrEdit = id === undefined;
         if (id) {
             $scope.settings.loading = true;
             service.getEntityById('/Administration/GetUser', id)
@@ -56,29 +59,32 @@
                             }
                             $scope.settings.createTimer();
                         });
+                        $scope.roles.getEntities(id);
+                        $scope.settings.loading = false;
                     }
                 });
         }
     };
 
     $scope.clearFields = function () {
-        if (!$scope.settings.addOrEdit) {
-            $scope.loadDialog();
-            return;
-        }
         $scope.entity.Name = '';
         $scope.entity.Login = '';
         $scope.entity.Password = '';
         $scope.entity.LastName = '';
         $scope.entity.Patronimyc = '';
         $scope.entity.AcademicDegrees = [];
-        $scope.entity.AcademicTitles = [];
+        $scope.entity.AcademicTitleId = null;
+        $scope.selectedAcademicTitle = null;
+        if (!$scope.settings.addOrEdit) {
+            $scope.loadDialog();
+            return;
+        }
     };
 
     $scope.confirm = function () {
         var academicTitleId = null;
-        if ($scope.settings.AcademicTitle) {
-            academicTitleId = $scope.settings.AcademicTitle.Id;
+        if ($scope.settings.selectedAcademicTitle) {
+            academicTitleId = $scope.settings.selectedAcademicTitle.Id;
         }
         var entity = {
             Id: $scope.entity.Id,
@@ -91,13 +97,33 @@
         };
 
         $scope.message = 'Сохранение изменений';
-        $scope.loading = true;
+        $scope.settings.loading = true;
         result = true;
-        var method = service.addOrEdit ? "/Administration/AddUser" : "/Administration/ModifyUser";
+        var method = '/Administration/SaveUser';//service.addOrEdit ? "/Administration/AddUser" : "/Administration/ModifyUser";
         service.addOrEditEntity(method, entity)
             .then(function (response) {
                 if (response.data.Result) {
-                    $scope.closeDialog();
+                    entity.Id = response.data.Id;
+                    for (var i = 0; i < $scope.roles.entities.length; i++) {
+                        $scope.roles.entities[i].UserId = entity.Id;
+                    }
+                    if ($scope.roles.Total) {
+                        service.postMethod('/Administration/SaveUserRolesState', model = {
+                            Entities: $scope.roles.entities
+                        })
+                            .then(function (response) {
+                                $scope.settings.createTimer();
+                            });
+                    }
+                    if ($scope.entity.AcademicDegrees.length) {
+                        service.changeEntities('/Administration/SaveUserAcademicDegrees', model = {
+                            NewId: $scope.entity.Id,
+                            Entities: $scope.entity.AcademicDegrees
+                        })
+                            .then(function (response) {
+                                $scope.settings.createTimer();
+                            });
+                    }     
                 }
             });
     };
@@ -142,5 +168,63 @@
             });
 
         return deferred.promise;
+    };
+
+    $scope.addEntity = function (event) {
+        service.addOrEdit = true;
+        $mdDialog.show({
+            clickOutsideToClose: false,
+            controller: 'userRoleController',
+            controllerAs: 'ctrl',
+            focusOnOpen: true,
+            targetEvent: event,
+            templateUrl: 'addOrEditForm.html',
+            fullscreen: false
+        }).then(function () {
+            $scope.roles.entities.push(service.tempEntity);
+        });
+    };
+
+    $scope.editEntity = function (entity, event) {
+        service.addOrEdit = false;
+        service.tempEntity = entity;
+        $mdDialog.show({
+            clickOutsideToClose: false,
+            controller: 'userRoleController',
+            controllerAs: 'ctrl',
+            focusOnOpen: true,
+            targetEvent: event,
+            templateUrl: 'addOrEditForm.html',
+            fullscreen: false
+        }).then(function () {
+            for (var i = 0; i < $scope.roles.entities.length; i++) {
+                var role = $scope.roles.entities[i];
+                if (role.Id === service.tempEntity.Id) {
+                    $scope.roles.entities[i] = service.tempEntity;
+                }
+            }
+            $scope.roles.selected = [];
+        });
+    };
+
+    $scope.delete = function (entities, event) {
+        var confirm = $mdDialog.confirm()
+            .title('Вы уверены, что хотите удалить выбранные права пользователя?')
+            .ariaLabel('Pleeeeease noooooo!!!')
+            .targetEvent(event)
+            .ok('Да')
+            .cancel('Нет');
+        $mdDialog.show(confirm).then(
+            function () {
+                for (var i = 0; i < $scope.roles.entities.length; i++) {
+                    var role = $scope.roles.entities[i];
+                    for (var j = 0; j < entities.length; j++) {
+                        if (entities[j].Id === role.Id) {
+                            $scope.roles.entities[i].EntityState = 8;
+                        }
+                    }
+                }
+                $scope.roles.selected = [];
+            }, function () { });
     };
 });

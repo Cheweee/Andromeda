@@ -252,6 +252,7 @@
     <Content Include="Scripts\Andromeda\Controllers\andromeda.controller.table.js" />
     <Content Include="Scripts\Andromeda\Controllers\andromeda.controller.courseTitle.js" />
     <Content Include="Scripts\Angular\angular-cookies.min.js.map" />
+    <Content Include="Scripts\Andromeda\Controllers\andromeda.controller.userRole.js" />
     <None Include="Scripts\Jquery\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\Jquery\jquery-3.3.1.js" />
     <Content Include="Scripts\Jquery\jquery-3.3.1.min.js" />

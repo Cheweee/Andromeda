@@ -47,7 +47,6 @@
         public virtual DbSet<CompetenceAcademicDiscipline> CompetenceAcademicDisciplines { get; set; }
         public virtual DbSet<RightRole> RightRoles { get; set; }
         public virtual DbSet<UserRole> UserRoles { get; set; }
-        public virtual DbSet<UserRoleDepartment> UserRoleDepartments { get; set; }
         #endregion
         #endregion
 
@@ -1276,7 +1275,17 @@
                     LastName = "Гринченков",
                     Password = Encryption.Encrypt("grinchDV"),
                     Patronimyc = "Валерьевич",
-                    UserName = "Дмитрий"
+                    UserName = "Дмитрий",
+                    UserRoles = new List<UserRole>
+                        {
+                            new UserRole
+                            {
+                                Id = Guid.NewGuid(),
+                                UserId = grinId,
+                                DepartmentId = new Guid("6C3B8752-F8BB-43DA-886E-20E3146012CE"),
+                                RoleId = new Guid("AE9F0C57-DBB3-455F-A578-91C4CDCA3D79"),
+                            }
+                        }
                 };
                 Guid kirpichenkovaId = new Guid();
                 User kirpichenkova = new User
@@ -1299,8 +1308,9 @@
                     UserName = "Кирилл",
                     UserRoles = new List<UserRole>
                         {
-                            new UserRole()
+                            new UserRole
                             {
+                                Id = Guid.NewGuid(),
                                 UserId = kirillId,
                                 //DepartmentId = new Guid("6C3B8752-F8BB-43DA-886E-20E3146012CE"),
                                 RoleId = new Guid("556CAB08-1CC0-40E7-B665-4E59E59189E4"),

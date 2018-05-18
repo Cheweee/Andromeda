@@ -69,16 +69,16 @@ namespace Andromeda.Web.Controllers
             return Json(data, JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
-        public JsonResult AddUser(User entity)
+        public JsonResult SaveUser(UserViewModel entity)
         {
-            var data = BaseEntityManager.AddEntity(entity);
+            var data = UserManager.SaveUser(entity);
 
             return Json(data, JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
-        public JsonResult ModifyUser(User entity)
+        public JsonResult SaveUserAcademicDegrees(ChangeEntitiesViewModel<AcademicDegree> model)
         {
-            var data = BaseEntityManager.ModifyEntity(entity);
+            var data = UserManager.SaveUserAcademicDegrees(model.NewId, model.Entities.Select(o=> o.Id).ToList());
 
             return Json(data, JsonRequestBehavior.AllowGet);
         }
@@ -86,6 +86,63 @@ namespace Andromeda.Web.Controllers
         public JsonResult DeleteUsers(List<User> entities)
         {
             var data = BaseEntityManager.DeleteEntities(entities);
+
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+        #endregion
+        #region UserRoles
+        [HttpGet]
+        public JsonResult GetUserRoles(EntitiesViewModel model)
+        {
+            var data = UserManager.GetUserRoles(model.SearchId);
+
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+        [HttpGet]
+        public JsonResult GetUserRole(Guid id)
+        {
+            var data = BaseEntityManager.GetEntity<UserRole, UserRoleViewModel>(o => o.Id == id, o => new UserRoleViewModel
+            {
+                Id = o.Id,
+                DepartmentId = o.DepartmentId,
+                RoleId = o.RoleId,
+                UserId = o.UserId
+            });
+
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+        [HttpGet]
+        public JsonResult GetUserRoleRoles(EntitiesViewModel model)
+        {
+            var data = BaseEntityManager.GetEntities<Role, RoleViewModel>(
+                o => o.Name.ToLower().Contains((model.Search ?? string.Empty).ToLower()),
+                o => new RoleViewModel
+                {
+                    Id = o.Id,
+                    Name = o.Name
+                });
+
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+        [HttpGet]
+        public JsonResult GetUserRoleDepartments(EntitiesViewModel model)
+        {
+            var data = BaseEntityManager.GetEntities<Department, DepartmentViewModel>(
+                o => o.Name.ToLower().Contains((model.Search ?? string.Empty).ToLower()) ||
+                o.ShortName.ToLower().Contains((model.Search ?? string.Empty).ToLower()),
+                o => new DepartmentViewModel
+                {
+                    Id = o.Id,
+                    Name = o.Name,
+                    ShortName = o.ShortName
+                });
+
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+        [HttpPost]
+        public JsonResult SaveUserRolesState(EntitiesViewModel<UserRoleViewModel> model)
+        {
+            var data = UserManager.SaveUserRolesSate(model.Entities);
 
             return Json(data, JsonRequestBehavior.AllowGet);
         }

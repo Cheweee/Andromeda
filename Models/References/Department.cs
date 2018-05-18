@@ -44,7 +44,7 @@ namespace Andromeda.Models.References
         /// <summary>
         /// Collection of user roles in this department
         /// </summary>
-        public virtual ICollection<UserRoleDepartment> UserRoleDepartments { get; set; }
+        public virtual ICollection<UserRole> UserRoles{ get; set; }
         /// <summary>
         /// Collection of working cirriculums in this department
         /// </summary>
@@ -70,7 +70,6 @@ namespace Andromeda.Models.References
         public Department()
         {
             this.IsFaculty = false;
-            this.UserRoleDepartments = new HashSet<UserRoleDepartment>();
             this.WorkingCirriculums = new HashSet<WorkingCirriculum>();
             this.AcademicDisciplines = new HashSet<AcademicDiscipline>();
             this.CourseTitlesInDepartment = new HashSet<CourseTitle>();

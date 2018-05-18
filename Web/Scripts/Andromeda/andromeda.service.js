@@ -5,6 +5,7 @@
     this.addOrEdit = false;
     //Current object for exchange data between different controllers
     this.id = null;
+    this.tempEntity = null;
 
     //JSON data type for request data
     var jsonDataType = 'json';
@@ -95,8 +96,24 @@
                     }
                 }
             },
-            getEntities: function () {
+            getEntities: function (searchId) {
                 var self = query;
+                if (searchId) {
+                    $http({
+                        dataType: jsonDataType,
+                        method: getMethod,
+                        params: model = { Page: self.page, Limit: self.limit, Order: self.order, Search: self.filter.search, SearchId: searchId },
+                        url: getEntitiesUrl
+                    }).then(function (response) {
+                        if (response.data.Result) {
+                            self.entities = response.data.Entities;
+                            self.total = response.data.Total;
+                            self.page = response.data.Page;
+                            self.selected = [];
+                        }
+                        });
+                    return;
+                }
                 $http({
                     dataType: jsonDataType,
                     method: getMethod,
@@ -167,7 +184,17 @@
             dataType: jsonDataType
         });
     };
-    this.postMethod = function (url) {
+    
+    this.postMethod = function (url, model) {
+        if(model)
+        {
+            return $http({
+                method: postMethod,
+                url: url,
+                data: model,
+                dataType: jsonDataType
+            });
+        }
         return $http({
             method: postMethod,
             url: url

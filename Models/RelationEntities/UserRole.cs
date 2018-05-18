@@ -1,4 +1,5 @@
 ﻿using Andromeda.Models.Administration;
+using Andromeda.Models.Interfaces;
 using Andromeda.Models.References;
 using System;
 using System.Collections.Generic;
@@ -13,26 +14,18 @@ namespace Andromeda.Models.RelationEntities
     /// <summary>
     /// The entity for many-to-many communication user - role
     /// </summary>
-    public partial class UserRole
+    public partial class UserRole : IKeyEntity<Guid>
     {
         #region Properties
         [Key]
-        [Column(Order = 1)]
+        public Guid Id { get; set; }
         public Guid UserId { get; set; }
-        [Key]
-        [Column(Order = 2)]
         public Guid RoleId { get; set; }
+        public Guid? DepartmentId { get; set; }
 
         public virtual User User { get; set; }
         public virtual Role Role { get; set; }
-        public virtual ICollection<UserRoleDepartment> UserRoleDepartments { get; set; }
-        #endregion
-
-        #region Constructors
-        public UserRole()
-        {
-            this.UserRoleDepartments = new HashSet<UserRoleDepartment>();
-        }
+        public virtual Department Department { get; set; }
         #endregion
     }
 }

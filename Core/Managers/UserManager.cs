@@ -305,18 +305,18 @@ namespace Andromeda.Core.Managers
                         Result = Result.Ok
                     };
 
-                    data.Entity = context.Users
-                        .Where(o => o.Id == id).AsNoTracking().ToList().Select(
-                            o => new UserViewModel
-                            {
-                                Id = o.Id,
-                                LastName = o.LastName,
-                                Login = o.Login,
-                                Name = o.UserName,
-                                Patronimyc = o.Patronimyc,
-                                Password = Encryption.Decrypt(o.Password),
-                                AcademicTitleId = o.AcademicTitleId
-                            }).FirstOrDefault();
+                    User user = context.Users.Find(id);
+                    
+                    data.Entity = new UserViewModel
+                    {
+                        Id = user.Id,
+                        LastName = user.LastName,
+                        Login = user.Login,
+                        Name = user.UserName,
+                        Patronimyc = user.Patronimyc,
+                        Password = Encryption.Decrypt(user.Password),
+                        AcademicTitleId = user.AcademicTitleId
+                    };
 
                     return data;
                 }
@@ -395,6 +395,173 @@ namespace Andromeda.Core.Managers
                          .AsNoTracking().ToList();
 
                     return data;
+                }
+            }
+            catch (Exception exc)
+            {
+                return LogErrorManager.Add(exc);
+            }
+        }
+        public static IViewModel GetUserRoles(Guid? userId)
+        {
+            try
+            {
+                using(DBContext context = DBContext.Create())
+                {
+                    EntitiesViewModel<UserRoleViewModel> data = new EntitiesViewModel<UserRoleViewModel>
+                    {
+                        Result = Result.Ok
+                    };
+                    
+                    var tempUserRoles = context.UserRoles.Where(o => o.UserId == userId).AsNoTracking();
+                    var tempRoles = context.Roles.Join(tempUserRoles,
+                        r => r.Id,
+                        ur => ur.RoleId,
+                        (r, ur) => new UserRoleViewModel
+                        {
+                            Id = ur.Id,
+                            RoleId = ur.RoleId,
+                            DepartmentId = ur.DepartmentId,
+                            UserId = ur.UserId,
+                            Name = r.Name + (ur.DepartmentId.HasValue ? " " + context.Departments.Where(o => o.Id == ur.DepartmentId).Select(o => o.ShortName).FirstOrDefault() : string.Empty),
+                            EntityState = EntityState.Unchanged
+                        }).ToList();
+                    data.Total = tempRoles.Count;
+                    data.Page = 1;
+
+                    data.Entities = tempRoles;
+
+                    return data;
+                }
+            }
+            catch(Exception exc)
+            {
+                return LogErrorManager.Add(exc);
+            }
+        }
+        public static IViewModel SaveUser(UserViewModel viewModel)
+        {
+            try
+            {
+                using(DBContext context = DBContext.Create())
+                {
+                    AddOrEditViewModel data = new AddOrEditViewModel
+                    {
+                        Result = Result.Ok
+                    };
+                    context.Configuration.AutoDetectChangesEnabled = false;
+                    context.Configuration.ValidateOnSaveEnabled = false;
+
+                    if (viewModel.Id == Guid.Empty)
+                    {
+                        User user = new User
+                        {
+                            Id = Guid.NewGuid(),
+                            AcademicTitleId = viewModel.AcademicTitleId,
+                            LastName = viewModel.LastName,
+                            Login = viewModel.Login,
+                            Password = Encryption.Encrypt(viewModel.Password),
+                            Patronimyc = viewModel.Patronimyc,
+                            UserName = viewModel.Name
+                        };
+                        context.Entry(user).State = EntityState.Added;
+                        data.Id = user.Id;
+                    }
+                    else
+                    {
+                        User user = new User
+                        {
+                            Id = viewModel.Id,
+                            AcademicTitleId = viewModel.AcademicTitleId,
+                            LastName = viewModel.LastName,
+                            Login = viewModel.Login,
+                            Password = Encryption.Encrypt(viewModel.Password),
+                            Patronimyc = viewModel.Patronimyc,
+                            UserName = viewModel.Name
+                        };
+                        context.Entry(user).State = EntityState.Modified;
+                        data.Id = user.Id;
+                    }
+
+                    context.SaveChanges();
+                    context.Configuration.AutoDetectChangesEnabled = true;
+                    context.Configuration.ValidateOnSaveEnabled = true;
+
+                    return data;
+                }
+            }
+            catch(Exception exc)
+            {
+                return LogErrorManager.Add(exc);
+            }
+        }
+        public static IViewModel SaveUserRolesSate(List<UserRoleViewModel> viewModels)
+        {
+            try
+            {
+                using (DBContext context = DBContext.Create())
+                {
+                    ResultViewModel data = new ResultViewModel
+                    {
+                        Result = Result.Ok
+                    };
+                    context.Configuration.AutoDetectChangesEnabled = false;
+                    context.Configuration.ValidateOnSaveEnabled = false;
+
+                    foreach (UserRoleViewModel viewModel in viewModels)
+                    {
+                        UserRole userRole = new UserRole
+                        {
+                            Id = viewModel.Id == Guid.Empty ? Guid.NewGuid() : viewModel.Id,
+                            DepartmentId = viewModel.DepartmentId,
+                            RoleId = viewModel.RoleId,
+                            UserId = viewModel.UserId
+                        };
+                        context.Entry(userRole).State = viewModel.EntityState;
+                    }
+                    context.SaveChanges();
+
+                    context.Configuration.AutoDetectChangesEnabled = true;
+                    context.Configuration.ValidateOnSaveEnabled = true;
+
+                    return data;
+                }
+            }
+            catch(Exception exc)
+            {
+                return LogErrorManager.Add(exc);
+            }
+        }
+        public static IViewModel SaveUserAcademicDegrees(Guid userId, List<Guid> ids)
+        {
+            try
+            {
+                using (DBContext context = DBContext.Create())
+                {
+                    ResultViewModel result = new ResultViewModel
+                    {
+                        Result = Result.Ok
+                    };
+
+                    context.Configuration.AutoDetectChangesEnabled = false;
+                    context.Configuration.ValidateOnSaveEnabled = false;
+
+                    var entities = context.AcademicDegreeUsers.Where(o => o.UserId == userId).AsNoTracking();
+                    foreach (var entity in entities.Where(o => !ids.Contains(o.UserId)))
+                    {
+                        context.Entry(entity).State = EntityState.Deleted;
+                    }
+                    foreach (var id in ids.Where(o => !entities.Select(r => r.AcademicDegreeId).Contains(o)))
+                    {
+                        AcademicDegreeUser rightRole = new AcademicDegreeUser { AcademicDegreeId = id, UserId = userId };
+                        context.Entry(rightRole).State = EntityState.Added;
+                    }
+                    context.SaveChanges();
+
+                    context.Configuration.AutoDetectChangesEnabled = true;
+                    context.Configuration.ValidateOnSaveEnabled = true;
+
+                    return result;
                 }
             }
             catch (Exception exc)

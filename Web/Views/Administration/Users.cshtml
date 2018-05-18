@@ -29,7 +29,7 @@
         </md-toolbar>
         <md-toolbar class="md-table-toolbar md-alternate" ng-show="query.selected.length">
             <div class="md-toolbar-tools">
-                <span>Ролей выбрано : {{query.selected.length}}</span>
+                <span>Пользователей выбрано : {{query.selected.length}}</span>
                 <span flex></span>
                 <md-button class="md-icon-button" show ng-hide="query.selected.length!=1 || !canEdit" ng-click="editEntity(query.selected[0])">
                     <md-icon md-colors="{color: 'accent-500'}">edit</md-icon>
@@ -57,7 +57,7 @@
                         <td md-cell>{{entity.Login}}</td>
                         <td md-cell>{{entity.Name}}</td>
                         <td md-cell>{{entity.LastName}}</td>
-                        <td md-cell>{{entity.Patronymic}}</td>
+                        <td md-cell>{{entity.Patronimyc}}</td>
                     </tr>
                 </tbody>
             </table>
