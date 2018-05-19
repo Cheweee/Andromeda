@@ -11,6 +11,5 @@ namespace Andromeda.ViewModels.Server
         public Guid Id { get; set; }
         public string Name { get; set; }
         public bool CanTeach { get; set; }
-        public bool TiedToDepartment { get; set; }
     }
 }

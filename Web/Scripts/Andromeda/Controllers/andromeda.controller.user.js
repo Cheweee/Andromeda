@@ -99,7 +99,7 @@
         $scope.message = 'Сохранение изменений';
         $scope.settings.loading = true;
         result = true;
-        var method = '/Administration/SaveUser';
+        var method = '/Administration/SaveUser';//service.addOrEdit ? "/Administration/AddUser" : "/Administration/ModifyUser";
         service.addOrEditEntity(method, entity)
             .then(function (response) {
                 if (response.data.Result) {
@@ -107,24 +107,23 @@
                     for (var i = 0; i < $scope.roles.entities.length; i++) {
                         $scope.roles.entities[i].UserId = entity.Id;
                     }
-
-                    service.changeEntities('/Administration/SaveUserAcademicDegrees', model = {
-                        NewId: $scope.entity.Id,
-                        Entities: $scope.entity.AcademicDegrees ? $scope.entity.AcademicDegrees : []
-                    })
-                    .then(function (response) {
-                        if ($scope.roles.entities.length) {
-                            service.postMethod('/Administration/SaveUserRolesState', model = {
-                                Entities: $scope.roles.entities
-                            })
-                                .then(function (response) {
-                                    $scope.settings.createTimer();
-                                });
-                        }
-                        else {
-                            $scope.settings.createTimer();
-                        }
-                    });
+                    if ($scope.roles.Total) {
+                        service.postMethod('/Administration/SaveUserRolesState', model = {
+                            Entities: $scope.roles.entities
+                        })
+                            .then(function (response) {
+                                $scope.settings.createTimer();
+                            });
+                    }
+                    if ($scope.entity.AcademicDegrees.length) {
+                        service.changeEntities('/Administration/SaveUserAcademicDegrees', model = {
+                            NewId: $scope.entity.Id,
+                            Entities: $scope.entity.AcademicDegrees
+                        })
+                            .then(function (response) {
+                                $scope.settings.createTimer();
+                            });
+                    }     
                 }
             });
     };
@@ -220,7 +219,7 @@
                 for (var i = 0; i < $scope.roles.entities.length; i++) {
                     var role = $scope.roles.entities[i];
                     for (var j = 0; j < entities.length; j++) {
-                        if (entities[j].Id === role.Id && entities[j].RoleId === role.RoleId && entities[j].DepartmentId === role.DepartmentId) {
+                        if (entities[j].Id === role.Id) {
                             $scope.roles.entities[i].EntityState = 8;
                         }
                     }

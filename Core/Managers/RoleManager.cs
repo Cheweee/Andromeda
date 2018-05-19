@@ -27,7 +27,7 @@ namespace Andromeda.Core.Managers
             return new Guid("556CAB08-1CC0-40E7-B665-4E59E59189E4");
         }
 
-        public static IViewModel GetNotRoleRights(Guid? roleId, string search)
+        public static IViewModel GetNotRoleRights(Guid roleId, string search)
         {
             try
             {
