@@ -1,11 +1,5 @@
 ﻿app.controller('workingCirriculumController', function ($scope, $q, $timeout, $mdDialog, $filter, service) {
     var result = false;
-    var createTimer = function () {
-        $timeout(function () {
-            // loading
-            $scope.loading = false;
-        }, 500);
-    };
 
     $scope.closeDialog = function () {
         $mdDialog.hide();
@@ -76,20 +70,23 @@
         delay: 500,
         loading: false,
         message: 'Загрузка данных',
-        addition: false,
-        addOrEdit: null,
-        closeDialog: function () {
-            service.closeDialog();
+        addOrEdit: true,
+        needToAddAreaOfTraining: false,
+        createTimer: function () {
+            return $timeout(function () {
+                // loading
+                $scope.settings.loading = false;
+            }, 500);
         }
     };
 
     $scope.loadDialog = function () {
         $scope.message = 'Загрузка данных';
-        $scope.settings.addOrEdit = $cookies.get('addOrEdit');
-        if (!$scope.settings.addOrEdit) {
-            var wcId = $cookies.get('entityId');
+        var id = $cookies.get('entityId');
+        if (id) {
+            $scope.settings.addOrEdit = false;
             $scope.loading = true;
-            service.getEntityById('/CirriculumDevelopment/GetAreaOfTraining', wcId)
+            service.getEntityById('/CirriculumDevelopment/GetAreaOfTraining', id)
                 .then(function (response) {
                     if (response.data.Result) {
                         $scope.entity.Id = response.data.Entity.Id;
@@ -108,29 +105,29 @@
                                     }
                                 }
                             }
-                            createTimer();
+                            $scope.settings.createTimer();
                         });
                         $scope.getAreasOfTraining().then(function () {
                             var rows = $scope.areasOfTrainings;
                             for (i = 0; i < rows.length; i++) {
                                 if ($scope.entity !== null) {
                                     if ($scope.entity.AreaOfTrainingId === rows[i].Id) {
-                                        $scope.selectedTypeOfEd = rows[i];
+                                        $scope.selectedAreaOfTraining = rows[i];
                                     }
                                 }
                             }
-                            createTimer();
+                            $scope.settings.createTimer();
                         });
                         $scope.getTypesOfEd().then(function () {
                             var rows = $scope.typesOfEd;
                             for (i = 0; i < rows.length; i++) {
                                 if ($scope.entity !== null) {
-                                    if ($scope.entity.TypeOfEducationName === rows[i].Name) {
-                                        $scope.selectedAreaOfTraining = rows[i];
+                                    if ($scope.entity.TypeOfEducationName === rows[i]) {
+                                        $scope.selectedTypeOfEd = rows[i];
                                     }
                                 }
                             }
-                            createTimer();
+                            $scope.settings.createTimer();
                         });
                     }
                 });
@@ -179,5 +176,57 @@
                     $scope.closeDialog();
                 }
             });
+    };
+
+    $scope.openUploadDialog = function (event) {
+        $scope.settings.loading = true;
+        $mdDialog.show({
+            clickOutsideToClose: false,
+            controller: 'uploadController',
+            controllerAs: 'ctrl',
+            focusOnOpen: true,
+            targetEvent: event,
+            templateUrl: 'uploadForm.html',
+            fullscreen: $scope.fullscreen
+        }).then(function () {
+            $scope.entity = service.entity;
+            $scope.selectedTypeOfEd = service.entity.TypeOfEducationName;
+            $scope.getDepartments().then(function () {
+                var rows = $scope.departments;
+                for (i = 0; i < rows.length; i++) {
+                    if ($scope.entity !== null) {
+                        if ($scope.entity.DepartmentId === rows[i].Id) {
+                            $scope.selectedDepartment = rows[i];
+                        }
+                    }
+                }
+            });
+            $scope.getAreasOfTraining().then(function () {
+                var rows = $scope.areasOfTrainings;
+                for (i = 0; i < rows.length; i++) {
+                    if ($scope.entity !== null) {
+                        if ($scope.entity.AreaOfTrainingId === rows[i].Id) {
+                            $scope.selectedAreaOfTraining = rows[i];
+                        }
+                    }
+                }
+
+                if (!$scope.selectedAreaOfTraining) {
+                    $scope.settings.needToAddAreaOfTraining = true;
+                    $scope.selectedAreaOfTraining = service.entity.AreaOfTraining;
+                }
+            });
+            $scope.getTypesOfEd().then(function () {
+                var rows = $scope.typesOfEd;
+                for (i = 0; i < rows.length; i++) {
+                    if ($scope.entity !== null) {
+                        if ($scope.entity.TypeOfEducationName === rows[i]) {
+                            $scope.selectedTypeOfEd = rows[i];
+                        }
+                    }
+                }
+            });
+            $scope.settings.createTimer();
+        });
     };
 });

@@ -52,6 +52,7 @@
     <Compile Include="Client\EntityViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Server\AcademicDegreeViewModel.cs" />
+    <Compile Include="Server\AcademicDisciplineViewModel.cs" />
     <Compile Include="Server\AcademicTitleViewModel.cs" />
     <Compile Include="Server\AreaOfTrainingViewModel.cs" />
     <Compile Include="Server\CourseTitleViewModel.cs" />

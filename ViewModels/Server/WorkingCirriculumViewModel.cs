@@ -19,5 +19,7 @@ namespace Andromeda.ViewModels.Server
         public string EducationalStandart { get; set; }
         public double TrainingPeriod { get; set; }
         public int StartTraining { get; set; }
+
+        public AreaOfTrainingViewModel AreaOfTraining { get; set; }
     }
 }

@@ -18,7 +18,7 @@ namespace Andromeda.Models.Entities
         /// <summary>
         /// Id of the working cirriculum
         /// </summary>
-        public Guid Id { get; set; }
+        public Guid Id { get; set; }        
         /// <summary>
         /// Id of the department which contains this working cirriculum (required property)
         /// </summary>
@@ -29,6 +29,7 @@ namespace Andromeda.Models.Entities
         /// </summary>
         [Required]
         public Guid AreaOfTrainingId { get; set; }
+        public Guid? WorkingCirriculumFileId { get; set; }
         /// <summary>
         /// Type of education name of this working cirriculum (required property)
         /// </summary>
@@ -64,6 +65,7 @@ namespace Andromeda.Models.Entities
         /// Department entity
         /// </summary>
         public virtual Department Department { get; set; }
+        public virtual WorkingCirriculumFile WorkingCirriculumFile { get; set; }
         /// <summary>
         /// Collection of competences that need to this working cirriculum
         /// </summary>

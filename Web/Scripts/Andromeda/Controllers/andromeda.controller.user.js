@@ -34,7 +34,6 @@
     $scope.loadDialog = function () {
         $scope.message = 'Загрузка данных';
         var id = $cookies.get('entityId');
-        service.addOrEdit = id === undefined;
         if (id) {
             $scope.settings.loading = true;
             service.getEntityById('/Administration/GetUser', id)

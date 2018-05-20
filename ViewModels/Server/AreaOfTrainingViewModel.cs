@@ -17,6 +17,6 @@ namespace Andromeda.ViewModels.Server
         public string LevelOfHigherEducationName { get; set; }
         public string DepartmentName { get; set; }
         public string FacultyName { get; set; }
-        public double Code { get; set; }
+        public string Code { get; set; }
     }
 }

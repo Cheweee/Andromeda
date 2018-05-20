@@ -30,12 +30,10 @@ namespace Andromeda.Models.Entities
         /// <summary>
         /// Code of the area of training (required property)
         /// </summary>
-        [Required]
-        public double Code { get; set; }
+        public string Code { get; set; }
         /// <summary>
         /// Directionaly of the area of training (required property)
         /// </summary>
-        [Required]
         [MaxLength(255)]
         public string Directionaly { get; set; }
         /// <summary>

@@ -57,6 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Administration\Right.cs" />
+    <Compile Include="References\WorkingCirriculumFile.cs" />
     <Compile Include="RelationEntities\CompetenceAcademicDiscipline.cs" />
     <Compile Include="RelationEntities\RightRoles.cs" />
     <Compile Include="Administration\Role.cs" />

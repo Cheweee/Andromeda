@@ -48,6 +48,7 @@
         public virtual DbSet<RightRole> RightRoles { get; set; }
         public virtual DbSet<UserRole> UserRoles { get; set; }
         public virtual DbSet<RoleDepartment> RoleDepartments { get; set; }
+        public virtual DbSet<WorkingCirriculumFile> WorkingCirriculumFiles { get; set; }
         #endregion
         #endregion
 
@@ -62,6 +63,12 @@
         public static DBContext Create()
         {
             return new DBContext();
+        }
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<WorkingCirriculumFile>()
+                .HasRequired(o=> o.WorkingCirriculum)
+                .WithOptional(o => o.WorkingCirriculumFile);
         }
         #endregion
     }
