@@ -27,7 +27,7 @@ namespace Andromeda.Core.Managers
             return new Guid("556CAB08-1CC0-40E7-B665-4E59E59189E4");
         }
 
-        public static IViewModel GetNotRoleRights(Guid roleId, string search)
+        public static IViewModel GetNotRoleRights(Guid? roleId, string search)
         {
             try
             {
@@ -45,13 +45,13 @@ namespace Andromeda.Core.Managers
                         Id = r.Id,
                         Name = r.Name
                     })
-                    .Where(o=> o.Name.ToLower().Contains((search ?? string.Empty).ToLower()))
+                    .Where(o => o.Name.ToLower().Contains((search ?? string.Empty).ToLower()))
                     .ToList();
 
                     return data;
                 }
             }
-            catch(Exception exc)
+            catch (Exception exc)
             {
                 return LogErrorManager.Add(exc);
             }
@@ -71,11 +71,11 @@ namespace Andromeda.Core.Managers
                     context.Configuration.ValidateOnSaveEnabled = false;
 
                     var roleRights = context.RightRoles.Where(o => o.RoleId == roleId).AsNoTracking();
-                    foreach(var role in roleRights.Where(o=> !ids.Contains(o.RightId)))
+                    foreach (var role in roleRights.Where(o => !ids.Contains(o.RightId)))
                     {
                         context.Entry(role).State = EntityState.Deleted;
                     }
-                    foreach(var id in ids.Where(o=> !roleRights.Select(r => r.RightId).Contains(o)))
+                    foreach (var id in ids.Where(o => !roleRights.Select(r => r.RightId).Contains(o)))
                     {
                         RightRole rightRole = new RightRole { RightId = id, RoleId = roleId };
                         context.Entry(rightRole).State = EntityState.Added;

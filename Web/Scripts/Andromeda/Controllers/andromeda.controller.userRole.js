@@ -1,11 +1,11 @@
 ﻿app.controller('userRoleController', function ($scope, $q, $timeout, $mdDialog, $cookies, $filter, service) {
     $scope.roles = [];
-	$scope.searchRole = '';
-	$scope.selectedRole = null;
+    $scope.searchRole = '';
+    $scope.selectedRole = null;
 
-	$scope.getRoles = function () {
+    $scope.getRoles = function () {
         var deferred = $q.defer();
-        service.getEntities('/Administration/GetUserRoleRoles', model = { Search: $scope.searchRole })
+        service.getEntities('/Administration/GetUserRoleRoles', model = { Search: $scope.searchRole, SearchId: $cookies.get('entityId') })
             .then(function (response) {
                 if (response.data.Result) {
                     var rows = response.data.Entities;
@@ -14,7 +14,7 @@
                 }
             });
 
-		return deferred.promise;
+        return deferred.promise;
     };
 
     $scope.departments = [];
@@ -23,7 +23,7 @@
 
     $scope.getDepartments = function () {
         var deferred = $q.defer();
-        service.getEntities('/Administration/GetUserRoleDepartments', model = { Search: $scope.searchDepartment })
+        service.getEntities('/Administration/GetUserRoleDepartments', model = { Search: $scope.searchDepartment, SearchId: $cookies.get('entityId'), SecondSearchId: $scope.selectedRole.Id })
             .then(function (response) {
                 if (response.data.Result) {
                     var rows = response.data.Entities;
@@ -38,17 +38,17 @@
     $scope.entity = {
         Id: null,
         UserId: null,
-		RoleId: null,
-		DepartmentId: null
-	};
+        RoleId: null,
+        DepartmentId: null
+    };
 
-	$scope.settings = {
-		delay: 500,
-		loading: false,
-		message: 'Загрузка данных',
-		addition: false,
-		addOrEdit: service.addOrEdit,
-		closeDialog: function () {
+    $scope.settings = {
+        delay: 500,
+        loading: false,
+        message: 'Загрузка данных',
+        addition: false,
+        addOrEdit: service.addOrEdit,
+        closeDialog: function () {
             $mdDialog.hide();
         },
         createTimer: function () {
@@ -57,7 +57,7 @@
                 $scope.loading = false;
             }, $scope.settings.delay);
         }
-	};
+    };
 
     $scope.loadDialog = function () {
         $scope.message = 'Загрузка данных';
@@ -98,10 +98,10 @@
         $scope.selectedDepartment = null;
         $scope.selectedRole = null;
 
-		if (!$scope.settings.addOrEdit) {
-			$scope.loadDialog();
+        if (!$scope.settings.addOrEdit) {
+            $scope.loadDialog();
         }
-	};
+    };
 
     $scope.confirm = function () {
         var departmentId = null;
@@ -113,7 +113,7 @@
             RoleId: $scope.selectedRole.Id,
             DepartmentId: departmentId,
             UserId: $scope.entity.UserId,
-            Name: $scope.selectedRole.Name + (departmentId ? ' ' + $scope.selectedDepartment.ShortName : '') 
+            Name: $scope.selectedRole.Name + (departmentId ? ' ' + $scope.selectedDepartment.ShortName : '')
         };
 
         $scope.message = 'Сохранение изменений';

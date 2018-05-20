@@ -85,6 +85,7 @@
     <Compile Include="Managers\RightManager.cs" />
     <Compile Include="Managers\RoleManager.cs" />
     <Compile Include="Managers\UserManager.cs" />
+    <Compile Include="Managers\UserRoleManager.cs" />
     <Compile Include="Managers\WorkingCirriculumManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

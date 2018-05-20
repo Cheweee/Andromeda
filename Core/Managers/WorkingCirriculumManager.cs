@@ -103,5 +103,6 @@ namespace Andromeda.Core.Managers
                 return LogErrorManager.Add(exc);
             }
         }
+        public void TestMethod() { }
     }
 }

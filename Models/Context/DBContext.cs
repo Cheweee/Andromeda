@@ -47,6 +47,7 @@
         public virtual DbSet<CompetenceAcademicDiscipline> CompetenceAcademicDisciplines { get; set; }
         public virtual DbSet<RightRole> RightRoles { get; set; }
         public virtual DbSet<UserRole> UserRoles { get; set; }
+        public virtual DbSet<RoleDepartment> RoleDepartments { get; set; }
         #endregion
         #endregion
 
@@ -1250,21 +1251,20 @@
                 #endregion
                 #endregion
 
-                //#region Выделение ролей факультетам, институтам и кафедрам
-                //foreach (Department dep in context.Departments.Local.Where(o => o.IsFaculty))
-                //{
-                //    dep.RolesInDepartment = deaneryRoles;
-                //}
-                //var departmentRoles = new List<Role>();
-                //departmentRoles.AddRange(departmentStaffRoles);
-                //departmentRoles.AddRange(professorsRoles);
-                //foreach (Department dep in context.Departments.Local.Where(o => !o.IsFaculty))
-                //{
-                //    dep.RolesInDepartment = departmentRoles;
-
-                //}
-                //context.SaveChanges();
-                //#endregion
+                #region Выделение ролей факультетам, институтам и кафедрам
+                foreach (Department dep in context.Departments.Local.Where(o => o.IsFaculty))
+                {
+                    context.RoleDepartments.AddRange(deaneryRoles.Select(o => new RoleDepartment { Id = Guid.NewGuid(), DepartmentId = dep.Id, RoleId = o.Id }));
+                }
+                var departmentRoles = new List<Role>();
+                departmentRoles.AddRange(departmentStaffRoles);
+                departmentRoles.AddRange(professorsRoles);
+                foreach (Department dep in context.Departments.Local.Where(o => !o.IsFaculty))
+                {
+                    context.RoleDepartments.AddRange(departmentRoles.Select(o => new RoleDepartment { Id = Guid.NewGuid(), DepartmentId = dep.Id, RoleId = o.Id }));
+                }
+                context.SaveChanges();
+                #endregion
 
                 #region Создание пользователей
                 Guid grinId = Guid.NewGuid();
@@ -1325,7 +1325,7 @@
             }
             catch (Exception exc)
             {
-                context.LogErrors.Add(new LogError {Date = DateTime.Today, Id = Guid.NewGuid(), Message = exc.Message, Method = "Initialize database" });
+                context.LogErrors.Add(new LogError { Date = DateTime.Today, Id = Guid.NewGuid(), Message = exc.Message, Method = "Initialize database" });
             }
             finally
             {
