@@ -132,11 +132,9 @@ namespace Andromeda.Core.Managers
                             byte[] fileData = new byte[fileSize];
                             file.InputStream.Read(fileData, 0, fileSize);
 
-                            file.SaveAs(Path.Combine(HttpContext.Current.Server.MapPath("~/WorkingCirriculumFiles"), workingCirriculumFileName + ".xlsx"));
-                            
-                            data.Entity = AnalizeWorkingCirriculumFile(context, Path.Combine(HttpContext.Current.Server.MapPath("~/WorkingCirriculumFiles"), workingCirriculumFileName + ".xlsx"));
+                            MemoryStream stream = new MemoryStream(fileData);
 
-                            File.Delete(Path.Combine(HttpContext.Current.Server.MapPath("~/WorkingCirriculumFiles"), fileName));
+                            data.Entity = AnalizeWorkingCirriculumFile(context, stream);
 
                             WorkingCirriculumFile workingCirriculumFile = new WorkingCirriculumFile
                             {
@@ -159,21 +157,14 @@ namespace Andromeda.Core.Managers
             }
         }
 
-        private static WorkingCirriculumViewModel AnalizeWorkingCirriculumFile(DBContext context, string fileName)
+        private static WorkingCirriculumViewModel AnalizeWorkingCirriculumFile(DBContext context, Stream stream)
         {
-            try
+            using (SpreadsheetDocument document = SpreadsheetDocument.Open(stream, false))
             {
-                using (SpreadsheetDocument document = SpreadsheetDocument.Open(fileName, false))
-                {
-                    WorkingCirriculumViewModel data = AnalizeTitleSheet(context, document);
-                    AnalizePlanSheet(context, document);
+                WorkingCirriculumViewModel data = AnalizeTitleSheet(context, document);
+                AnalizePlanSheet(context, document);
 
-                    return data;
-                }
-            }
-            catch (Exception exc)
-            {
-                return null;
+                return data;
             }
         }
 

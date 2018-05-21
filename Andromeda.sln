@@ -15,6 +15,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Web", "Web\Web.csproj", "{8
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F9638EE0-5A3F-4BAC-B0CD-096888BD1640}"
 	ProjectSection(SolutionItems) = preProject
+		D:\Litra\Original\09.03.04_ПИ\09.03.04_ПОВТ_13-14_итог.plm.xlsx = D:\Litra\Original\09.03.04_ПИ\09.03.04_ПОВТ_13-14_итог.plm.xlsx
+		D:\Litra\Original\09.04.04_ПИ\09.04.04 ПИ набор 2015 ФГОС3+ ПРИНЯТ 22.10.15.plm.xlsx = D:\Litra\Original\09.04.04_ПИ\09.04.04 ПИ набор 2015 ФГОС3+ ПРИНЯТ 22.10.15.plm.xlsx
+		D:\Litra\Original\09.04.04_ПИ\09.04.04 ПИ набор 2015 ФГОС3+ ПРИНЯТ 22.10.15.plm.xml.xls = D:\Litra\Original\09.04.04_ПИ\09.04.04 ПИ набор 2015 ФГОС3+ ПРИНЯТ 22.10.15.plm.xml.xls
 		WECr.dll = WECr.dll
 	EndProjectSection
 EndProject
