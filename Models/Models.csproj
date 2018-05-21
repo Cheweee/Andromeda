@@ -62,6 +62,7 @@
     <Compile Include="RelationEntities\RightRoles.cs" />
     <Compile Include="Administration\Role.cs" />
     <Compile Include="Administration\User.cs" />
+    <Compile Include="RelationEntities\RoleDepartment.cs" />
     <Compile Include="RelationEntities\UserRole.cs" />
     <Compile Include="Base\BaseEntity.cs" />
     <Compile Include="Context\DBContext.cs" />

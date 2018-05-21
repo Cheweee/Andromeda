@@ -95,6 +95,21 @@
       <HintPath>..\packages\System.Diagnostics.DiagnosticSource.4.4.1\lib\net46\System.Diagnostics.DiagnosticSource.dll</HintPath>
     </Reference>
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http, Version=4.1.1.2, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Net.Http.4.3.3\lib\net46\System.Net.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Algorithms, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Algorithms.4.3.1\lib\net461\System.Security.Cryptography.Algorithms.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Encoding, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Encoding.4.3.0\lib\net46\System.Security.Cryptography.Encoding.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Primitives, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Primitives.4.3.0\lib\net46\System.Security.Cryptography.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.X509Certificates, Version=4.1.1.2, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.X509Certificates.4.3.2\lib\net461\System.Security.Cryptography.X509Certificates.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -132,8 +147,6 @@
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
-    <Reference Include="System.Net.Http">
-    </Reference>
     <Reference Include="System.Net.Http.WebRequest">
     </Reference>
     <Reference Include="System.Web.Optimization">
@@ -157,6 +170,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\Angular\angular-material.css" />
+    <Content Include="Content\Angular\angular-material.layout-attributes.css" />
+    <Content Include="Content\Angular\angular-material.layout-attributes.min.css" />
+    <Content Include="Content\Angular\angular-material.layouts.css" />
+    <Content Include="Content\Angular\angular-material.layouts.ie_fixes.css" />
+    <Content Include="Content\Angular\angular-material.layouts.min.css" />
+    <Content Include="Content\Angular\angular-material.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="Content\Andromeda\andromeda.dialog.css" />
     <Content Include="Content\Andromeda\andromeda.menu.css" />
@@ -170,13 +190,6 @@
     <Content Include="Content\Andromeda\Images\Andromeda system.ico" />
     <Content Include="Content\Andromeda\Images\Andromeda system.png" />
     <Content Include="Content\Andromeda\Images\Andromeda system.svg" />
-    <Content Include="Content\Angular\angular-material.css" />
-    <Content Include="Content\Angular\angular-material.layout-attributes.css" />
-    <Content Include="Content\Angular\angular-material.layout-attributes.min.css" />
-    <Content Include="Content\Angular\angular-material.layouts.css" />
-    <Content Include="Content\Angular\angular-material.layouts.ie_fixes.css" />
-    <Content Include="Content\Angular\angular-material.layouts.min.css" />
-    <Content Include="Content\Angular\angular-material.min.css" />
     <Content Include="Content\Angular\Fonts\roboto-font.css" />
     <Content Include="Content\Angular\Icon fonts\material-icons.css" />
     <Content Include="Content\Angular\Icon fonts\MaterialIcons-Regular.svg" />
@@ -195,15 +208,21 @@
     <Content Include="Scripts\Andromeda\Controllers\andromeda.controller.department.js" />
     <Content Include="Scripts\Andromeda\Controllers\andromeda.controller.faculty.js" />
     <Content Include="Scripts\Andromeda\Controllers\andromeda.controller.role.js" />
+    <Content Include="Scripts\Andromeda\Controllers\andromeda.controller.upload.js" />
     <Content Include="Scripts\Andromeda\Controllers\andromeda.controller.user.js" />
     <Content Include="Scripts\Andromeda\Controllers\andromeda.controller.workingCirriculum.js" />
+    <Content Include="Scripts\Angular\angular-file-upload.js" />
+    <Content Include="Scripts\Angular\angular-file-upload.min.js" />
+    <Content Include="Scripts\Angular\angular-material-mocks.js" />
+    <Content Include="Scripts\Angular\angular-material.js" />
+    <Content Include="Scripts\Angular\angular-material.min.js" />
     <Content Include="Scripts\Angular\angular-animate.js" />
     <Content Include="Scripts\Angular\angular-animate.min.js" />
     <Content Include="Scripts\Angular\angular-aria.js" />
     <Content Include="Scripts\Angular\angular-aria.min.js" />
     <Content Include="Scripts\Angular\angular-cookies.js" />
     <Content Include="Scripts\Angular\angular-cookies.min.js" />
-    <Content Include="Scripts\Angular\angular-csp.css" />
+    <Content Include="Content\Angular\angular-csp.css" />
     <Content Include="Scripts\Angular\angular-loader.js" />
     <Content Include="Scripts\Angular\angular-loader.min.js" />
     <Content Include="Scripts\Angular\angular-message-format.js" />
@@ -255,7 +274,7 @@
     <Content Include="Scripts\Andromeda\Controllers\andromeda.controller.table.js" />
     <Content Include="Scripts\Andromeda\Controllers\andromeda.controller.courseTitle.js" />
     <Content Include="Scripts\Andromeda\Controllers\andromeda.controller.userRole.js" />
-    <Content Include="Scripts\Angular\errors.json" />
+    <Content Include="Scripts\errors.json" />
     <Content Include="Scripts\Angular\angular.min.js.map" />
     <Content Include="Scripts\Angular\angular-touch.min.js.map" />
     <Content Include="Scripts\Angular\angular-sanitize.min.js.map" />
@@ -268,6 +287,8 @@
     <Content Include="Scripts\Angular\angular-cookies.min.js.map" />
     <Content Include="Scripts\Angular\angular-aria.min.js.map" />
     <Content Include="Scripts\Angular\angular-animate.min.js.map" />
+    <Content Include="Scripts\Angular\angular-file-upload.js.map" />
+    <Content Include="Scripts\Angular\angular-file-upload.min.js.map" />
     <None Include="Scripts\Jquery\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\i18n\angular-locale_af-na.js" />
     <Content Include="Scripts\i18n\angular-locale_af-za.js" />
@@ -1070,7 +1091,9 @@
     <Content Include="Views\Administration\User.cshtml" />
     <Content Include="Scripts\version.json" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="WorkingCirriculumFiles\" />
+  </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
     <Content Include="Scripts\Jquery\jquery-3.3.1.slim.min.map" />
@@ -1080,7 +1103,7 @@
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="Scripts\Angular\index.d.ts" />
+    <TypeScriptCompile Include="Scripts\index.d.ts" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj">

@@ -151,6 +151,13 @@ namespace Andromeda.Web.Controllers
             return Json(data, JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
+        public JsonResult UploadWorkingCirriculumFile()
+        {
+            var data = WorkingCirriculumManager.UploadWorkingCirriculumFile();
+
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+        [HttpPost]
         public JsonResult AddWorkingCirriculum(WorkingCirriculum entity)
         {
             entity.Id = Guid.NewGuid();

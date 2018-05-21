@@ -78,7 +78,7 @@ namespace Andromeda.Web.Controllers
         [HttpPost]
         public JsonResult SaveUserAcademicDegrees(ChangeEntitiesViewModel<AcademicDegree> model)
         {
-            var data = UserManager.SaveUserAcademicDegrees(model.NewId, model.Entities.Select(o=> o.Id).ToList());
+            var data = UserManager.SaveUserAcademicDegrees(model.NewId, model.Entities.Select(o => o.Id).ToList());
 
             return Json(data, JsonRequestBehavior.AllowGet);
         }
@@ -114,28 +114,14 @@ namespace Andromeda.Web.Controllers
         [HttpGet]
         public JsonResult GetUserRoleRoles(EntitiesViewModel model)
         {
-            var data = BaseEntityManager.GetEntities<Role, RoleViewModel>(
-                o => o.Name.ToLower().Contains((model.Search ?? string.Empty).ToLower()),
-                o => new RoleViewModel
-                {
-                    Id = o.Id,
-                    Name = o.Name
-                });
+            var data = UserRoleManager.GetUserAvailableRoles(model.Search, model.SearchId);
 
             return Json(data, JsonRequestBehavior.AllowGet);
         }
         [HttpGet]
         public JsonResult GetUserRoleDepartments(EntitiesViewModel model)
         {
-            var data = BaseEntityManager.GetEntities<Department, DepartmentViewModel>(
-                o => o.Name.ToLower().Contains((model.Search ?? string.Empty).ToLower()) ||
-                o.ShortName.ToLower().Contains((model.Search ?? string.Empty).ToLower()),
-                o => new DepartmentViewModel
-                {
-                    Id = o.Id,
-                    Name = o.Name,
-                    ShortName = o.ShortName
-                });
+            var data = UserRoleManager.GetRoleAvailableDepartments(model.Search, model.SearchId, model.SecondSearchId);
 
             return Json(data, JsonRequestBehavior.AllowGet);
         }
@@ -161,8 +147,8 @@ namespace Andromeda.Web.Controllers
                 model.Limit,
                 model.Order,
                 model.IsAscending(),
-                o=> o.Name.ToLower().Contains((model.Search ?? string.Empty).ToLower()),
-                o=> new RoleViewModel { Id = o.Id, Name = o.Name });
+                o => o.Name.ToLower().Contains((model.Search ?? string.Empty).ToLower()),
+                o => new RoleViewModel { Id = o.Id, Name = o.Name });
 
             return Json(data, JsonRequestBehavior.AllowGet);
         }

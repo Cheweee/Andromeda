@@ -4,248 +4,301 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<md-card ng-controller="workingCirriculumController">
-    <md-card-title>
-        <md-card-title-text>
-            <span class="md-headline">Рабочий план</span>
-        </md-card-title-text>
-    </md-card-title>
-    <md-card-content>
-        <div layout="column">
-            <div layout="row">
-                <md-input-container class="md-block">
-                    <label>Начало обучения</label>
-                    <input type="number" name="startTraining" ng-model="entity.StartTraining" min="1">
-                </md-input-container>
-                <md-input-container class="md-block">
-                    <label>Длительность обучения</label>
-                    <input type="number" step="0.1" name="trainingPeriod" ng-model="entity.TrainingPeriod" min="1">
-                </md-input-container>
-                <md-input-container flex class="md-block">
-                    <label>Стандарт обучения</label>
-                    <input required name="educationalStandart" ng-model="entity.EducationalStandart" md-maxlength="20" md-autofocus>
-                    <div ng-messages="addOrEditForm.educationalStandart.$error" multiple>
-                        <div ng-message="required">
-                            Пожалуйста заполните данное поле.
-                        </div>
-                    </div>
-                </md-input-container>
-            </div>
-            <div layout="row">
-                <md-autocomplete name="department" flex
-                                 md-no-chache="true"
-                                 md-clear-button="true"
-                                 md-selected-item="selectedDepartment"
-                                 md-search-text="searchDepartment"
-                                 md-items="item in getDepartments()"
-                                 md-item-text="item.Name"
-                                 md-min-length="0"
-                                 md-floating-label="Кафедра">
-                    <md-item-template>
-                        <span md-highlight-text="searchDepartment" md-highlight-flags="^i">{{item.Name}}</span>
-                    </md-item-template>
-                    <md-not-found>
-                        Совпадений не найдено.
-                    </md-not-found>
-                    <div ng-messages="addOrEditForm.department.$error" multiple>
-                        <div ng-message="required">
-                            Пожалуйста заполните данное поле.
-                        </div>
-                    </div>
-                </md-autocomplete>
-                <md-autocomplete name="areaOfTraining" flex
-                                 md-no-chache="true"
-                                 md-clear-button="true"
-                                 md-selected-item="selectedAreaOfTraining"
-                                 md-search-text="searchAreaOfTraining"
-                                 md-items="item in getAreasOfTraining()"
-                                 md-item-text="item.Name"
-                                 md-min-length="0"
-                                 md-floating-label="Направление подготовки">
-                    <md-item-template>
-                        <span md-highlight-text="searchAreaOfTraining" md-highlight-flags="^i">{{item.Name}}</span>
-                    </md-item-template>
-                    <md-not-found>
-                        Совпадений не найдено.
-                    </md-not-found>
-                    <div ng-messages="addOrEditForm.areaOfTraining.$error" multiple>
-                        <div ng-message="required">
-                            Пожалуйста заполните данное поле.
-                        </div>
-                    </div>
-                </md-autocomplete>
-                <md-autocomplete name="typeOfEd" flex
-                                 md-no-chache="true"
-                                 md-clear-button="true"
-                                 md-selected-item="selectedTypeOfEd"
-                                 md-search-text="searchTypeOfEd"
-                                 md-items="item in getTypesOfEd()"
-                                 md-item-text="item.Name"
-                                 md-min-length="0"
-                                 md-floating-label="Форма обучения">
-                    <md-item-template>
-                        <span md-highlight-text="searchTypeOfEd" md-highlight-flags="^i">{{item}}</span>
-                    </md-item-template>
-                    <md-not-found>
-                        Совпадений не найдено.
-                    </md-not-found>
-                    <div ng-messages="addOrEditForm.typeOfEd.$error" multiple>
-                        <div ng-message="required">
-                            Пожалуйста заполните данное поле.
-                        </div>
-                    </div>
-                </md-autocomplete>
-            </div>
-            <div @*ng-init="checkRole(
-     '/References/CanUserEditReferences',
-     '/References/IsUserHeadOfDepartment')"*@
-                 layout="column" layout-fill
-                 @*ng-controller="tableController"*@>
-                <div layout="column" flex
-                     @*ng-init="init('Name',
-     '/References/GetDepartments',
-     '/References/DeleteDepartments',
-     'Вы уверены, что хотите удалить выбранные кафедры?',
-     'departmentController', false)"*@>
-                    <md-toolbar class="md-table-toolbar md-default" ng-hide="query.selected.length">
-                        <div class="md-toolbar-tools">
-                            <md-icon>search</md-icon>
-                            <form flex ng-dirty ng-valid name="form.filter">
-                                <input type="text" flex ng-model="query.filter.search" ng-model-options="filter.options" placeholder="Поиск">
-                            </form>
-                            <md-button ng-hide="!canEdit" class="md-icon-button" ng-click="addEntity()">
-                                <md-icon>add</md-icon>
-                                <md-tooltip md-direction="bottom" style="font-size:14px;">Добавить академическую дисциплину</md-tooltip>
-                            </md-button>
-                        </div>
-                    </md-toolbar>
-                    <md-toolbar class="md-table-toolbar md-alternate" ng-show="query.selected.length">
-                        <div class="md-toolbar-tools">
-                            <span>Кафедр выбрано : {{query.selected.length}}</span>
-                            <span flex></span>
-                            <md-button class="md-icon-button" show ng-hide="query.selected.length!=1 || !canEdit" ng-click="editEntity(query.selected[0])">
-                                <md-icon md-colors="{color: 'accent-500'}">edit</md-icon>
-                                <md-tooltip md-direction="bottom" style="font-size:14px;">Редактировать выбранную академическую дисциплину</md-tooltip>
-                            </md-button>
-                            <md-button ng-hide="!canEdit" class="md-icon-button" ng-click="delete(query.selected)">
-                                <md-icon md-colors="{color: 'accent-500'}">delete</md-icon>
-                                <md-tooltip md-direction="bottom" style="font-size:14px;">Удалить выбранные академические дисциплины</md-tooltip>
-                            </md-button>
-                        </div>
-                    </md-toolbar>
-                    <md-divider></md-divider>
-                    <md-table-container flex>
-                        <table md-table md-row-select="canEdit" multiple="true" ng-model="query.selected" md-progress="promise">
-                            <thead md-head md-order="query.order" md-on-reorder="query.getEntities">
-                                <tr md-row>
-                                    <th md-column md-order-by="Code" md-numeric><span class="md-subhead">Код</span></th>
-                                    <th md-column md-order-by="ShortName"><span class="md-subhead">Сокращенное наименование</span></th>
-                                    <th md-column md-order-by="Name"><span class="md-subhead">Наименование</span></th>
-                                    <th md-column md-order-by="FacultyName"><span class="md-subhead">Факультет</span></th>
-                                </tr>
-                            </thead>
-                            <tbody md-body>
-                                <tr md-auto-select md-row md-select="entity" ng-repeat="entity in query.entities">
-                                    <td md-cell>{{entity.Code}}</td>
-                                    <td md-cell>{{entity.ShortName}}</td>
-                                    <td md-cell>{{entity.Name}}</td>
-                                    <td md-cell>{{entity.FacultyName}}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </md-table-container>
-                    <md-table-pagination md-label="{page: 'Страница:', rowsPerPage: 'Записей на странице:', of: 'из'}"
-                                         md-page="query.page"
-                                         md-limit="query.limit"
-                                         md-limit-options="query.limitOptions"
-                                         md-total="{{query.total}}"
-                                         md-boundary-links="true"
-                                         md-on-paginate="query.getEntities">
-                    </md-table-pagination>
-                </div>
-            </div>
-            <div @*ng-init="checkRole(
-     '/References/CanUserEditReferences',
-     '/References/IsUserHeadOfDepartment')"*@
-                 layout="column" layout-fill
-                 @*ng-controller="tableController"*@>
-                <div layout="column" flex
-                     @*ng-init="init('Name',
-     '/References/GetDepartments',
-     '/References/DeleteDepartments',
-     'Вы уверены, что хотите удалить выбранные кафедры?',
-     'departmentController', false)"*@>
-                    <md-toolbar class="md-table-toolbar md-default" ng-hide="query.selected.length">
-                        <div class="md-toolbar-tools">
-                            <md-icon>search</md-icon>
-                            <form flex ng-dirty ng-valid name="form.filter">
-                                <input type="text" flex ng-model="query.filter.search" ng-model-options="filter.options" placeholder="Поиск">
-                            </form>
-                            <md-button ng-hide="!canEdit" class="md-icon-button" ng-click="addEntity()">
-                                <md-icon>add</md-icon>
-                                <md-tooltip md-direction="bottom" style="font-size:14px;">Добавить академическую дисциплину</md-tooltip>
-                            </md-button>
-                        </div>
-                    </md-toolbar>
-                    <md-toolbar class="md-table-toolbar md-alternate" ng-show="query.selected.length">
-                        <div class="md-toolbar-tools">
-                            <span>Кафедр выбрано : {{query.selected.length}}</span>
-                            <span flex></span>
-                            <md-button class="md-icon-button" show ng-hide="query.selected.length!=1 || !canEdit" ng-click="editEntity(query.selected[0])">
-                                <md-icon md-colors="{color: 'accent-500'}">edit</md-icon>
-                                <md-tooltip md-direction="bottom" style="font-size:14px;">Редактировать выбранную академическую дисциплину</md-tooltip>
-                            </md-button>
-                            <md-button ng-hide="!canEdit" class="md-icon-button" ng-click="delete(query.selected)">
-                                <md-icon md-colors="{color: 'accent-500'}">delete</md-icon>
-                                <md-tooltip md-direction="bottom" style="font-size:14px;">Удалить выбранные академические дисциплины</md-tooltip>
-                            </md-button>
-                        </div>
-                    </md-toolbar>
-                    <md-divider></md-divider>
-                    <md-table-container flex>
-                        <table md-table md-row-select="canEdit" multiple="true" ng-model="query.selected" md-progress="promise">
-                            <thead md-head md-order="query.order" md-on-reorder="query.getEntities">
-                                <tr md-row>
-                                    <th md-column md-order-by="Code" md-numeric><span class="md-subhead">Код</span></th>
-                                    <th md-column md-order-by="ShortName"><span class="md-subhead">Сокращенное наименование</span></th>
-                                    <th md-column md-order-by="Name"><span class="md-subhead">Наименование</span></th>
-                                    <th md-column md-order-by="FacultyName"><span class="md-subhead">Факультет</span></th>
-                                </tr>
-                            </thead>
-                            <tbody md-body>
-                                <tr md-auto-select md-row md-select="entity" ng-repeat="entity in query.entities">
-                                    <td md-cell>{{entity.Code}}</td>
-                                    <td md-cell>{{entity.ShortName}}</td>
-                                    <td md-cell>{{entity.Name}}</td>
-                                    <td md-cell>{{entity.FacultyName}}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </md-table-container>
-                    <md-table-pagination md-label="{page: 'Страница:', rowsPerPage: 'Записей на странице:', of: 'из'}"
-                                         md-page="query.page"
-                                         md-limit="query.limit"
-                                         md-limit-options="query.limitOptions"
-                                         md-total="{{query.total}}"
-                                         md-boundary-links="true"
-                                         md-on-paginate="query.getEntities">
-                    </md-table-pagination>
-                </div>
-            </div>
-        </div>
-    </md-card-content>
-    <md-card-actions>
-        <div layout="row">
+<script type="text/ng-template" id="uploadForm.html">
+    <md-dialog aria-label="uploadForm" ng-controller="uploadController">
+        <div flex layout-padding layout-margin ng-show="settings.loading" layout-fill layout-align="center center" layout="column">
             <span flex></span>
-            <md-button class="md-primary" ng-click="confirm()" ng-disabled="addOrEditForm.$invalid">
-                Принять
-            </md-button>
-            <md-button class="md-alert" ng-click="clearFields()">
-                Отмена
-            </md-button>
+            <md-progress-circular md-diameter="96" md-mode="indeterminate"></md-progress-circular>
+            <h2 class="md-title">
+                {{settings.message}}
+            </h2>
+            <span flex></span>
         </div>
-    </md-card-actions>
-</md-card>
+        <form name="uploadForm" action="" ng-hide="settings.loading" method="post" ng-submit="confirm()" ng-valid>
+            <md-toolbar>
+                <div class="md-toolbar-tools">
+                    <h2 md-title>Выберите файл рабочего плана</h2>
+                    <span flex></span>
+                    <md-button class="md-icon-button" ng-click="settings.closeDialog()">
+                        <md-icon>close</md-icon>
+                    </md-button>
+                </div>
+            </md-toolbar>
+            <md-dialog-content>
+                <div class="md-dialog-content">
+                    <input type="file" nv-file-select uploader="uploader" class="ng-hide" name="upload" id="fileUpload" />
+                    <div layout="row">
+                        <md-input-container class="md-block" flex>
+                            <label>Выберите файл</label>
+                            <input type="text" readonly name="imagePath" ng-model="uploader.queue[0].file.name">
+                        </md-input-container>
+                        <md-button class="md-icon-button md-primary" aria-label="attach" ng-click="uploadFile()"><md-icon>attach_file</md-icon></md-button>
+                    </div>
+                </div>
+            </md-dialog-content>
+            <md-dialog-actions>
+                <md-button class="md-primary" ng-click="confirm()" ng-disabled="uploadForm.$invalid">
+                    Принять
+                </md-button>
+                <md-button class="md-alert" ng-click="clearFields()">
+                    Отмена
+                </md-button>
+            </md-dialog-actions>
+        </form>
+    </md-dialog>
+</script>
+
+<div layout-fill ng-controller="workingCirriculumController">
+    <div flex layout-padding layout-margin ng-show="settings.loading" layout-fill layout-align="center center" layout="column">
+        <span flex></span>
+        <md-progress-circular md-diameter="96" md-mode="indeterminate"></md-progress-circular>
+        <h2 class="md-title">
+            {{message}}
+        </h2>
+        <span flex></span>
+    </div>
+    <md-card>
+        <md-card-title>
+            <md-card-title-text>
+                <span class="md-headline" flex>Рабочий план</span>
+            </md-card-title-text>
+            <md-button ng-show="settings.addOrEdit" class="md-icon-button" ng-click="openUploadDialog()">
+                <md-icon>cloud_upload</md-icon>
+                <md-tooltip md-direction="bottom" style="font-size:14px;">Выгрузить и анализировать рабочий план</md-tooltip>
+            </md-button>
+        </md-card-title>
+        <md-card-content>
+            <div layout="column">
+                <div layout="row">
+                    <md-input-container class="md-block">
+                        <label>Начало обучения</label>
+                        <input type="number" name="startTraining" ng-model="entity.StartTraining" min="1">
+                    </md-input-container>
+                    <md-input-container class="md-block">
+                        <label>Длительность обучения</label>
+                        <input type="number" step="0.1" name="trainingPeriod" ng-model="entity.TrainingPeriod" min="1">
+                    </md-input-container>
+                    <md-input-container flex class="md-block">
+                        <label>Стандарт обучения</label>
+                        <input required name="educationalStandart" ng-model="entity.EducationalStandart" md-maxlength="20" md-autofocus>
+                        <div ng-messages="addOrEditForm.educationalStandart.$error" multiple>
+                            <div ng-message="required">
+                                Пожалуйста заполните данное поле.
+                            </div>
+                        </div>
+                    </md-input-container>
+                </div>
+                <div layout="row">
+                    <md-autocomplete name="department" flex
+                                     md-no-chache="true"
+                                     md-clear-button="true"
+                                     md-selected-item="selectedDepartment"
+                                     md-search-text="searchDepartment"
+                                     md-items="item in getDepartments()"
+                                     md-item-text="item.Name"
+                                     md-min-length="0"
+                                     md-floating-label="Кафедра">
+                        <md-item-template>
+                            <span md-highlight-text="searchDepartment" md-highlight-flags="^i">{{item.Name}}</span>
+                        </md-item-template>
+                        <md-not-found>
+                            Совпадений не найдено.
+                        </md-not-found>
+                        <div ng-messages="addOrEditForm.department.$error" multiple>
+                            <div ng-message="required">
+                                Пожалуйста заполните данное поле.
+                            </div>
+                        </div>
+                    </md-autocomplete>
+                    <md-autocomplete name="areaOfTraining" flex
+                                     md-no-chache="true"
+                                     md-clear-button="true"
+                                     md-selected-item="selectedAreaOfTraining"
+                                     md-search-text="searchAreaOfTraining"
+                                     md-items="item in getAreasOfTraining()"
+                                     md-item-text="item.Name"
+                                     md-min-length="0"
+                                     md-floating-label="Направление подготовки">
+                        <md-item-template>
+                            <span md-highlight-text="searchAreaOfTraining" md-highlight-flags="^i">{{item.Name}}</span>
+                        </md-item-template>
+                        <md-not-found>
+                            Совпадений не найдено.
+                        </md-not-found>
+                        <div ng-messages="addOrEditForm.areaOfTraining.$error" multiple>
+                            <div ng-message="required">
+                                Пожалуйста заполните данное поле.
+                            </div>
+                        </div>
+                    </md-autocomplete>
+                    <md-autocomplete name="typeOfEd" flex
+                                     md-no-chache="true"
+                                     md-clear-button="true"
+                                     md-selected-item="selectedTypeOfEd"
+                                     md-search-text="searchTypeOfEd"
+                                     md-items="item in getTypesOfEd()"
+                                     md-item-text="item.Name"
+                                     md-min-length="0"
+                                     md-floating-label="Форма обучения">
+                        <md-item-template>
+                            <span md-highlight-text="searchTypeOfEd" md-highlight-flags="^i">{{item}}</span>
+                        </md-item-template>
+                        <md-not-found>
+                            Совпадений не найдено.
+                        </md-not-found>
+                        <div ng-messages="addOrEditForm.typeOfEd.$error" multiple>
+                            <div ng-message="required">
+                                Пожалуйста заполните данное поле.
+                            </div>
+                        </div>
+                    </md-autocomplete>
+                </div>
+                <md-tabs md-dynamic-height md-border-bottom>
+                    <md-tab label="Академические дисциплины">
+                        <div layout="column" flex
+                             @*ng-init="init('Name',
+     '/References/GetDepartments',
+     '/References/DeleteDepartments',
+     'Вы уверены, что хотите удалить выбранные кафедры?',
+     'departmentController', false)"*@>
+                            <md-toolbar class="md-table-toolbar md-default" ng-hide="query.selected.length">
+                                <div class="md-toolbar-tools">
+                                    <md-icon>search</md-icon>
+                                    <form flex ng-dirty ng-valid name="form.filter">
+                                        <input type="text" flex ng-model="query.filter.search" ng-model-options="filter.options" placeholder="Поиск">
+                                    </form>
+                                    <md-button ng-hide="!canEdit" class="md-icon-button" ng-click="addEntity()">
+                                        <md-icon>add</md-icon>
+                                        <md-tooltip md-direction="bottom" style="font-size:14px;">Добавить академическую дисциплину</md-tooltip>
+                                    </md-button>
+                                </div>
+                            </md-toolbar>
+                            <md-toolbar class="md-table-toolbar md-alternate" ng-show="query.selected.length">
+                                <div class="md-toolbar-tools">
+                                    <span>Кафедр выбрано : {{query.selected.length}}</span>
+                                    <span flex></span>
+                                    <md-button class="md-icon-button" show ng-hide="query.selected.length!=1 || !canEdit" ng-click="editEntity(query.selected[0])">
+                                        <md-icon md-colors="{color: 'accent-500'}">edit</md-icon>
+                                        <md-tooltip md-direction="bottom" style="font-size:14px;">Редактировать выбранную академическую дисциплину</md-tooltip>
+                                    </md-button>
+                                    <md-button ng-hide="!canEdit" class="md-icon-button" ng-click="delete(query.selected)">
+                                        <md-icon md-colors="{color: 'accent-500'}">delete</md-icon>
+                                        <md-tooltip md-direction="bottom" style="font-size:14px;">Удалить выбранные академические дисциплины</md-tooltip>
+                                    </md-button>
+                                </div>
+                            </md-toolbar>
+                            <md-divider></md-divider>
+                            <md-table-container flex>
+                                <table md-table md-row-select="canEdit" multiple="true" ng-model="query.selected" md-progress="promise">
+                                    <thead md-head md-order="query.order" md-on-reorder="query.getEntities">
+                                        <tr md-row>
+                                            <th md-column md-order-by="Code" md-numeric><span class="md-subhead">Код</span></th>
+                                            <th md-column md-order-by="ShortName"><span class="md-subhead">Сокращенное наименование</span></th>
+                                            <th md-column md-order-by="Name"><span class="md-subhead">Наименование</span></th>
+                                            <th md-column md-order-by="FacultyName"><span class="md-subhead">Факультет</span></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody md-body>
+                                        <tr md-auto-select md-row md-select="entity" ng-repeat="entity in query.entities">
+                                            <td md-cell>{{entity.Code}}</td>
+                                            <td md-cell>{{entity.ShortName}}</td>
+                                            <td md-cell>{{entity.Name}}</td>
+                                            <td md-cell>{{entity.FacultyName}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </md-table-container>
+                            <md-table-pagination md-label="{page: 'Страница:', rowsPerPage: 'Записей на странице:', of: 'из'}"
+                                                 md-page="query.page"
+                                                 md-limit="query.limit"
+                                                 md-limit-options="query.limitOptions"
+                                                 md-total="{{query.total}}"
+                                                 md-boundary-links="true"
+                                                 md-on-paginate="query.getEntities">
+                            </md-table-pagination>
+                        </div>
+                    </md-tab>
+                    <md-tab label="Компетенции">
+                        <div layout="column" flex
+                             @*ng-init="init('Name',
+     '/References/GetDepartments',
+     '/References/DeleteDepartments',
+     'Вы уверены, что хотите удалить выбранные кафедры?',
+     'departmentController', false)"*@>
+                            <md-toolbar class="md-table-toolbar md-default" ng-hide="query.selected.length">
+                                <div class="md-toolbar-tools">
+                                    <md-icon>search</md-icon>
+                                    <form flex ng-dirty ng-valid name="form.filter">
+                                        <input type="text" flex ng-model="query.filter.search" ng-model-options="filter.options" placeholder="Поиск">
+                                    </form>
+                                    <md-button ng-hide="!canEdit" class="md-icon-button" ng-click="addEntity()">
+                                        <md-icon>add</md-icon>
+                                        <md-tooltip md-direction="bottom" style="font-size:14px;">Добавить академическую дисциплину</md-tooltip>
+                                    </md-button>
+                                </div>
+                            </md-toolbar>
+                            <md-toolbar class="md-table-toolbar md-alternate" ng-show="query.selected.length">
+                                <div class="md-toolbar-tools">
+                                    <span>Кафедр выбрано : {{query.selected.length}}</span>
+                                    <span flex></span>
+                                    <md-button class="md-icon-button" show ng-hide="query.selected.length!=1 || !canEdit" ng-click="editEntity(query.selected[0])">
+                                        <md-icon md-colors="{color: 'accent-500'}">edit</md-icon>
+                                        <md-tooltip md-direction="bottom" style="font-size:14px;">Редактировать выбранную академическую дисциплину</md-tooltip>
+                                    </md-button>
+                                    <md-button ng-hide="!canEdit" class="md-icon-button" ng-click="delete(query.selected)">
+                                        <md-icon md-colors="{color: 'accent-500'}">delete</md-icon>
+                                        <md-tooltip md-direction="bottom" style="font-size:14px;">Удалить выбранные академические дисциплины</md-tooltip>
+                                    </md-button>
+                                </div>
+                            </md-toolbar>
+                            <md-divider></md-divider>
+                            <md-table-container flex>
+                                <table md-table md-row-select="canEdit" multiple="true" ng-model="query.selected" md-progress="promise">
+                                    <thead md-head md-order="query.order" md-on-reorder="query.getEntities">
+                                        <tr md-row>
+                                            <th md-column md-order-by="Code" md-numeric><span class="md-subhead">Код</span></th>
+                                            <th md-column md-order-by="ShortName"><span class="md-subhead">Сокращенное наименование</span></th>
+                                            <th md-column md-order-by="Name"><span class="md-subhead">Наименование</span></th>
+                                            <th md-column md-order-by="FacultyName"><span class="md-subhead">Факультет</span></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody md-body>
+                                        <tr md-auto-select md-row md-select="entity" ng-repeat="entity in query.entities">
+                                            <td md-cell>{{entity.Code}}</td>
+                                            <td md-cell>{{entity.ShortName}}</td>
+                                            <td md-cell>{{entity.Name}}</td>
+                                            <td md-cell>{{entity.FacultyName}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </md-table-container>
+                            <md-table-pagination md-label="{page: 'Страница:', rowsPerPage: 'Записей на странице:', of: 'из'}"
+                                                 md-page="query.page"
+                                                 md-limit="query.limit"
+                                                 md-limit-options="query.limitOptions"
+                                                 md-total="{{query.total}}"
+                                                 md-boundary-links="true"
+                                                 md-on-paginate="query.getEntities">
+                            </md-table-pagination>
+                        </div>
+                    </md-tab>
+                </md-tabs>
+            </div>
+        </md-card-content>
+        <md-card-actions>
+            <div layout="row">
+                <span flex></span>
+                <md-button class="md-primary" ng-click="confirm()" ng-disabled="addOrEditForm.$invalid">
+                    Принять
+                </md-button>
+                <md-button class="md-alert" ng-click="clearFields()">
+                    Отмена
+                </md-button>
+            </div>
+        </md-card-actions>
+    </md-card>
+</div>
 
 <script src="~/Scripts/Andromeda/Controllers/andromeda.controller.table.js"></script>
 <script src="~/Scripts/Andromeda/Controllers/andromeda.controller.workingCirriculum.js"></script>
+<script src="~/Scripts/Andromeda/Controllers/andromeda.controller.upload.js"></script>
