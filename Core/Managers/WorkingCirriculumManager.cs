@@ -306,20 +306,37 @@ namespace Andromeda.Core.Managers
             Sheet sheet = workbookPart.Workbook.Descendants<Sheet>().FirstOrDefault(s => s.Name == sheetName);
             WorksheetPart worksheetPart = (WorksheetPart)(workbookPart.GetPartById(sheet.Id));
             SheetData sheetData = worksheetPart.Worksheet.Elements<SheetData>().First();
-            
-            foreach (Row row in sheetData.Elements<Row>())
+
+            Dictionary<string, string> columns = new Dictionary<string, string>
             {
-                foreach (Cell cell in row.Elements<Cell>())
-                {
-                    string cellValue = GetCellValue(workbookPart, cell);
 
-                    if(cellValue.ToLower() == "базовая часть")
-                    {
-                        break;
-                    }
+                { "По плану",  string.Empty },
+                { "По ЗЕТ",  string.Empty},
+                { "Экспертное",  string.Empty},
+                { "Факт",  string.Empty},
+                { "Итого часов в электронной форме",  string.Empty},
+                { "Итого часов в интерактивной форме",  string.Empty},
+                { "Контакт. раб.",  string.Empty},
+                { "СРС",  string.Empty},
+                { "Контроль",  string.Empty},
+                { "Наименование",  string.Empty},
+                { "Индекс",  string.Empty},
+                { "Компетенции",  string.Empty}
+            };
 
-                }
-            }
+            GetColumnNames(workbookPart, sheetData, ref columns);
+
+            string searchBasePart = "б1.б";
+            string searchVariativePart = "б1.в.од";
+            string searchTrainingPracticePart = "б2.у";
+            string searchResearchWorkPart = "б2.н";
+            string searchInternshipPart = "б2.п";
+            data.AddRange(SearchPart(workbookPart, sheetData, searchBasePart, columns));
+            data.AddRange(SearchPart(workbookPart, sheetData, searchVariativePart, columns));
+            data.AddRange(SearchOptionallyPart(workbookPart, sheetData, columns));
+            data.AddRange(SearchPart(workbookPart, sheetData, searchTrainingPracticePart, columns));
+            data.AddRange(SearchPart(workbookPart, sheetData, searchResearchWorkPart, columns));
+            data.AddRange(SearchPart(workbookPart, sheetData, searchInternshipPart, columns));
 
             return data;
         }
@@ -442,6 +459,238 @@ namespace Andromeda.Core.Managers
 
             return levelOfHigherEducationName;
         }
+        private static void GetColumnNames(WorkbookPart workbookPart, SheetData sheetData, ref Dictionary<string, string> columns)
+        {
+            foreach (Row row in sheetData.Elements<Row>())
+            {
+                foreach (Cell cell in row.Elements<Cell>())
+                {
+                    string cellValue = GetCellValue(workbookPart, cell);
+                    var column = columns.Where(o => cellValue.ToLower().Contains(o.Key.ToLower())).FirstOrDefault();
+                    if(!string.IsNullOrEmpty(column.Key) && string.IsNullOrEmpty(column.Value))
+                    {
+                        columns[column.Key] = GetColumnName(cell.CellReference);
+                    }
+
+                    if(columns.All(o=> !string.IsNullOrEmpty(o.Value)))
+                    {
+                        return;
+                    }
+                }
+            }
+        }
+        private static List<AcademicDisciplineViewModel> SearchPart(WorkbookPart workbookPart, SheetData sheetData, string partName, Dictionary<string, string> columns)
+        {
+            List<AcademicDisciplineViewModel> data = new List<AcademicDisciplineViewModel>();
+
+            foreach (Row row in sheetData.Elements<Row>())
+            {
+                AcademicDisciplineViewModel academicdiscipline = new AcademicDisciplineViewModel();
+                bool needToAddAcademicDiscipline = false;
+                string rowIndex = string.Empty;
+
+                foreach (Cell cell in row.Elements<Cell>())
+                {
+                    string cellValue = GetCellValue(workbookPart, cell);
+
+                    if (cellValue.ToLower() == partName)
+                    {
+                        break;
+                    }
+                    if (cellValue.ToLower().Contains(partName))
+                    {
+                        rowIndex = row.RowIndex;
+                    }
+
+                    if (row.RowIndex == rowIndex)
+                    {
+                        string columnName = GetColumnName(cell.CellReference);
+
+                        if (columnName == columns["Индекс"])
+                        {
+                            academicdiscipline.Code = cellValue;
+                        }
+                        else if (columnName == columns["По плану"])
+                        {
+                            int.TryParse(cellValue, out int value);
+
+                            academicdiscipline.TotalOursOnPlan = value;
+                        }
+                        else if (columnName == columns["По ЗЕТ"])
+                        {
+                            int.TryParse(cellValue, out int value);
+
+                            academicdiscipline.SUTTotalOurs = value;
+                        }
+                        else if (columnName == columns["Экспертное"])
+                        {
+                            int.TryParse(cellValue, out int value);
+
+                            academicdiscipline.SUTExpert = value;
+                        }
+                        else if (columnName == columns["Факт"])
+                        {
+                            int.TryParse(cellValue, out int value);
+
+                            academicdiscipline.SUTFactual = value;
+                        }
+                        else if (columnName == columns["Итого часов в электронной форме"])
+                        {
+                            int.TryParse(cellValue, out int value);
+
+                            academicdiscipline.OursInElectronicalForm = value;
+                        }
+                        else if (columnName == columns["Итого часов в интерактивной форме"])
+                        {
+                            int.TryParse(cellValue, out int value);
+
+                            academicdiscipline.OursInInteractiveForm = value;
+                        }
+                        else if (columnName == columns["Контакт. раб."])
+                        {
+                            int.TryParse(cellValue, out int value);
+
+                            academicdiscipline.ContactOurs = value;
+                        }
+                        else if (columnName == columns["СРС"])
+                        {
+                            int.TryParse(cellValue, out int value);
+
+                            academicdiscipline.IWOSOurs = value;
+                        }
+                        else if (columnName == columns["Контроль"])
+                        {
+                            int.TryParse(cellValue, out int value);
+
+                            academicdiscipline.ControlOurs = value;
+                        }
+                        else if (columnName == columns["Наименование"])
+                        {
+                            academicdiscipline.CourseTitle = cellValue;
+                        }
+
+                        needToAddAcademicDiscipline = string.Compare(columnName, columns["Компетенции"]) == 0;
+                    }
+                }
+
+                if (needToAddAcademicDiscipline)
+                {
+                    data.Add(academicdiscipline);
+                }
+            }
+
+            return data;
+        }
+        private static List<AcademicDisciplineViewModel> SearchOptionallyPart(WorkbookPart workbookPart, SheetData sheetData, Dictionary<string, string> columns)
+        {
+            string partName = "б1.в.дв";
+            List<AcademicDisciplineViewModel> data = new List<AcademicDisciplineViewModel>();
+            bool needToSearchPartNameAcademicDiscipline = false;
+
+            foreach (Row row in sheetData.Elements<Row>())
+            {
+                AcademicDisciplineViewModel academicdiscipline = new AcademicDisciplineViewModel();
+                academicdiscipline.Code = partName.ToUpper();
+                bool needToAddAcademicDiscipline = false;
+                string rowIndex = string.Empty;
+
+                foreach (Cell cell in row.Elements<Cell>())
+                {
+                    string cellValue = GetCellValue(workbookPart, cell);
+                    string columnName = GetColumnName(cell.CellReference);
+
+                    if (cellValue.ToLower().Contains(partName))
+                    {
+                        needToSearchPartNameAcademicDiscipline = true;
+                        break;
+                    }
+                    if(needToSearchPartNameAcademicDiscipline && columnName == columns["Наименование"] && !string.IsNullOrEmpty(cellValue))
+                    {
+                        rowIndex = row.RowIndex;
+                        needToSearchPartNameAcademicDiscipline = false;
+                    }
+                    if (cellValue.ToLower().Contains("*"))
+                    {
+                        rowIndex = string.Empty;
+                    }
+
+                    if (row.RowIndex == rowIndex)
+                    {
+                        if (columnName == columns["Индекс"])
+                        {
+                            academicdiscipline.Code += !string.IsNullOrEmpty(cellValue) ? "." + cellValue : string.Empty;
+                        }
+                        else if (columnName == columns["По плану"])
+                        {
+                            int.TryParse(cellValue, out int value);
+
+                            academicdiscipline.TotalOursOnPlan = value;
+                        }
+                        else if (columnName == columns["По ЗЕТ"])
+                        {
+                            int.TryParse(cellValue, out int value);
+
+                            academicdiscipline.SUTTotalOurs = value;
+                        }
+                        else if (columnName == columns["Экспертное"])
+                        {
+                            int.TryParse(cellValue, out int value);
+
+                            academicdiscipline.SUTExpert = value;
+                        }
+                        else if (columnName == columns["Факт"])
+                        {
+                            int.TryParse(cellValue, out int value);
+
+                            academicdiscipline.SUTFactual = value;
+                        }
+                        else if (columnName == columns["Итого часов в электронной форме"])
+                        {
+                            int.TryParse(cellValue, out int value);
+
+                            academicdiscipline.OursInElectronicalForm = value;
+                        }
+                        else if (columnName == columns["Итого часов в интерактивной форме"])
+                        {
+                            int.TryParse(cellValue, out int value);
+
+                            academicdiscipline.OursInInteractiveForm = value;
+                        }
+                        else if (columnName == columns["Контакт. раб."])
+                        {
+                            int.TryParse(cellValue, out int value);
+
+                            academicdiscipline.ContactOurs = value;
+                        }
+                        else if (columnName == columns["СРС"])
+                        {
+                            int.TryParse(cellValue, out int value);
+
+                            academicdiscipline.IWOSOurs = value;
+                        }
+                        else if (columnName == columns["Контроль"])
+                        {
+                            int.TryParse(cellValue, out int value);
+
+                            academicdiscipline.ControlOurs = value;
+                        }
+                        else if (columnName == columns["Наименование"])
+                        {
+                            academicdiscipline.CourseTitle = cellValue;
+                        }
+
+                        needToAddAcademicDiscipline = string.Compare(columnName, columns["Компетенции"]) == 0;
+                    }
+                }
+
+                if (needToAddAcademicDiscipline)
+                {
+                    data.Add(academicdiscipline);
+                }
+            }
+
+            return data;
+        }
 
         private static string GetCellValue(WorkbookPart workbookPart, Cell cell)
         {
@@ -483,6 +732,40 @@ namespace Andromeda.Core.Managers
             }
 
             return value;
+        }
+        public static string GetColumnName(string cellReference)
+        {
+            string columnName = string.Empty;
+
+            for(int i =0; i < cellReference.Length; i++)
+            {
+                string symbol = cellReference[i].ToString();
+                if (int.TryParse(symbol, out int result))
+                {
+                    break;
+                }
+
+                columnName += symbol;
+            }
+
+            return columnName;
+        }
+
+        public static int GetRowIndex(string cellReference)
+        {
+            int rowIndex = -1;
+
+            for (int i = 0; i < cellReference.Length; i++)
+            {
+                string subString = cellReference.Substring(i);
+                if (!int.TryParse(subString, out rowIndex))
+                {
+                    continue;
+                }
+                break;
+            }
+
+            return rowIndex;
         }
     }
 }
