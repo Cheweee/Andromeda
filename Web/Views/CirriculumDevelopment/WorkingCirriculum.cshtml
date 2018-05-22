@@ -155,17 +155,12 @@
                 </div>
                 <md-tabs md-dynamic-height md-border-bottom>
                     <md-tab label="Академические дисциплины">
-                        <div layout="column" flex
-                             @*ng-init="init('Name',
-     '/References/GetDepartments',
-     '/References/DeleteDepartments',
-     'Вы уверены, что хотите удалить выбранные кафедры?',
-     'departmentController', false)"*@>
-                            <md-toolbar class="md-table-toolbar md-default" ng-hide="query.selected.length">
+                        <div layout="column" flex>
+                            <md-toolbar class="md-table-toolbar md-default" ng-hide="academicDisciplines.selected.length">
                                 <div class="md-toolbar-tools">
                                     <md-icon>search</md-icon>
                                     <form flex ng-dirty ng-valid name="form.filter">
-                                        <input type="text" flex ng-model="query.filter.search" ng-model-options="filter.options" placeholder="Поиск">
+                                        <input type="text" flex ng-model="academicDisciplines.filter.search" ng-model-options="filter.options" placeholder="Поиск">
                                     </form>
                                     <md-button ng-hide="!canEdit" class="md-icon-button" ng-click="addEntity()">
                                         <md-icon>add</md-icon>
@@ -173,15 +168,15 @@
                                     </md-button>
                                 </div>
                             </md-toolbar>
-                            <md-toolbar class="md-table-toolbar md-alternate" ng-show="query.selected.length">
+                            <md-toolbar class="md-table-toolbar md-alternate" ng-show="academicDisciplines.selected.length">
                                 <div class="md-toolbar-tools">
-                                    <span>Кафедр выбрано : {{query.selected.length}}</span>
+                                    <span>Кафедр выбрано : {{academicDisciplines.selected.length}}</span>
                                     <span flex></span>
                                     <md-button class="md-icon-button" show ng-hide="query.selected.length!=1 || !canEdit" ng-click="editEntity(query.selected[0])">
                                         <md-icon md-colors="{color: 'accent-500'}">edit</md-icon>
                                         <md-tooltip md-direction="bottom" style="font-size:14px;">Редактировать выбранную академическую дисциплину</md-tooltip>
                                     </md-button>
-                                    <md-button ng-hide="!canEdit" class="md-icon-button" ng-click="delete(query.selected)">
+                                    <md-button ng-hide="!canEdit" class="md-icon-button" ng-click="delete(academicDisciplines.selected)">
                                         <md-icon md-colors="{color: 'accent-500'}">delete</md-icon>
                                         <md-tooltip md-direction="bottom" style="font-size:14px;">Удалить выбранные академические дисциплины</md-tooltip>
                                     </md-button>
@@ -189,32 +184,45 @@
                             </md-toolbar>
                             <md-divider></md-divider>
                             <md-table-container flex>
-                                <table md-table md-row-select="canEdit" multiple="true" ng-model="query.selected" md-progress="promise">
-                                    <thead md-head md-order="query.order" md-on-reorder="query.getEntities">
+                                <table md-table md-row-select="canEdit" multiple="true" ng-model="academicDisciplines.selected" md-progress="promise">
+                                    <thead md-head md-order="academicDisciplines.order">
                                         <tr md-row>
-                                            <th md-column md-order-by="Code" md-numeric><span class="md-subhead">Код</span></th>
-                                            <th md-column md-order-by="ShortName"><span class="md-subhead">Сокращенное наименование</span></th>
-                                            <th md-column md-order-by="Name"><span class="md-subhead">Наименование</span></th>
-                                            <th md-column md-order-by="FacultyName"><span class="md-subhead">Факультет</span></th>
+                                            <th md-column md-order-by="Code"><span class="md-subhead">Индекс</span></th>
+                                            <th md-column md-order-by="CourseTitle"><span class="md-subhead">Наименование</span></th>
+                                            <th md-column md-order-by="TotalOursOnPlan" md-numeric><span class="md-subhead">Всего по плану (ч.)</span></th>
+                                            <th md-column md-order-by="SUTTotalOurs" md-numeric><span class="md-subhead">Всего по ЗЕТ (ч.)</span></th>
+                                            <th md-column md-order-by="SUTExpert" md-numeric><span class="md-subhead">ЗЕТ Экспертное</span></th>
+                                            <th md-column md-order-by="SUTFactual" md-numeric><span class="md-subhead">ЗЕТ Фактическое</span></th>
+                                            <th md-column md-order-by="OursInInteractiveForm" md-numeric><span class="md-subhead">В электронной форме (ч.)</span></th>
+                                            <th md-column md-order-by="OursInElectronicalForm" md-numeric><span class="md-subhead">В интерактивной форме (ч.)</span></th>
+                                            <th md-column md-order-by="ContactOurs" md-numeric><span class="md-subhead">Контакт. раб. (по учеб. зан.)</span></th>
+                                            <th md-column md-order-by="IWOSOurs" md-numeric><span class="md-subhead">СРС (ч.)</span></th>
+                                            <th md-column md-order-by="ControlOurs" md-numeric><span class="md-subhead">Контроль (ч.)</span></th>
                                         </tr>
                                     </thead>
                                     <tbody md-body>
-                                        <tr md-auto-select md-row md-select="entity" ng-repeat="entity in query.entities">
+                                        <tr md-auto-select md-row md-select="entity" ng-repeat="entity in academicDisciplines.entities | filter: academicDisciplines.filter.search | orderBy: academicDisciplines.order | limitTo: academicDisciplines.limit: (academicDisciplines.page - 1) * academicDisciplines.limit">
                                             <td md-cell>{{entity.Code}}</td>
-                                            <td md-cell>{{entity.ShortName}}</td>
-                                            <td md-cell>{{entity.Name}}</td>
-                                            <td md-cell>{{entity.FacultyName}}</td>
+                                            <td md-cell>{{entity.CourseTitle}}</td>
+                                            <td md-cell>{{entity.TotalOursOnPlan}}</td>
+                                            <td md-cell>{{entity.SUTTotalOurs}}</td>
+                                            <td md-cell>{{entity.SUTExpert}}</td>
+                                            <td md-cell>{{entity.SUTFactual}}</td>
+                                            <td md-cell>{{entity.OursInInteractiveForm}}</td>
+                                            <td md-cell>{{entity.OursInElectronicalForm}}</td>
+                                            <td md-cell>{{entity.ContactOurs}}</td>
+                                            <td md-cell>{{entity.IWOSOurs}}</td>
+                                            <td md-cell>{{entity.ControlOurs}}</td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </md-table-container>
                             <md-table-pagination md-label="{page: 'Страница:', rowsPerPage: 'Записей на странице:', of: 'из'}"
-                                                 md-page="query.page"
-                                                 md-limit="query.limit"
-                                                 md-limit-options="query.limitOptions"
-                                                 md-total="{{query.total}}"
-                                                 md-boundary-links="true"
-                                                 md-on-paginate="query.getEntities">
+                                                 md-page="academicDisciplines.page"
+                                                 md-limit="academicDisciplines.limit"
+                                                 md-limit-options="academicDisciplines.limitOptions"
+                                                 md-total="{{(academicDisciplines.entities | filter: academicDisciplines.filter.search ).length}}"
+                                                 md-boundary-links="true">
                             </md-table-pagination>
                         </div>
                     </md-tab>

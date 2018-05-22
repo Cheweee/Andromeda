@@ -21,5 +21,6 @@ namespace Andromeda.ViewModels.Server
         public int StartTraining { get; set; }
 
         public AreaOfTrainingViewModel AreaOfTraining { get; set; }
+        public List<AcademicDisciplineViewModel> AcademicDisciplines { get; set; }
     }
 }

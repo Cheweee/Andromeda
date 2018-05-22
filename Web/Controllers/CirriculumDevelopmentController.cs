@@ -150,6 +150,13 @@ namespace Andromeda.Web.Controllers
 
             return Json(data, JsonRequestBehavior.AllowGet);
         }
+        [HttpGet]
+        public JsonResult GetWorkingCirriculumAcademicDisciplines(EntitiesViewModel model)
+        {
+            var data = WorkingCirriculumManager.GetWorkingCirriculumAcademicDisciplines(model.Page, model.Limit, model.Order, model.IsAscending(), model.Search, model.SearchId);
+
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
         [HttpPost]
         public JsonResult UploadWorkingCirriculumFile()
         {

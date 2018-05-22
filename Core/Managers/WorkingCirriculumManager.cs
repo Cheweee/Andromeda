@@ -108,6 +108,25 @@ namespace Andromeda.Core.Managers
                 return LogErrorManager.Add(exc);
             }
         }
+        public static IViewModel GetWorkingCirriculumAcademicDisciplines(int page, int limit, string order, bool isAscending, string search, Guid? id)
+        {
+            try
+            {
+                using (DBContext context = DBContext.Create())
+                {
+                    EntitiesViewModel<AcademicDisciplineViewModel> model = new EntitiesViewModel<AcademicDisciplineViewModel>
+                    {
+                        Result = Result.Ok
+                    };
+
+                    return model;
+                }
+            }
+            catch(Exception exc)
+            {
+                return new ResultViewModel { Result = Result.Error, Message = exc.Message };
+            }
+        }
         public static IViewModel UploadWorkingCirriculumFile()
         {
             try
@@ -162,7 +181,7 @@ namespace Andromeda.Core.Managers
             using (SpreadsheetDocument document = SpreadsheetDocument.Open(stream, false))
             {
                 WorkingCirriculumViewModel data = AnalizeTitleSheet(context, document);
-                AnalizePlanSheet(context, document);
+                data.AcademicDisciplines = AnalizePlanSheet(context, document);
 
                 return data;
             }

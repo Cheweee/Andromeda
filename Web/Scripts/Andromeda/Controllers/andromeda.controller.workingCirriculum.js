@@ -5,6 +5,8 @@
         $mdDialog.hide();
     };
 
+    $scope.academicDisciplines = service.createQuery('Code', '/CirriculumDevelopment/GetWorkingCirriculumAcademicDisciplines');
+
     $scope.typesOfEd = [];
     $scope.searchTypeOfEd = '';
     $scope.selectedTypeOfEd = '';
@@ -226,6 +228,9 @@
                     }
                 }
             });
+
+            $scope.academicDisciplines.entities = service.entity.AcademicDisciplines;
+
             $scope.settings.createTimer();
         });
     };
