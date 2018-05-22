@@ -1,0 +1,17 @@
+﻿using Andromeda.Models.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Andromeda.Models.References
+{
+    public class TimeNorm : IKeyEntity<Guid>
+    {
+        public Guid Id { get; set; }
+        public string Name { get; set; }
+        public string Years { get; set; }
+        public double Value { get; set; }
+    }
+}

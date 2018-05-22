@@ -34,6 +34,7 @@
         public virtual DbSet<AcademicTitle> AcademicTitles { get; set; }
         public virtual DbSet<AcademicDegree> AcademicDegrees { get; set; }
         public virtual DbSet<BranchOfScience> BranchesOfScience { get; set; }
+        public virtual DbSet<TimeNorm> TimeNorms { get; set; }
         #endregion
         #region Entities
         public virtual DbSet<Competence> Competences { get; set; }
@@ -41,6 +42,7 @@
         public virtual DbSet<Project> Projects { get; set; }
         public virtual DbSet<AcademicDiscipline> AcademicDsciplines { get; set; }
         public virtual DbSet<WorkingCirriculum> WorkingCirriculums { get; set; }
+        public virtual DbSet<StudyGroup> StudyGroupes { get; set; }
         #endregion
         #region Relation entities
         public virtual DbSet<AcademicDegreeUser> AcademicDegreeUsers { get; set; }
@@ -69,6 +71,10 @@
             modelBuilder.Entity<WorkingCirriculumFile>()
                 .HasRequired(o=> o.WorkingCirriculum)
                 .WithOptional(o => o.WorkingCirriculumFile);
+
+            modelBuilder.Entity<StudyGroup>()
+                .HasRequired(o => o.WorkingCirriculum)
+                .WithOptional(o => o.StudyGroup);
         }
         #endregion
     }

@@ -48,7 +48,7 @@
     </md-dialog>
 </script>
 
-<div layout-fill ng-controller="workingCirriculumController">
+<div layout-fill flex ng-controller="workingCirriculumController">
     <div flex layout-padding layout-margin ng-show="settings.loading" layout-fill layout-align="center center" layout="column">
         <span flex></span>
         <md-progress-circular md-diameter="96" md-mode="indeterminate"></md-progress-circular>
@@ -57,7 +57,7 @@
         </h2>
         <span flex></span>
     </div>
-    <md-card>
+    <md-card ng-hide="settings.loading">
         <md-card-title>
             <md-card-title-text>
                 <span class="md-headline" flex>Рабочий план</span>
