@@ -24,6 +24,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Images", "Images", "{1CF37BC2-D13B-43D9-A528-354DDE674DE0}"
 	ProjectSection(SolutionItems) = preProject
 		Images\Area of training (add or edit) page.png = Images\Area of training (add or edit) page.png
+		Images\Area of training page.png = Images\Area of training page.png
 		Images\Course of titles (add or edit) page.png = Images\Course of titles (add or edit) page.png
 		Images\Course of titles page.png = Images\Course of titles page.png
 		Images\Departments (add or edit) page.png = Images\Departments (add or edit) page.png
