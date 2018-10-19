@@ -99,7 +99,7 @@
             getEntities: function (searchId) {
                 var self = query;
                 if (searchId) {
-                    $http({
+                    return $http({
                         dataType: jsonDataType,
                         method: getMethod,
                         params: model = { Page: self.page, Limit: self.limit, Order: self.order, Search: self.filter.search, SearchId: searchId },
@@ -112,9 +112,8 @@
                             self.selected = [];
                         }
                         });
-                    return;
                 }
-                $http({
+                return $http({
                     dataType: jsonDataType,
                     method: getMethod,
                     params: model = { Page: self.page, Limit: self.limit, Order: self.order, Search: self.filter.search },

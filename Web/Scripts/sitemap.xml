@@ -55,7 +55,7 @@
     <loc>https://docs.angularjs.org/error/$compile/selmulti</loc>
   </url>
   <url>
-    <loc>https://docs.angularjs.org/error/$compile/tpload</loc>
+    <loc>https://docs.angularjs.org/error/$compile/srcset</loc>
   </url>
   <url>
     <loc>https://docs.angularjs.org/error/$compile/tplrt</loc>
@@ -154,6 +154,9 @@
     <loc>https://docs.angularjs.org/error/$interpolate/wantstring</loc>
   </url>
   <url>
+    <loc>https://docs.angularjs.org/error/$interval/badprom</loc>
+  </url>
+  <url>
     <loc>https://docs.angularjs.org/error/$location/badpath</loc>
   </url>
   <url>
@@ -241,6 +244,12 @@
     <loc>https://docs.angularjs.org/error/$sce/unsafe</loc>
   </url>
   <url>
+    <loc>https://docs.angularjs.org/error/$templateRequest/tpload</loc>
+  </url>
+  <url>
+    <loc>https://docs.angularjs.org/error/$timeout/badprom</loc>
+  </url>
+  <url>
     <loc>https://docs.angularjs.org/error/filter/notarray</loc>
   </url>
   <url>
@@ -302,6 +311,12 @@
   </url>
   <url>
     <loc>https://docs.angularjs.org/error/ngPattern/noregexp</loc>
+  </url>
+  <url>
+    <loc>https://docs.angularjs.org/error/ngRef/noctrl</loc>
+  </url>
+  <url>
+    <loc>https://docs.angularjs.org/error/ngRef/nonassign</loc>
   </url>
   <url>
     <loc>https://docs.angularjs.org/error/ngRepeat/badident</loc>
@@ -491,12 +506,6 @@
   </url>
   <url>
     <loc>https://docs.angularjs.org/api/ng</loc>
-  </url>
-  <url>
-    <loc>https://docs.angularjs.org/api/ng/function/angular.lowercase</loc>
-  </url>
-  <url>
-    <loc>https://docs.angularjs.org/api/ng/function/angular.uppercase</loc>
   </url>
   <url>
     <loc>https://docs.angularjs.org/api/ng/function/angular.forEach</loc>
@@ -829,6 +838,9 @@
     <loc>https://docs.angularjs.org/api/ng/directive/ngPluralize</loc>
   </url>
   <url>
+    <loc>https://docs.angularjs.org/api/ng/directive/ngRef</loc>
+  </url>
+  <url>
     <loc>https://docs.angularjs.org/api/ng/directive/ngRepeat</loc>
   </url>
   <url>
@@ -1063,9 +1075,6 @@
     <loc>https://docs.angularjs.org/api/ngCookies/service/$cookies</loc>
   </url>
   <url>
-    <loc>https://docs.angularjs.org/api/ngCookies/service/$cookieStore</loc>
-  </url>
-  <url>
     <loc>https://docs.angularjs.org/api/ngMessageFormat</loc>
   </url>
   <url>
@@ -1082,6 +1091,9 @@
   </url>
   <url>
     <loc>https://docs.angularjs.org/api/ngMessages/directive/ngMessageExp</loc>
+  </url>
+  <url>
+    <loc>https://docs.angularjs.org/api/ngMessages/directive/ngMessageDefault</loc>
   </url>
   <url>
     <loc>https://docs.angularjs.org/api/ngMock/object/angular.mock</loc>
@@ -1183,9 +1195,6 @@
     <loc>https://docs.angularjs.org/api/ngSanitize/provider/$sanitizeProvider</loc>
   </url>
   <url>
-    <loc>https://docs.angularjs.org/api/ngTouch/directive/ngClick</loc>
-  </url>
-  <url>
     <loc>https://docs.angularjs.org/api/ngTouch/directive/ngSwipeLeft</loc>
   </url>
   <url>
@@ -1196,12 +1205,6 @@
   </url>
   <url>
     <loc>https://docs.angularjs.org/api/ngTouch</loc>
-  </url>
-  <url>
-    <loc>https://docs.angularjs.org/api/ngTouch/provider/$touchProvider</loc>
-  </url>
-  <url>
-    <loc>https://docs.angularjs.org/api/ngTouch/service/$touch</loc>
   </url>
   <url>
     <loc>https://docs.angularjs.org/error/$animate</loc>
@@ -1223,6 +1226,9 @@
   </url>
   <url>
     <loc>https://docs.angularjs.org/error/$interpolate</loc>
+  </url>
+  <url>
+    <loc>https://docs.angularjs.org/error/$interval</loc>
   </url>
   <url>
     <loc>https://docs.angularjs.org/error/$location</loc>
@@ -1249,6 +1255,12 @@
     <loc>https://docs.angularjs.org/error/$sce</loc>
   </url>
   <url>
+    <loc>https://docs.angularjs.org/error/$templateRequest</loc>
+  </url>
+  <url>
+    <loc>https://docs.angularjs.org/error/$timeout</loc>
+  </url>
+  <url>
     <loc>https://docs.angularjs.org/error/filter</loc>
   </url>
   <url>
@@ -1268,6 +1280,9 @@
   </url>
   <url>
     <loc>https://docs.angularjs.org/error/ngPattern</loc>
+  </url>
+  <url>
+    <loc>https://docs.angularjs.org/error/ngRef</loc>
   </url>
   <url>
     <loc>https://docs.angularjs.org/error/ngRepeat</loc>
@@ -1382,8 +1397,5 @@
   </url>
   <url>
     <loc>https://docs.angularjs.org/api/ngTouch/service</loc>
-  </url>
-  <url>
-    <loc>https://docs.angularjs.org/api/ngTouch/provider</loc>
   </url>
 </urlset>
